@@ -205,7 +205,7 @@ Vite + Preact + TS, build target `chrome56`, fixed 1920×1080 layout. `config.xm
 
 ### B3 — API client, setup, settings, i18n
 - `api/client.ts`: base URL from settings, Basic auth header, timeout (60 s for stream search), and errors typed by `error.code`. **Use XHR (`xhr.timeout`/`abort()`), not `fetch`+`AbortController`:** Chrome 56 has no `AbortController`, and its `fetch` can't be aborted.
-- `localStorage` keys are prefixed `elementum.`. Unit tests use a mocked `fetch`.
+- `localStorage` keys are prefixed `elementum.`. Unit tests use a mocked XHR.
 - Setup screen: IP, port (default Elementum port), user, password, and a "Test connection" button (`/system/info`). It is shown on first run and on 401.
 - Waiting dialog: on a network error/timeout (at startup or any later call), show "Waiting for Elementum at IP:port…" with a spinner. It retries `/system/info` every 3 s and closes on its own once Elementum responds, retrying the call that failed. Buttons: "Change server" (Setup) and "Exit".
 - Settings screen: server, language switcher, about (app + Elementum version).
@@ -233,7 +233,7 @@ The streams screen calls the stream endpoint, with a spinner and cancel. The lis
 **Done when:** the full flow with the legal test torrent reaches the player in Chrome (html5 fallback); the cancel path deletes the session; the poller has a unit test.
 
 ### B9 — Player
-AVPlay needs `$WEBAPIS/webapis/webapis.js` in `index.html` (loaded only on Tizen). `player/avplay.ts` (`open`, `setDisplayRect(0,0,1920,1080)`, `prepareAsync`, play/pause/seek, `getTotalTrackInfo` for audio and subtitle tracks, buffering and error listeners, suspend/resume on `visibilitychange`) and `player/html5.ts`, both behind the same tiny interface. OSD: title, progress bar, time, play/pause, ±10 s / ±60 s seek, audio/subtitle track menu; it auto-hides. Media keys are handled. `progress` is posted every 10 s; Back/Stop sends `DELETE` and returns to details.
+AVPlay needs `$WEBAPIS/webapis/webapis.js` in `index.html` (loaded only on Tizen). While the player is active, pause norigin spatial navigation (`pause()`/`resume()`), so the OSD's arrow/seek keys don't also move focus (B4 review). `player/avplay.ts` (`open`, `setDisplayRect(0,0,1920,1080)`, `prepareAsync`, play/pause/seek, `getTotalTrackInfo` for audio and subtitle tracks, buffering and error listeners, suspend/resume on `visibilitychange`) and `player/html5.ts`, both behind the same tiny interface. OSD: title, progress bar, time, play/pause, ±10 s / ±60 s seek, audio/subtitle track menu; it auto-hides. Media keys are handled. `progress` is posted every 10 s; Back/Stop sends `DELETE` and returns to details.
 **Done when:** 👤 the user plays the test torrent plus one real MKV (HEVC + multiple audio tracks) on a real TV: seeking, track switching, and stop all work, and the session is gone in Elementum afterwards.
 
 ### B10 — Hardening & release
