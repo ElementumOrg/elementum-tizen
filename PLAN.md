@@ -54,10 +54,10 @@ Two repos are touched:
 | TV stack | Vite + Preact + TypeScript, `@noriginmedia/norigin-spatial-navigation`, no router library (a simple screen stack), plain CSS | Small bundle, fast on old TVs, focus handling solved. |
 | Baseline | **Tizen 4.0+ (2018+ TVs), confirmed.** Build target `chrome56`. | async/await works natively, so no legacy polyfill bundle. |
 | API types | `openapi-typescript` generates `src/api/schema.d.ts` from a copy of the spec (`npm run api:sync` pulls it from a pinned Elementum ref) | No hand-written DTOs that drift. |
-| Player | `webapis.avplay` on the TV; plain `<video>` fallback in a desktop browser | Hardware decoding (MKV/HEVC/DTS…) on the TV; the whole app can be developed in Chrome. |
+| Player | `webapis.avplay` on the TV (`.wgt`, loading `$WEBAPIS/webapis/webapis.js`); plain `<video>` fallback in a desktop browser for development | Hardware decoding (MKV/HEVC/…) on the TV; the whole app can be developed in Chrome. |
 | i18n | Flat JSON per language in `src/i18n/`, `en.json` as source. Language list = Elementum's `resources/language` list. Default from `tizen.systeminfo` LOCALE → `navigator.language` → `en`. | A sync script pre-fills translations from Elementum's `.po` files where the English `msgid` matches. |
 | Settings storage | `localStorage` (server, credentials, language) | Single-user TV. Credentials are stored in plain text; documented. |
-| Distribution | **Main path: a TizenBrew module.** The user installs TizenBrew once, adds this GitHub repo as a module, and gets updates from releases. No certificates are needed per app (Nuvio ships its TV app the same way). **Fallback: a signed `.wgt`** from GitHub Releases that the user re-signs with their own Samsung certificate (bound to their TV's DUID). Not on the Samsung store (see §8). | TizenBrew is the closest to "anyone can install". The `.wgt` covers TVs where TizenBrew fails (TizenBrew's docs warn about Tizen 8+). |
+| Distribution | **Apps2Samsung** (desktop sideloading tool for Windows/macOS/Linux): the user puts the TV in Developer Mode, opens Apps2Samsung, and installs our `.wgt` from GitHub Releases. Apps2Samsung handles Samsung signing for the TV. Fallback: the manual Tizen CLI (`sdb connect` + re-sign + `tizen install`). No TizenBrew, no npm, no Samsung store (see §8). | One `.wgt` for everyone, with full Tizen APIs (AVPlay, key registration, our `config.xml` privileges). |
 
 ## 4. API v1 contract (draft — finalized in step A1)
 
@@ -73,7 +73,7 @@ Common: `page` (1-based), `limit` (page size 1–100; defaults to Elementum's `r
 | `GET /shows/lists/{list}` / `GET /shows/genres` | same as movies |
 | `GET /shows/{tmdb_id}` | details + seasons summary |
 | `GET /shows/{tmdb_id}/seasons/{season}` | episodes (still image, overview, air date) |
-| `GET /search?query=&type=movie\|show\|multi` | search |
+| `GET /search?query=&type=movie\|show` | search (both honour `limit`) |
 | `GET /library/movies`, `GET /library/shows` | Elementum local library |
 | `GET /trakt/{movies\|shows}/lists/{list}` | trending, popular, anticipated, watched, played |
 | `GET /tracker/{movies\|shows}/watchlist`, `/collection` | user lists (409 `tracker_not_authorized` when not linked) |
@@ -184,6 +184,11 @@ Movie and episode stream endpoints reuse the existing provider search, sorting, 
 **Done when:** mapping tests pass; a real search returns sorted streams within the configured timeout.
 
 ### A5 — Playback sessions
+**Validate `POST /playback` `uri` (from the A4 review; trust boundary):** prefer not trusting it. Look up the `TorrentFile` by `info_hash`/uri in the stream-search cache for that tmdb_id/season/episode, and fall back to a magnet built from the infohash. Otherwise allow only:
+- `magnet:` with a valid btih;
+- a local path only when `filepath.Clean(uri) == filepath.Join(TempPath, <40-hex>.torrent)`;
+- `http(s)` only when it exactly matches a cached result.
+Reject `file:`, `plugin:`, relative paths, and `..`. Return a generic 400 that never echoes paths or `err.Error()`. Without these checks, `Download()` reads any absolute path, and http URIs allow server-side requests to internal URLs and header injection via `|k=v`. Tests cover every rejected form.
 **Biggest change in the Elementum part.** The existing `bittorrent.Player` assumes a Kodi host: `updateWatchTimes` dereferences `xbmcHost` without checking it, and multi-file movies open a Kodi picker. Add a small **external mode** to `bittorrent/player.go`: no Kodi dialogs, overlay, or watch-time loop, and lifecycle driven by API calls. `ChooseFile` returns a sentinel error for an ambiguous choice, which drives `choosing_file`. `GetActivePlayer` skips API players so Kodi player events never reach them. Never call `NewPlayer(..., nil)` with today's loop.
 Session store (one active session). `POST` adds the torrent and selects the file (auto for movies and episodes, `choosing_file` when ambiguous). `GET` reports state/progress. `progress` keeps the session alive, stores the resume point, and scrobbles to Trakt. `DELETE` and the idle reaper clean up. `stream_url` is an absolute LAN URL to `GET /api/v1/stream/{id}/{file_index}`, which wraps the existing Range-capable `bittorrent.NewTorrentFS` file serving (as used by `/files/`) and is authorized only by the HMAC link from §3 (expiry 12 h; session must be active). This path must not depend on Kodi player callbacks. Mount `HEAD` on the same stream handler outside the spec (ServeContent and `NewTorrentFS(method)` handle it). Fill `resume_s` from the stored resume point or tracker progress.
 **Done when:** tests cover the state machine and HMAC (valid, tampered sig/path/exp, expired, stopped session → 403, all compared with `hmac.Equal`). An integration check with a legal public-domain torrent (e.g. Big Buck Bunny/Sintel) reaches `ready` and returns `206` on a ranged GET. The reaper stops the session after 60 s without calls. Kodi playback still works. 👤 The user runs the integration check on their setup.
@@ -194,14 +199,13 @@ Vite + Preact + TS, build target `chrome56`, fixed 1920×1080 layout. `config.xm
 
 ### B2 — CI, packaging, install docs
 `.github/workflows/build.yml`: on PR/push run `npm ci`, typecheck, test, and build. Install a pinned, cached Tizen Studio CLI, generate an author certificate (from repo secrets when present, otherwise a throwaway one), `tizen package -t wgt`, and upload the `.wgt` artifact. On a `v*` tag, attach the `.wgt` to a GitHub Release.
-**First, a spike (👤 on a real TV, before anything else in B2):** a throwaway TizenBrew module page that does `fetch('http://<LAN-IP>:65220/api/v1/system/info')` with an Authorization header, registers a media key, checks `webapis.avplay` availability, and prints `location.href`, the result of each check, and `localStorage` sharing. The result decides risk §8.5.
-**TizenBrew module:** add the `package.json` fields TizenBrew needs for an app module (check against TizenBrew's current docs; NuvioTVTizen is a working reference). The tag job must publish the built `dist/` where TizenBrew loads it from, either committed to the release or published to npm, whichever the TizenBrew docs require. Verify on a real TV that AVPlay, key registration, and plain-`http://` LAN requests work from inside TizenBrew.
-`INSTALL.md` covers **Option A (recommended): TizenBrew**: install TizenBrew, add the module `<github-user>/elementum-tizen`, launch. **Option B: `.wgt`**: enabling Developer Mode on the TV (Apps → `12345` → dev mode on, PC IP, reboot); installing the Tizen CLI; `sdb connect <TV_IP>`; creating a Samsung certificate with the TV's DUID in Certificate Manager; re-signing the downloaded `.wgt` with that profile; `tizen install -n ElementumTV.wgt -t <device>`; using the emulator; uninstalling; troubleshooting (cert mismatch, `sdb` not connecting).
-**Done when:** a CI run on a PR produces a `.wgt` artifact. 👤 The user installs the placeholder app on a real TV by following each INSTALL.md option word for word, and fixes go back into the doc.
+**Install path:** research Apps2Samsung (github.com/Apps2Samsung/Apps2Samsung): how it installs a custom `.wgt`, whether it re-signs it (so our CI signature only has to be valid, not Samsung-specific), any requirements on `config.xml`/package id, and whether apps can be listed in its catalog (e.g. via a PR to its app list pointing at our GitHub Releases). Write the findings to `docs/apps2samsung.md`.
+`INSTALL.md` covers **Option A (recommended): Apps2Samsung**: enable Developer Mode on the TV (Apps → `12345` → dev mode on, PC IP, reboot), install Apps2Samsung, download `Elementum-<version>.wgt` from GitHub Releases, select the TV and the file, install. **Option B: Tizen CLI**: `sdb connect <TV_IP>`, a Samsung certificate with the TV's DUID, re-sign, `tizen install`, uninstall. Plus troubleshooting.
+**Done when:** a CI run on a PR produces a `.wgt` artifact. 👤 The user installs the app on a real TV with Apps2Samsung by following INSTALL.md word for word, and fixes go back into the doc.
 
 ### B3 — API client, setup, settings, i18n
 - `api/client.ts`: base URL from settings, Basic auth header, timeout (60 s for stream search), and errors typed by `error.code`. **Use XHR (`xhr.timeout`/`abort()`), not `fetch`+`AbortController`:** Chrome 56 has no `AbortController`, and its `fetch` can't be aborted.
-- `localStorage` keys are prefixed `elementum.`, since under TizenBrew the origin may be shared with other modules. Unit tests use a mocked `fetch`.
+- `localStorage` keys are prefixed `elementum.`. Unit tests use a mocked `fetch`.
 - Setup screen: IP, port (default Elementum port), user, password, and a "Test connection" button (`/system/info`). It is shown on first run and on 401.
 - Waiting dialog: on a network error/timeout (at startup or any later call), show "Waiting for Elementum at IP:port…" with a spinner. It retries `/system/info` every 3 s and closes on its own once Elementum responds, retrying the call that failed. Buttons: "Change server" (Setup) and "Exit".
 - Settings screen: server, language switcher, about (app + Elementum version).
@@ -229,7 +233,7 @@ The streams screen calls the stream endpoint, with a spinner and cancel. The lis
 **Done when:** the full flow with the legal test torrent reaches the player in Chrome (html5 fallback); the cancel path deletes the session; the poller has a unit test.
 
 ### B9 — Player
-AVPlay needs `$WEBAPIS/webapis/webapis.js`. Load it conditionally, only on Tizen and only from the path that works in TizenBrew (see the B2 spike). `player/avplay.ts` (`open`, `setDisplayRect(0,0,1920,1080)`, `prepareAsync`, play/pause/seek, `getTotalTrackInfo` for audio and subtitle tracks, buffering and error listeners, suspend/resume on `visibilitychange`) and `player/html5.ts`, both behind the same tiny interface. OSD: title, progress bar, time, play/pause, ±10 s / ±60 s seek, audio/subtitle track menu; it auto-hides. Media keys are handled. `progress` is posted every 10 s; Back/Stop sends `DELETE` and returns to details.
+AVPlay needs `$WEBAPIS/webapis/webapis.js` in `index.html` (loaded only on Tizen). `player/avplay.ts` (`open`, `setDisplayRect(0,0,1920,1080)`, `prepareAsync`, play/pause/seek, `getTotalTrackInfo` for audio and subtitle tracks, buffering and error listeners, suspend/resume on `visibilitychange`) and `player/html5.ts`, both behind the same tiny interface. OSD: title, progress bar, time, play/pause, ±10 s / ±60 s seek, audio/subtitle track menu; it auto-hides. Media keys are handled. `progress` is posted every 10 s; Back/Stop sends `DELETE` and returns to details.
 **Done when:** 👤 the user plays the test torrent plus one real MKV (HEVC + multiple audio tracks) on a real TV: seeking, track switching, and stop all work, and the session is gone in Elementum afterwards.
 
 ### B10 — Hardening & release
@@ -238,11 +242,11 @@ Test on the oldest available TV (performance: image sizes, row windowing); add a
 
 ## 8. Risks / open questions
 
-1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to TizenBrew + `.wgt` instead.
+1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
 2. **`/files/` is open today.** It is mounted outside gin (`main.go:281`) with no auth, so anyone on the LAN can read torrent files there. This predates the plan and is left unchanged because Kodi playback depends on it. The new `/api/v1/stream` is HMAC-protected.
-3. **TizenBrew limits:** it is a community tool (the TV stays in Developer Mode; TizenBrew's docs warn about Tizen 8+). The `.wgt` path stays as the fallback.
+3. **Developer Mode:** the TV stays in Developer Mode for sideloaded apps (Apps2Samsung or CLI).
 4. **Codec support** depends on the TV model (e.g. DTS was dropped on 2018+ models). No transcoding is planned; the UI shows codec badges so users can pick wisely.
-5. **TizenBrew loading model (high impact, B2 checks it first).** If TizenBrew serves the module page from an https CDN, `fetch('http://<LAN>:65220')` is blocked as mixed content, and CORS applies with a real origin. Our `config.xml` privileges don't apply there; TizenBrew's do. `$WEBAPIS/webapis.js` may not resolve. B2 starts with a spike on a real TV to settle this. Fallbacks, in order: TizenBrew's own local serving (if it has one); Elementum serving the built app at `/tv/` (same origin, no CORS/mixed content); `.wgt` only.
+5. **Apps2Samsung:** a community tool; Developer Mode must stay enabled on the TV, and sideloaded apps may need reinstalling when the signing certificate expires. B2 documents the details; the manual Tizen CLI path stays as the fallback.
 6. **Resolved:** the Elementum repo is at `/home/elgato/Develop/elementum` (branch `api` does not exist yet; A1 creates it from `master`). The codegen deps are approved. The app is named `Elementum`, with package id `ElmntmTV01` and app id `ElmntmTV01.Elementum`.
 
 ## 9. Decisions log
@@ -256,6 +260,12 @@ Test on the oldest available TV (performance: image sizes, row windowing); add a
 - 2026-11-06: A1 review. Show lists are `popular, trending, top_rated, on_the_air, by_genre` (not the movie names). There is a single `{media}` param for tracker/trakt, and `media` is required on list items. All lists are paged except `/tracker/lists` and genres. The added error codes are `tracker_unsupported`, `forbidden`, and `playback_failed`. `PlaybackSession.resume_s` is added, and so are `Stream.rip`, `language`, and `info_hash`.
 - 2026-11-07: B1 review. Chrome 56 limits aren't type-checked for DOM/CSS, so: no `AbortController` (use XHR), no flex `gap`, no `import.meta.url`, no code-splitting (single iife bundle). TizenBrew's loading model is a high-impact unknown, so B2 starts with a real-TV spike.
 - 2026-11-07: A4 found and fixed a deadlock in the existing (unused) `SearchMovieSilent`. The search cache and CallbackHost moved from `api` to `providers` to avoid an import cycle.
+- 2026-11-07: A4 review. A client abort does not cancel the search: Burst can't be cancelled inside Kodi, and the finished result warms the cache. Duplicate concurrent searches are accepted, as on the Kodi routes; the TV disables the button while a search runs. `Stream.uri` may expose a host path or a provider URL with a cookie or passkey to API clients; this is accepted for a LAN API, and A5 validates URIs. TMDB outage → 404 is a known limit. Possible hang in the non-silent Kodi search (`providers/search.go:242-262`): out of scope, follow-up.
+- 2026-11-07: (User) Deployment is done with **Apps2Samsung** (`.wgt` from GitHub Releases) instead of TizenBrew. This drops npm publishing, TizenBrew module fields and the spike; AVPlay is the TV player again.
+- 2026-11-07: Follow-ups outside the plan (pre-existing, not fixed): data races in `cache.NewDBStore` (`dbstore.go:43`) and `reqapi.Request.Do` (`request.go:164`) found by `-race`; possible hang in the non-silent Kodi search (`providers/search.go:242-262`).
+- 2026-11-07: (User) `type=multi` is removed from `/search`: it can't honour `limit` without a TMDB refactor, and the TV calls movie and show search separately.
+- 2026-11-07: B2 research. A TizenBrew module is published to npm (GitHub tags don't contain `dist/`), and pages are served from `http://127.0.0.1:8081` with no `tizen`/`webapis`, so HTML5 `<video>` is used under TizenBrew and AVPlay only in the `.wgt`.
+- 2026-11-07: A5 integration passed against a standalone daemon (no Kodi): Sintel resolving→buffering→ready, ranged 206, HEAD, tampered link 403, DELETE cleanup, resume, reaper, and choosing_file re-POST.
 - 2026-11-07: (User) Every list endpoint takes `limit` (1–100; default `results_per_page`). Responses add `limit` + `total_results`. The existing fetchers get a `perPage` argument instead of reading the global config.
 - 2026-11-06: Known, unchanged: CORS `*` with auth off by default lets any LAN web page call the API, the same as existing Kodi routes like `/playuri` and `/shutdown`. Document it in the README in B10, and recommend setting a login.
 - 2026-11-06: The app name is `Elementum` (id `ElmntmTV01.Elementum`). `oapi-codegen` + `kin-openapi` are approved for Elementum's `go.mod`.
