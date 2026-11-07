@@ -1,0 +1,31 @@
+/* Fixed 1920x1080 TV canvas. */
+html,
+body {
+  margin: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: #101014;
+  color: #f0f0f0;
+  font-family: "Samsung One", "Tizen Sans", Roboto, Arial, sans-serif;
+  font-size: 28px;
+}
+
+#app {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.placeholder h1 {
+  font-size: 96px;
+  margin: 0 0 24px;
+}

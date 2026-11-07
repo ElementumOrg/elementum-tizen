@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    // Only ES lib is limited to Chrome 56; the DOM lib is the latest, so these are NOT type-checked:
+    // no AbortController (Chrome 66), no flex `gap` (Chrome 84), no import.meta.url,
+    // no code-splitting (the iife bundle inlines import()).
+    "lib": ["ES2016", "ES2017.Object", "DOM", "DOM.Iterable"],
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "test", "vite.config.ts"]
+}

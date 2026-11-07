@@ -1,0 +1,26 @@
+{
+  "name": "elementum-tizen",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Samsung Tizen TV front-end for Elementum",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "pretest": "vite build",
+    "test": "vitest run",
+    "api:sync": "node scripts/sync-api.mjs"
+  },
+  "dependencies": {
+    "preact": "10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "2.10.6",
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  }
+}
