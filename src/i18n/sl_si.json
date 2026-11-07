@@ -1,0 +1,14 @@
+{
+  "nav.movies": "Filmi",
+  "nav.shows": "TV serije",
+  "nav.search": "Iskanje",
+  "nav.settings": "Nastavitve",
+  "common.yes": "Da",
+  "common.no": "Ne",
+  "setup.ip": "IP naslov",
+  "setup.user": "Prijava",
+  "setup.password": "Geslo",
+  "setup.save": "Shrani",
+  "settings.language": "Jezik",
+  "settings.language_auto": "Samodejno"
+}

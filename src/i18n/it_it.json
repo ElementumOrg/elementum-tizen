@@ -1,0 +1,12 @@
+{
+  "nav.movies": "Film",
+  "nav.shows": "Serie TV",
+  "nav.search": "Cerca",
+  "nav.settings": "Impostazioni",
+  "common.yes": "Sì",
+  "setup.ip": "Indirizzo IP",
+  "setup.port": "Porta",
+  "setup.save": "Salva",
+  "settings.language": "Lingua",
+  "settings.language_auto": "Automatico"
+}

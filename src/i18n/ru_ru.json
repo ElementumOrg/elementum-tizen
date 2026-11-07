@@ -1,0 +1,15 @@
+{
+  "nav.movies": "Фильмы",
+  "nav.shows": "Сериалы",
+  "nav.search": "Поиск",
+  "nav.settings": "Настройки",
+  "common.yes": "Да",
+  "common.no": "Нет",
+  "setup.ip": "IP адрес",
+  "setup.port": "Порт",
+  "setup.user": "Логин",
+  "setup.password": "Пароль",
+  "setup.save": "Сохранить",
+  "settings.language": "Язык",
+  "settings.language_auto": "Автоматически"
+}

@@ -1,0 +1,38 @@
+# Kodi Media Center language file
+msgid ""
+msgstr ""
+"Language: de\n"
+
+msgctxt "#30000"
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgctxt "#30001"
+msgid "Search"
+msgstr "Suche"
+
+msgctxt "#30002"
+msgid "Long "
+"line"
+msgstr "Lange "
+"Zeile"
+
+msgctxt "#30003"
+msgid "Password"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Yes (%s seconds)"
+msgstr "Ja (%s Sekunden)"
+
+msgctxt "#30005"
+msgid "Bold"
+msgstr "[B]Fett[/B]"
+
+msgctxt "#30006"
+msgid "Say \"hi\""
+msgstr "Sag \"hallo\""
+
+msgctxt "#30007"
+msgid "Port"
+msgstr "Port"

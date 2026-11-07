@@ -1,0 +1,14 @@
+{
+  "nav.movies": "Filmer",
+  "nav.shows": "TV-serier",
+  "nav.search": "Sök",
+  "nav.settings": "Inställningar",
+  "common.yes": "Ja",
+  "common.no": "Nej",
+  "setup.ip": "IP-adress",
+  "setup.user": "Logga in",
+  "setup.password": "Lösenord",
+  "setup.save": "Spara",
+  "settings.language": "Språk",
+  "settings.language_auto": "Automatiskt"
+}

@@ -1,0 +1,15 @@
+{
+  "nav.movies": "סרטים",
+  "nav.shows": "סדרות",
+  "nav.search": "חיפוש",
+  "nav.settings": "הגדרות",
+  "common.yes": "כן",
+  "common.no": "לא",
+  "setup.ip": "כתובת IP",
+  "setup.port": "פורט",
+  "setup.user": "שם משתמש",
+  "setup.password": "ססמה",
+  "setup.save": "שמור",
+  "settings.language": "שפה",
+  "settings.language_auto": "אוטומטי"
+}

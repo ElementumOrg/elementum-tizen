@@ -6,4 +6,7 @@ declare const __APP_VERSION__: string;
 declare const tizen: {
   tvinputdevice: { registerKey(name: string): void };
   application: { getCurrentApplication(): { exit(): void } };
+  systeminfo: {
+    getPropertyValue(prop: 'LOCALE', ok: (locale: { language: string }) => void, err?: (e: unknown) => void): void;
+  };
 };

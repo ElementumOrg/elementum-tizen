@@ -1,0 +1,15 @@
+{
+  "nav.movies": "Filmovi",
+  "nav.shows": "TV serije",
+  "nav.search": "Pretraživanje",
+  "nav.settings": "Postavke",
+  "common.yes": "Da",
+  "common.no": "Ne",
+  "setup.ip": "IP adresa",
+  "setup.port": "Ulaz",
+  "setup.user": "Prijava",
+  "setup.password": "Lozinka",
+  "setup.save": "Spremi",
+  "settings.language": "Jezik",
+  "settings.language_auto": "Automatski"
+}

@@ -6,7 +6,7 @@
 
 Requirements: a Samsung TV with Tizen 4.0 or newer (2018+ models), and Elementum running on a machine in
 the same network (default port 65220). If Elementum has a login (`local_login`/`local_password`), the app
-asks for it. (Until the setup screen is built, the app only shows a placeholder screen.)
+asks for it. The app stores that password in plain text on the TV.
 
 There are two ways to install:
 
@@ -37,8 +37,8 @@ be deleted on the TV before installing it the other way (the certificates differ
    `.wgt` file) and press **Install**. The first time, it asks you to sign in to your Samsung account to create
    the signing certificate (needed on Tizen 7+); it reuses it afterwards. Keep the TV connected to the internet
    during the install.
-5. Start **Elementum** from the TV's app list, enter your Elementum address (`IP:port`, for example
-   `192.168.1.10:65220`) and, if set, the login.
+5. Start **Elementum** from the TV's app list, enter your Elementum IP address (for example `192.168.1.10`)
+   and port (default `65220`) and, if set, the login.
 
 To update, install the newer release the same way. To uninstall, use Apps2Samsung's installed-apps list, or on
 the TV: Apps → Elementum → hold Enter → Delete.

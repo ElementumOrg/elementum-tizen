@@ -1,4 +1,4 @@
-// B4 demo screens with fake data. B5–B7 replace this file with real screens (src/screens/).
+// B4 demo screens with fake data; Settings is real (src/screens/Settings.tsx). B5–B7 replace this file.
 import type { ComponentChild } from 'preact';
 import { useState } from 'preact/hooks';
 import { stack } from './nav/stack';
@@ -99,12 +99,11 @@ function Details({ item }: { item: PosterItem }) {
   );
 }
 
-export const demoScreens: Record<Tab, () => ComponentChild> = {
+export const demoScreens: Record<Exclude<Tab, 'settings'>, () => ComponentChild> = {
   home: () => <Home />,
   movies: () => <GridScreen title="Movies" />,
   shows: () => <GridScreen title="Shows" />,
   library: () => <Library />,
   tracker: () => <GridScreen title="Tracker" />,
   search: () => <Placeholder title="Search" />,
-  settings: () => <Placeholder title="Settings" />,
 };

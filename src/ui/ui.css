@@ -179,6 +179,7 @@
 
 .dialog {
   min-width: 700px;
+  max-width: 1600px; /* long action lists (languages) wrap into rows */
   padding: 48px;
   border-radius: 12px;
   background: #1e1e26;
@@ -187,4 +188,67 @@
 
 .dialog h2 {
   margin: 0 0 40px 0;
+}
+
+.dialog .btn {
+  margin: 8px 12px;
+}
+
+.dialog .spinner {
+  margin: 0 auto 32px auto;
+}
+
+/* TextField */
+.field {
+  display: flex;
+  align-items: center;
+  width: 1000px;
+  margin: 0 0 16px 24px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: #1e1e26;
+}
+
+.field.focused {
+  box-shadow: 0 0 0 5px #f0f0f0;
+}
+
+.field span {
+  width: 260px;
+}
+
+.field input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 6px;
+  background: #2a2a33;
+  color: #f0f0f0;
+  font: inherit;
+}
+
+/* Setup / Settings */
+.setup .hint,
+.setup .status,
+.settings p,
+.settings h2 {
+  margin: 0 0 24px 24px;
+}
+
+.setup-actions {
+  margin: 32px 0 24px 24px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  margin: 0 0 24px 24px;
+}
+
+.settings-row span {
+  width: 260px;
+}
+
+.settings-row b {
+  width: 560px;
 }

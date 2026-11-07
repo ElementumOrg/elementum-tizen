@@ -1,0 +1,15 @@
+{
+  "nav.movies": "Filmes",
+  "nav.shows": "Séries",
+  "nav.search": "Pesquisar",
+  "nav.settings": "Definições",
+  "common.yes": "Sim",
+  "common.no": "Não",
+  "setup.ip": "Endereço IP",
+  "setup.port": "Porta",
+  "setup.user": "Autenticação",
+  "setup.password": "Senha",
+  "setup.save": "Guardar",
+  "settings.language": "Idioma",
+  "settings.language_auto": "Automático"
+}

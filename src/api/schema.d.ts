@@ -189,8 +189,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Search TMDB
-         * @description `multi` returns movies and shows.
+         * Search TMDB movies or shows
+         * @description One media type per call; search movies and shows with two calls.
          */
         get: operations["search"];
         put?: never;
@@ -472,11 +472,8 @@ export interface components {
         ShowListName: "popular" | "trending" | "top_rated" | "on_the_air" | "by_genre";
         /** @enum {string} */
         TraktChartName: "trending" | "popular" | "anticipated" | "watched" | "played";
-        /**
-         * @default multi
-         * @enum {string}
-         */
-        SearchType: "movie" | "show" | "multi";
+        /** @enum {string} */
+        SearchType: "movie" | "show";
         MediaItem: {
             type: components["schemas"]["MediaType"];
             /** @example 603 */
@@ -522,7 +519,9 @@ export interface components {
             /** @example 10 */
             total_pages: number;
             /**
-             * @description Null when the source can't tell.
+             * @description Null when the source can't tell. For library, tracker and Trakt lists it counts the source's
+             *     entries, and a page can hold fewer than `limit` items when some can't be resolved to TMDB, so
+             *     page by `total_pages`.
              * @example 200
              */
             total_results: number | null;
@@ -720,7 +719,8 @@ export interface components {
             /** @example 1 */
             total_pages: number;
             /**
-             * @description Null when the source can't tell.
+             * @description Counts the tracker's shows in progress. A page can hold fewer than `limit` items when some can't
+             *     be resolved to TMDB, so page by `total_pages`.
              * @example 3
              */
             total_results: number | null;
@@ -735,7 +735,8 @@ export interface components {
         };
         Stream: {
             /**
-             * @description Magnet or .torrent URL; pass it to `createPlayback` as is.
+             * @description A magnet link, a provider http(s) URL, or a `.torrent` path on the Elementum host.
+             *     Opaque: send it back only to `createPlayback`, as is.
              * @example magnet:?xt=urn:btih:...
              */
             uri: string;
@@ -881,24 +882,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["MediaItemPage"];
-            };
-        };
-        /** @description OK */
-        GenreList: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["Genre"][];
-            };
-        };
-        /** @description OK */
-        StreamList: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["Stream"][];
             };
         };
         /** @description Invalid parameters or body (`bad_request`) */
@@ -1116,7 +1099,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["responses"]["GenreList"];
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Genre"][];
+                };
+            };
             401: components["responses"]["Unauthorized"];
             default: components["responses"]["Error"];
         };
@@ -1163,7 +1154,16 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["responses"]["StreamList"];
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stream"][];
+                };
+            };
+            400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
             502: components["responses"]["ProvidersUnavailable"];
@@ -1215,7 +1215,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["responses"]["GenreList"];
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Genre"][];
+                };
+            };
             401: components["responses"]["Unauthorized"];
             default: components["responses"]["Error"];
         };
@@ -1296,7 +1304,16 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["responses"]["StreamList"];
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stream"][];
+                };
+            };
+            400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
             502: components["responses"]["ProvidersUnavailable"];
@@ -1307,7 +1324,7 @@ export interface operations {
         parameters: {
             query: {
                 query: string;
-                type?: components["schemas"]["SearchType"];
+                type: components["schemas"]["SearchType"];
                 page?: components["parameters"]["PageParam"];
                 /** @description Page size. Defaults to Elementum's `results_per_page` setting. */
                 limit?: components["parameters"]["LimitParam"];
@@ -1523,6 +1540,7 @@ export interface operations {
             };
             header?: never;
             path: {
+                /** @description The tracker's list id, as listed by `/tracker/lists` (e.g. `12345` or Simkl's `status:watching`). */
                 list_id: string;
             };
             cookie?: never;

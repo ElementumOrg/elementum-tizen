@@ -1,0 +1,15 @@
+{
+  "nav.movies": "Ταινίες",
+  "nav.shows": "Τηλεοπτικές Σειρές",
+  "nav.search": "Αναζήτηση",
+  "nav.settings": "Ρυθμίσεις",
+  "common.yes": "Ναι",
+  "common.no": "Όχι",
+  "setup.ip": "Διεύθυνση ip",
+  "setup.port": "Θύρα",
+  "setup.user": "Σύνδεση",
+  "setup.password": "Συνθηματικό",
+  "setup.save": "Αποθήκευση",
+  "settings.language": "Γλώσσα",
+  "settings.language_auto": "Αυτόματα"
+}

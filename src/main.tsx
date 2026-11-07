@@ -5,18 +5,28 @@ import { FocusContext, GetBoundingClientRectAdapter, init, useFocusable } from '
 import './base.css';
 import './ui/ui.css';
 import { initKeys, onKey } from './nav/keys';
-import { exitApp, LayerContext, layerKey, stack, type Entry } from './nav/stack';
+import { LayerContext, layerKey, stack, type Entry } from './nav/stack';
 import { Sidebar, type Tab } from './ui/Sidebar';
-import { Dialog } from './ui/Dialog';
-import { t } from './i18n';
+import { ExitDialog } from './ui/Dialog';
+import { Button } from './ui/Button';
+import { ErrorView } from './ui/ErrorView';
+import { Spinner } from './ui/Spinner';
+import { initLanguage, language, onLanguageChange, t } from './i18n';
+import { ApiError, errorText, get } from './api/client';
+import { markBooted, openSetup, setupIsOpen, WaitingDialog } from './connection';
+import { loadServer } from './settings';
+import { Settings } from './screens/Settings';
 import { demoScreens } from './demo';
 
 // getBoundingClientRect so positions include the Row/Grid track transforms; throttle keeps held keys smooth on old TVs.
 init({ layoutAdapter: GetBoundingClientRectAdapter, throttle: 80, throttleKeypresses: true });
 initKeys();
 
-/** One stack entry. Lower entries stay mounted but hidden, so their state and focus keys survive a push. */
-const Layer = memo(function Layer({ entry, visible }: { entry: Entry; visible: boolean }) {
+/**
+ * One stack entry. Lower entries stay mounted but hidden, so their state and focus keys survive a push.
+ * `lang` is unused here: a new value makes memo re-render the whole layer after a language switch.
+ */
+const Layer = memo(function Layer({ entry, visible }: { entry: Entry; visible: boolean; lang: string }) {
   const { ref, focusKey, focusSelf } = useFocusable({
     focusKey: layerKey(entry.id),
     isFocusBoundary: true,
@@ -60,29 +70,68 @@ function Root() {
       <Sidebar current={tab} onSelect={setTab} />
       <FocusContext.Provider value={content.focusKey}>
         <div ref={content.ref} class="content">
-          {demoScreens[tab]()}
+          {tab === 'settings' ? <Settings /> : demoScreens[tab]()}
         </div>
       </FocusContext.Provider>
-      {exitOpen && (
-        <Dialog
-          title={t('exit.title')}
-          onClose={() => setExitOpen(false)}
-          actions={[
-            { label: t('common.no'), onPress: () => setExitOpen(false) },
-            { label: t('common.yes'), onPress: () => (exitApp(), setExitOpen(false)) }, // closes in a browser
-          ]}
-        />
-      )}
+      {exitOpen && <ExitDialog onClose={() => setExitOpen(false)} />}
     </div>
+  );
+}
+
+/**
+ * First screen: connects (Setup on first run or 401; network errors wait in the client's waiting dialog),
+ * then replaces itself with Root.
+ */
+function Boot() {
+  const [error, setError] = useState<unknown>(null);
+  const connect = async () => {
+    setError(null);
+    for (;;) {
+      if (!loadServer().ip) {
+        await openSetup();
+        continue;
+      }
+      try {
+        await get('/system/info');
+        // The server came up while Setup is open: let the user finish there, then connect with what was saved.
+        if (!setupIsOpen()) break;
+        await openSetup();
+      } catch (e) {
+        // The client already opened Setup on 401; openSetup returns that one.
+        if (e instanceof ApiError && e.kind === 'unauthorized') await openSetup();
+        else return setError(e);
+      }
+    }
+    markBooted();
+    stack.replace(() => <Root />);
+  };
+  useEffect(() => void connect(), []);
+  if (!error) return <Spinner />;
+  return (
+    <ErrorView message={errorText(error)} onRetry={connect}>
+      <Button label={t('waiting.change_server')} onPress={() => void openSetup().then(connect)} />
+    </ErrorView>
   );
 }
 
 function App() {
   const [, rerender] = useState(0);
-  useEffect(() => stack.subscribe(() => rerender((n) => n + 1)), []);
+  useEffect(() => {
+    const update = () => rerender((n) => n + 1);
+    const offs = [stack.subscribe(update), onLanguageChange(update)];
+    update(); // children's effects (Boot pushing Setup) ran before this subscription
+    return () => offs.forEach((off) => off());
+  }, []);
   const entries = stack.entries;
-  return <>{entries.map((e, i) => <Layer key={e.id} entry={e} visible={i === entries.length - 1} />)}</>;
+  return (
+    <>
+      {entries.map((e, i) => <Layer key={e.id} entry={e} visible={i === entries.length - 1} lang={language()} />)}
+      <WaitingDialog />
+    </>
+  );
 }
 
-stack.push(() => <Root />);
-render(<App />, document.getElementById('app')!);
+void initLanguage().then(() => {
+  stack.push(() => <Boot />);
+  render(<App />, document.getElementById('app')!);
+});

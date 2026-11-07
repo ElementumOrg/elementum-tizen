@@ -1,0 +1,14 @@
+{
+  "nav.movies": "Filmy",
+  "nav.shows": "TV seriály",
+  "nav.search": "Vyhľadať",
+  "nav.settings": "Nastavenia",
+  "common.yes": "Áno",
+  "common.no": "Nie",
+  "setup.ip": "IP adresa",
+  "setup.user": "Meno",
+  "setup.password": "Heslo",
+  "setup.save": "Uložiť",
+  "settings.language": "Jazyk",
+  "settings.language_auto": "Automaticky"
+}

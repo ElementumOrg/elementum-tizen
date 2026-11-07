@@ -1,0 +1,15 @@
+{
+  "nav.movies": "Films",
+  "nav.shows": "Series",
+  "nav.search": "Zoeken",
+  "nav.settings": "Instellingen",
+  "common.yes": "Ja",
+  "common.no": "Nee",
+  "setup.ip": "IP-adres",
+  "setup.port": "Poort",
+  "setup.user": "Inloggen",
+  "setup.password": "Wachtwoord",
+  "setup.save": "Opslaan",
+  "settings.language": "Taal",
+  "settings.language_auto": "Automatisch"
+}

@@ -1,0 +1,14 @@
+{
+  "nav.movies": "Filme",
+  "nav.shows": "Seriale",
+  "nav.search": "Caută",
+  "nav.settings": "Setări",
+  "common.yes": "Da",
+  "common.no": "Nu",
+  "setup.ip": "Adresă IP",
+  "setup.user": "Autentificare",
+  "setup.password": "Parolă",
+  "setup.save": "Salvează",
+  "settings.language": "Limbă",
+  "settings.language_auto": "Automat"
+}

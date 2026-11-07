@@ -1,0 +1,15 @@
+{
+  "nav.movies": "Elokuvat",
+  "nav.shows": "Tv-sarjat",
+  "nav.search": "Etsi",
+  "nav.settings": "Asetukset",
+  "common.yes": "Kyllä",
+  "common.no": "Ei",
+  "setup.ip": "IP-osoite",
+  "setup.port": "Portti",
+  "setup.user": "Käyttäjätunnus",
+  "setup.password": "Salasana",
+  "setup.save": "Tallenna",
+  "settings.language": "Kieli",
+  "settings.language_auto": "Automaattinen"
+}

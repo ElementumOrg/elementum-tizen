@@ -1,0 +1,13 @@
+{
+  "nav.movies": "Filme",
+  "nav.shows": "TV-Serien",
+  "nav.search": "Suche",
+  "nav.settings": "Einstellungen",
+  "common.yes": "Ja",
+  "common.no": "Nein",
+  "setup.ip": "IP-Adresse",
+  "setup.password": "Passwort",
+  "setup.save": "Speichern",
+  "settings.language": "Sprache",
+  "settings.language_auto": "Automatisch"
+}

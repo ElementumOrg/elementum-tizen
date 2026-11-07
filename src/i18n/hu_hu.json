@@ -1,0 +1,14 @@
+{
+  "nav.movies": "Filmek",
+  "nav.shows": "Sorozatok",
+  "nav.search": "Keresés",
+  "nav.settings": "Beállítások",
+  "common.yes": "Igen",
+  "common.no": "Nem",
+  "setup.ip": "IP-cím",
+  "setup.user": "Felhasználónév",
+  "setup.password": "Jelszó",
+  "setup.save": "Mentés",
+  "settings.language": "Nyelv",
+  "settings.language_auto": "Automatikus"
+}
