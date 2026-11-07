@@ -132,14 +132,14 @@ Independent steps may run in parallel worktrees (see the dependency column).
 |---|---|---|---|
 | 0 ✅ | elementum (read-only) | Internals spike → `docs/elementum-notes.md` | — |
 | A1 ✅ | elementum | API foundation + full spec 👤 | 0 |
-| A2 | elementum | Catalog & search endpoints | A1 |
+| A2 ✅ | elementum | Catalog & search endpoints | A1 |
 | A3 | elementum | Library, tracker & Trakt charts | A2 (reuses its MediaItem mapping) |
-| A4 | elementum | Stream search endpoint | A1 |
+| A4 ✅ | elementum | Stream search endpoint | A1 |
 | A5 | elementum | Playback sessions 👤 | A4 |
-| B1 | tizen | Scaffold | A1 |
-| B2 | tizen | CI, packaging, INSTALL.md 👤 | B1 |
+| B1 ✅ | tizen | Scaffold | A1 |
+| B2 ✅ | tizen | CI, packaging, INSTALL.md 👤 (TV install pending) | B1 |
 | B3 | tizen | API client, setup screen, settings, i18n | B1 |
-| B4 | tizen | Navigation shell & UI kit | B1 |
+| B4 ✅ | tizen | Navigation shell & UI kit | B1 |
 | B5 | tizen | Browse screens (Home, Movies, Shows, Library, Trakt) | A2, A3, B3, B4 |
 | B6 | tizen | Search | A2, B4 |
 | B7 | tizen | Details, seasons, episodes, media | A2, B4 |
@@ -262,6 +262,7 @@ Test on the oldest available TV (performance: image sizes, row windowing); add a
 - 2026-11-07: A4 found and fixed a deadlock in the existing (unused) `SearchMovieSilent`. The search cache and CallbackHost moved from `api` to `providers` to avoid an import cycle.
 - 2026-11-07: A4 review. A client abort does not cancel the search: Burst can't be cancelled inside Kodi, and the finished result warms the cache. Duplicate concurrent searches are accepted, as on the Kodi routes; the TV disables the button while a search runs. `Stream.uri` may expose a host path or a provider URL with a cookie or passkey to API clients; this is accepted for a LAN API, and A5 validates URIs. TMDB outage → 404 is a known limit. Possible hang in the non-silent Kodi search (`providers/search.go:242-262`): out of scope, follow-up.
 - 2026-11-07: (User) Deployment is done with **Apps2Samsung** (`.wgt` from GitHub Releases) instead of TizenBrew. This drops npm publishing, TizenBrew module fields and the spike; AVPlay is the TV player again.
+- 2026-11-07: B2 merged. Apps2Samsung re-signs every `.wgt` with the user's own certificate (verified in its source), so the CI signature only has to be valid. The release asset is `Elementum-<version>.wgt`. Catalog listing is possible via a PR to Apps2Samsung/tizen-community-packages (maintainers' call; their rules exclude apps shipping torrent indexers, which we don't). Until then, users add `ElementumOrg/elementum-tizen` as a custom source.
 - 2026-11-07: Follow-ups outside the plan (pre-existing, not fixed): data races in `cache.NewDBStore` (`dbstore.go:43`) and `reqapi.Request.Do` (`request.go:164`) found by `-race`; possible hang in the non-silent Kodi search (`providers/search.go:242-262`).
 - 2026-11-07: (User) `type=multi` is removed from `/search`: it can't honour `limit` without a TMDB refactor, and the TV calls movie and show search separately.
 - 2026-11-07: B2 research. A TizenBrew module is published to npm (GitHub tags don't contain `dist/`), and pages are served from `http://127.0.0.1:8081` with no `tizen`/`webapis`, so HTML5 `<video>` is used under TizenBrew and AVPlay only in the `.wgt`.
