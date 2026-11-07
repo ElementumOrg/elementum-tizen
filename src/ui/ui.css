@@ -1,0 +1,190 @@
+/* UI kit. Chrome 56: no flex `gap`, no `inset`; no filter/blur (slow on old TVs). Focus = white ring + scale. */
+
+.layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: #101014;
+}
+
+.root {
+  display: flex;
+  height: 1080px;
+}
+
+.content {
+  width: 1640px;
+  height: 1080px;
+  overflow: hidden;
+}
+
+.screen {
+  height: 1080px;
+  overflow: hidden;
+  padding: 40px 0 0 0;
+  box-sizing: border-box;
+}
+
+.screen h1 {
+  margin: 0 0 24px 24px;
+  font-size: 56px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  padding: 120px 0 0 0;
+  background: #17171d;
+}
+
+.sidebar-item {
+  margin: 0 16px 8px 16px;
+  padding: 18px 24px;
+  border-radius: 8px;
+  border-left: 6px solid transparent;
+}
+
+.sidebar-item.active {
+  border-left-color: #3d8bfd;
+}
+
+.sidebar-item.focused {
+  background: #f0f0f0;
+  color: #101014;
+}
+
+/* Row / Grid: absolutely placed cells inside a track moved with transform. */
+.row {
+  margin: 0 0 24px 0;
+}
+
+.row h2 {
+  margin: 0 0 4px 24px;
+  font-size: 36px;
+}
+
+.row-viewport {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+}
+
+.grid {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.track {
+  position: absolute;
+  left: 24px; /* room for the focus scale + ring */
+  top: 20px;
+  transition: transform 0.2s ease-out;
+}
+
+/* Poster: 240x360, stride 264 (Row.tsx / Grid.tsx) */
+.poster {
+  position: absolute;
+  width: 240px;
+  height: 360px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #2a2a33;
+  transition: transform 0.12s ease-out;
+}
+
+.poster.focused {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 5px #f0f0f0;
+  z-index: 1;
+}
+
+.poster-title {
+  display: block;
+  padding: 20px;
+  font-size: 26px;
+}
+
+.poster img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.poster img.loaded {
+  opacity: 1;
+}
+
+/* Button */
+.btn {
+  display: inline-block;
+  margin: 0 24px 0 0;
+  padding: 16px 40px;
+  border-radius: 8px;
+  background: #2a2a33;
+}
+
+.btn.focused {
+  background: #f0f0f0;
+  color: #101014;
+  transform: scale(1.05);
+}
+
+/* Spinner */
+.spinner {
+  width: 80px;
+  height: 80px;
+  margin: 200px auto;
+  border: 8px solid #2a2a33;
+  border-top-color: #3d8bfd;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-view {
+  padding: 200px 0 0 0;
+  text-align: center;
+}
+
+.error-view p {
+  margin: 0 0 40px 0;
+}
+
+/* Dialog */
+.dialog-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.dialog {
+  min-width: 700px;
+  padding: 48px;
+  border-radius: 12px;
+  background: #1e1e26;
+  text-align: center;
+}
+
+.dialog h2 {
+  margin: 0 0 40px 0;
+}

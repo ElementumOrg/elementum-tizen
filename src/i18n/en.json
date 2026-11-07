@@ -1,0 +1,13 @@
+{
+  "nav.home": "Home",
+  "nav.movies": "Movies",
+  "nav.shows": "Shows",
+  "nav.library": "Library",
+  "nav.tracker": "Tracker",
+  "nav.search": "Search",
+  "nav.settings": "Settings",
+  "common.retry": "Retry",
+  "common.yes": "Yes",
+  "common.no": "No",
+  "exit.title": "Exit Elementum?"
+}

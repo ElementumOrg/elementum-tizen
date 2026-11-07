@@ -10,6 +10,8 @@
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
+    // norigin-spatial-navigation imports React types; @preact/preset-vite aliases react to preact/compat at build time.
+    "paths": { "react": ["./node_modules/preact/compat/"] },
     "strict": true,
     "noEmit": true,
     "isolatedModules": true,

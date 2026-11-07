@@ -17,15 +17,3 @@ body {
   position: relative;
 }
 
-.placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.placeholder h1 {
-  font-size: 96px;
-  margin: 0 0 24px;
-}

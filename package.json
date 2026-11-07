@@ -14,6 +14,7 @@
     "api:sync": "node scripts/sync-api.mjs"
   },
   "dependencies": {
+    "@noriginmedia/norigin-spatial-navigation": "3.4.0",
     "preact": "10.29.8"
   },
   "devDependencies": {
