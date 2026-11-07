@@ -21,3 +21,13 @@ npm run api:sync    # copy apiv1/openapi.yaml from Elementum and regenerate src/
 
 `api:sync` reads the spec with `git show $ELEMENTUM_REF:apiv1/openapi.yaml` from the repo at
 `$ELEMENTUM_REPO` (defaults: `../elementum`, ref `api`).
+
+## CI and releases
+
+`.github/workflows/build.yml` runs typecheck and tests, then packages `dist/` into `Elementum-<version>.wgt`
+with the Tizen Studio CLI. Every run uploads the `wgt` and `dist` artifacts. Pushing a tag
+`v<package.json version>` also creates a GitHub Release with the `.wgt`.
+
+Optional repository secrets `TIZEN_AUTHOR_P12_BASE64` (`base64 -w0 author.p12`) and `TIZEN_AUTHOR_PASSWORD` give
+release builds a stable Tizen author certificate. They are used on pushes only; pull requests and runs without
+them sign with a throwaway certificate. Installers re-sign the package for the TV anyway (INSTALL.md).

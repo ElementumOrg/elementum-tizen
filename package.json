@@ -4,6 +4,10 @@
   "private": true,
   "description": "Samsung Tizen TV front-end for Elementum",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElementumOrg/elementum-tizen.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
