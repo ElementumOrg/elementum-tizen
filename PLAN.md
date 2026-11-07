@@ -135,7 +135,7 @@ Independent steps may run in parallel worktrees (see the dependency column).
 | A2 ✅ | elementum | Catalog & search endpoints | A1 |
 | A3 | elementum | Library, tracker & Trakt charts | A2 (reuses its MediaItem mapping) |
 | A4 ✅ | elementum | Stream search endpoint | A1 |
-| A5 | elementum | Playback sessions 👤 | A4 |
+| A5 ✅ | elementum | Playback sessions 👤 (Kodi playback check pending) | A4 |
 | B1 ✅ | tizen | Scaffold | A1 |
 | B2 ✅ | tizen | CI, packaging, INSTALL.md 👤 (TV install pending) | B1 |
 | B3 | tizen | API client, setup screen, settings, i18n | B1 |
