@@ -194,12 +194,14 @@ Vite + Preact + TS, build target `chrome56`, fixed 1920×1080 layout. `config.xm
 
 ### B2 — CI, packaging, install docs
 `.github/workflows/build.yml`: on PR/push run `npm ci`, typecheck, test, and build. Install a pinned, cached Tizen Studio CLI, generate an author certificate (from repo secrets when present, otherwise a throwaway one), `tizen package -t wgt`, and upload the `.wgt` artifact. On a `v*` tag, attach the `.wgt` to a GitHub Release.
+**First, a spike (👤 on a real TV, before anything else in B2):** a throwaway TizenBrew module page that does `fetch('http://<LAN-IP>:65220/api/v1/system/info')` with an Authorization header, registers a media key, checks `webapis.avplay` availability, and prints `location.href`, the result of each check, and `localStorage` sharing. The result decides risk §8.5.
 **TizenBrew module:** add the `package.json` fields TizenBrew needs for an app module (check against TizenBrew's current docs; NuvioTVTizen is a working reference). The tag job must publish the built `dist/` where TizenBrew loads it from, either committed to the release or published to npm, whichever the TizenBrew docs require. Verify on a real TV that AVPlay, key registration, and plain-`http://` LAN requests work from inside TizenBrew.
 `INSTALL.md` covers **Option A (recommended): TizenBrew**: install TizenBrew, add the module `<github-user>/elementum-tizen`, launch. **Option B: `.wgt`**: enabling Developer Mode on the TV (Apps → `12345` → dev mode on, PC IP, reboot); installing the Tizen CLI; `sdb connect <TV_IP>`; creating a Samsung certificate with the TV's DUID in Certificate Manager; re-signing the downloaded `.wgt` with that profile; `tizen install -n ElementumTV.wgt -t <device>`; using the emulator; uninstalling; troubleshooting (cert mismatch, `sdb` not connecting).
 **Done when:** a CI run on a PR produces a `.wgt` artifact. 👤 The user installs the placeholder app on a real TV by following each INSTALL.md option word for word, and fixes go back into the doc.
 
 ### B3 — API client, setup, settings, i18n
-- `api/client.ts`: base URL from settings, Basic auth header, timeout via `AbortController` (60 s for stream search), and errors typed by `error.code`. Unit tests use a mocked `fetch`.
+- `api/client.ts`: base URL from settings, Basic auth header, timeout (60 s for stream search), and errors typed by `error.code`. **Use XHR (`xhr.timeout`/`abort()`), not `fetch`+`AbortController`:** Chrome 56 has no `AbortController`, and its `fetch` can't be aborted.
+- `localStorage` keys are prefixed `elementum.`, since under TizenBrew the origin may be shared with other modules. Unit tests use a mocked `fetch`.
 - Setup screen: IP, port (default Elementum port), user, password, and a "Test connection" button (`/system/info`). It is shown on first run and on 401.
 - Waiting dialog: on a network error/timeout (at startup or any later call), show "Waiting for Elementum at IP:port…" with a spinner. It retries `/system/info` every 3 s and closes on its own once Elementum responds, retrying the call that failed. Buttons: "Change server" (Setup) and "Exit".
 - Settings screen: server, language switcher, about (app + Elementum version).
@@ -227,7 +229,7 @@ The streams screen calls the stream endpoint, with a spinner and cancel. The lis
 **Done when:** the full flow with the legal test torrent reaches the player in Chrome (html5 fallback); the cancel path deletes the session; the poller has a unit test.
 
 ### B9 — Player
-`player/avplay.ts` (`open`, `setDisplayRect(0,0,1920,1080)`, `prepareAsync`, play/pause/seek, `getTotalTrackInfo` for audio and subtitle tracks, buffering and error listeners, suspend/resume on `visibilitychange`) and `player/html5.ts`, both behind the same tiny interface. OSD: title, progress bar, time, play/pause, ±10 s / ±60 s seek, audio/subtitle track menu; it auto-hides. Media keys are handled. `progress` is posted every 10 s; Back/Stop sends `DELETE` and returns to details.
+AVPlay needs `$WEBAPIS/webapis/webapis.js`. Load it conditionally, only on Tizen and only from the path that works in TizenBrew (see the B2 spike). `player/avplay.ts` (`open`, `setDisplayRect(0,0,1920,1080)`, `prepareAsync`, play/pause/seek, `getTotalTrackInfo` for audio and subtitle tracks, buffering and error listeners, suspend/resume on `visibilitychange`) and `player/html5.ts`, both behind the same tiny interface. OSD: title, progress bar, time, play/pause, ±10 s / ±60 s seek, audio/subtitle track menu; it auto-hides. Media keys are handled. `progress` is posted every 10 s; Back/Stop sends `DELETE` and returns to details.
 **Done when:** 👤 the user plays the test torrent plus one real MKV (HEVC + multiple audio tracks) on a real TV: seeking, track switching, and stop all work, and the session is gone in Elementum afterwards.
 
 ### B10 — Hardening & release
@@ -240,7 +242,7 @@ Test on the oldest available TV (performance: image sizes, row windowing); add a
 2. **`/files/` is open today.** It is mounted outside gin (`main.go:281`) with no auth, so anyone on the LAN can read torrent files there. This predates the plan and is left unchanged because Kodi playback depends on it. The new `/api/v1/stream` is HMAC-protected.
 3. **TizenBrew limits:** it is a community tool (the TV stays in Developer Mode; TizenBrew's docs warn about Tizen 8+). The `.wgt` path stays as the fallback.
 4. **Codec support** depends on the TV model (e.g. DTS was dropped on 2018+ models). No transcoding is planned; the UI shows codec badges so users can pick wisely.
-5. **CORS / mixed content on Tizen:** `access origin="*"` + server CORS should cover it; checked in B2 on a real TV.
+5. **TizenBrew loading model (high impact, B2 checks it first).** If TizenBrew serves the module page from an https CDN, `fetch('http://<LAN>:65220')` is blocked as mixed content, and CORS applies with a real origin. Our `config.xml` privileges don't apply there; TizenBrew's do. `$WEBAPIS/webapis.js` may not resolve. B2 starts with a spike on a real TV to settle this. Fallbacks, in order: TizenBrew's own local serving (if it has one); Elementum serving the built app at `/tv/` (same origin, no CORS/mixed content); `.wgt` only.
 6. **Resolved:** the Elementum repo is at `/home/elgato/Develop/elementum` (branch `api` does not exist yet; A1 creates it from `master`). The codegen deps are approved. The app is named `Elementum`, with package id `ElmntmTV01` and app id `ElmntmTV01.Elementum`.
 
 ## 9. Decisions log
@@ -252,6 +254,8 @@ Test on the oldest available TV (performance: image sizes, row windowing); add a
 - 2026-11-06: Reuse first. `/api` handlers call existing Elementum logic; refactor the data out of Kodi-specific code where needed instead of duplicating it.
 - 2026-11-06: Step 0 done. Findings folded in: `apiv1/` package, Auth/CORS reuse, tracker-agnostic endpoints, `multi_provider`, Player external mode for A5, and the existing silent search.
 - 2026-11-06: A1 review. Show lists are `popular, trending, top_rated, on_the_air, by_genre` (not the movie names). There is a single `{media}` param for tracker/trakt, and `media` is required on list items. All lists are paged except `/tracker/lists` and genres. The added error codes are `tracker_unsupported`, `forbidden`, and `playback_failed`. `PlaybackSession.resume_s` is added, and so are `Stream.rip`, `language`, and `info_hash`.
+- 2026-11-07: B1 review. Chrome 56 limits aren't type-checked for DOM/CSS, so: no `AbortController` (use XHR), no flex `gap`, no `import.meta.url`, no code-splitting (single iife bundle). TizenBrew's loading model is a high-impact unknown, so B2 starts with a real-TV spike.
+- 2026-11-07: A4 found and fixed a deadlock in the existing (unused) `SearchMovieSilent`. The search cache and CallbackHost moved from `api` to `providers` to avoid an import cycle.
 - 2026-11-07: (User) Every list endpoint takes `limit` (1–100; default `results_per_page`). Responses add `limit` + `total_results`. The existing fetchers get a `perPage` argument instead of reading the global config.
 - 2026-11-06: Known, unchanged: CORS `*` with auth off by default lets any LAN web page call the API, the same as existing Kodi routes like `/playuri` and `/shutdown`. Document it in the README in B10, and recommend setting a login.
 - 2026-11-06: The app name is `Elementum` (id `ElmntmTV01.Elementum`). `oapi-codegen` + `kin-openapi` are approved for Elementum's `go.mod`.
