@@ -138,7 +138,7 @@ Independent steps may run in parallel worktrees (see the dependency column).
 | A5 ✅ | elementum | Playback sessions 👤 (Kodi playback check pending) | A4 |
 | B1 ✅ | tizen | Scaffold | A1 |
 | B2 ✅ | tizen | CI, packaging, INSTALL.md 👤 (TV install pending) | B1 |
-| B3 | tizen | API client, setup screen, settings, i18n | B1 |
+| B3 ✅ | tizen | API client, setup screen, settings, i18n | B1 |
 | B4 ✅ | tizen | Navigation shell & UI kit | B1 |
 | B5 | tizen | Browse screens (Home, Movies, Shows, Library, Trakt) | A2, A3, B3, B4 |
 | B6 | tizen | Search | A2, B4 |
