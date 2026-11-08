@@ -15,12 +15,12 @@ function storage(init: Record<string, string> = {}) {
   };
 }
 
-test('t fills vars and falls back to English, then to the key', async () => {
+test('t fills vars and falls back to the key', async () => {
   const i = await import('../src/i18n');
   i.setLanguage('de_de');
   expect(i.t('nav.settings')).toBe('Einstellungen');
-  expect(i.t('setup.test')).toBe('Test connection'); // not translated → en
-  expect(i.t('waiting.title', { server: '1.2.3.4:65220' })).toBe('Waiting for Elementum at 1.2.3.4:65220…');
+  expect(i.t('setup.test')).toBe('Verbindung testen');
+  expect(i.t('waiting.title', { server: '1.2.3.4:65220' })).toBe('Warte auf Elementum unter 1.2.3.4:65220 …');
   expect(i.t('no.such.key')).toBe('no.such.key');
   expect(i.apiLang()).toBe('de-DE');
 });
