@@ -295,7 +295,14 @@ User's TV key log: OK sends one `keydown` on press and one `keyup` on release, w
 Elementum must start and run without an active Kodi. Follow lt2http's approach: the addon writes all addon settings to a JSON file (initially and on every settings change), and the binary reads its settings from that file and reloads when it changes, instead of always pulling them from Kodi.
 - **A8a (research, read-only):** compare lt2http (`/home/elgato/Develop/lt2http` plus its Kodi addon) with Elementum (`config.Reload`, the existing `-configPath`/`-exportConfig`, `importConfig`/`exportConfig`, and where Kodi-only values are used: paths via `TranslatePath`, the addon info bundle, `xbmcHost` callbacks), and with the Python addon (`/home/elgato/Develop/plugin.video.elementum`). Write `docs/settings-json.md`: the file format and location, who writes it and when, how Elementum picks it up (startup plus watch/reload trigger), what still needs Kodi (and how to degrade), migration/compatibility, and the step list for Go plus the addon.
 - 👤 The user approves the design, and which addon branch to use, before A8b.
-- **A8b/A8c:** implement it in Elementum (`api`) and in the addon.
+- **A8b/A8c:** implement it in Elementum (`api`) and in the addon (new branch `api` in plugin.video.elementum).
+- **Approved by the user (2026-11-08), all recommendations:**
+  - the addon writes `<profile>/settings.json` atomically (mode 0600) and passes `-configPath`; the file wins when `-configPath` is set;
+  - 2 s mtime polling plus the existing `/reload`;
+  - the binary creates a default file if none exists;
+  - token write-backs go to the file (and to Kodi when connected);
+  - Trakt device auth and Burst search return clear errors without Kodi.
+- **A9 (user idea): a UI host interface.** Elementum's dialogs, notifications, progress and confirmations go through an interface. Kodi is one implementation; another serves clients over HTTP (e.g. the TV app), with Elementum queuing a UI request and the client answering it. The design comes first, in `docs/ui-host.md`.
 
 ## 8. Risks / open questions
 
