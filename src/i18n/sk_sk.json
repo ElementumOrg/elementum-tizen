@@ -18,6 +18,7 @@
   "search.field": "Vyhľadať",
   "buffering.error": "Chyba",
   "player.subtitles": "Titulky",
+  "player.no_tracks": "Žiadna",
   "player.paused": "Pozastavené",
   "common.cancel": "Zrušiť"
 }

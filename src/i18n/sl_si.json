@@ -18,6 +18,7 @@
   "search.field": "Iskanje",
   "buffering.error": "Napaka",
   "player.subtitles": "Podnapisi",
+  "player.no_tracks": "Brez",
   "player.paused": "Zaustavljeno",
   "common.cancel": "Prekliči"
 }

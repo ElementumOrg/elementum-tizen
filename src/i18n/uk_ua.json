@@ -19,6 +19,7 @@
   "search.field": "Пошук",
   "buffering.error": "Помилка",
   "player.subtitles": "Саби",
+  "player.no_tracks": "Нема",
   "player.paused": "Призупинений",
   "common.cancel": "Скасувати"
 }

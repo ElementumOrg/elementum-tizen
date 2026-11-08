@@ -18,6 +18,7 @@
   "search.field": "Etsi",
   "buffering.error": "Virhe",
   "player.subtitles": "Tekstitykset",
+  "player.no_tracks": "Ei mitään",
   "player.paused": "Keskeytetty",
   "common.cancel": "Peruuta"
 }

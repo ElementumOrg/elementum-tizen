@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
-import { formatRate, formatSize, startPoller, streamBadges, type Session, type Stream } from '../src/screens/streams-util';
+import { formatRate, formatSize, playerSession, startPoller, streamBadges, type Session, type Stream } from '../src/screens/streams-util';
 
 const sess = (id: string, state: Session['state']): Session => ({ id, state, buffer_progress: 0, download_rate: 0, seeds: 0, peers: 0, resume_s: null });
 
@@ -92,4 +92,12 @@ test('onSession returning false keeps polling past ready', async () => {
   await vi.advanceTimersByTimeAsync(1000);
   await vi.advanceTimersByTimeAsync(3000);
   expect(f).toHaveBeenCalledTimes(4);
+});
+
+test('playerSession passes the plain title and the item info', () => {
+  const s = { id: 'x', stream_url: 'u', resume_s: 5 };
+  expect(playerSession(s, { title: 'Show', subtitle: 'S1E2 · Pilot', year: 2026, overview: 'o', poster: 'p', backdrops: ['b1', 'b2'] })).toEqual({
+    id: 'x', stream_url: 'u', resume_s: 5, title: 'Show', subtitle: 'S1E2 · Pilot', year: 2026, overview: 'o', poster: 'p', backdrop: 'b1',
+  });
+  expect(playerSession(s, { title: 'T' }).backdrop).toBeUndefined();
 });

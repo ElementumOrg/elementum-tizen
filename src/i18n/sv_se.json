@@ -17,6 +17,7 @@
   "search.field": "Sök",
   "buffering.error": "Fel",
   "player.subtitles": "Undertexter",
+  "player.no_tracks": "Ingen",
   "player.paused": "Pausad",
   "common.cancel": "Avbryt"
 }

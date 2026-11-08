@@ -14,16 +14,18 @@ export const startAt = (resume: number | null) => (resume != null && resume > 30
 
 export type PlayerCmd =
   | { type: 'seek'; by: number }
-  | { type: 'toggle' | 'play' | 'pause' | 'exit' | 'tracks' | 'hide' };
+  | { type: 'toggle' | 'play' | 'pause' | 'exit' | 'tracks' | 'hide' | 'audio' | 'subs' };
 
-/** Left/Right +-10 s, FF/Rewind +-60 s, Up = tracks, Down = hide OSD, Enter/play keys, Back/Stop exit. */
+/** Left/Right +-10 s, FF/Rewind +-60 s, Up = tracks panel, Green/Yellow = next audio/subtitles, Down = hide OSD, Enter/play keys, Back/Stop exit. */
 export function playerCmd(a: Action): PlayerCmd | undefined {
   switch (a) {
     case 'left': return { type: 'seek', by: -10 };
     case 'right': return { type: 'seek', by: 10 };
     case 'rw': return { type: 'seek', by: -60 };
     case 'ff': return { type: 'seek', by: 60 };
-    case 'up': case 'yellow': return { type: 'tracks' };
+    case 'up': return { type: 'tracks' };
+    case 'green': return { type: 'audio' };
+    case 'yellow': return { type: 'subs' };
     case 'down': return { type: 'hide' };
     case 'enter': case 'playpause': return { type: 'toggle' };
     case 'play': return { type: 'play' };
@@ -37,9 +39,9 @@ export function createHider(hide: () => void, ms = 4000) {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const cancel = () => clearTimeout(timer);
   return {
-    poke() {
+    poke(after = ms) {
       cancel();
-      timer = setTimeout(hide, ms);
+      timer = setTimeout(hide, after);
     },
     cancel,
   };

@@ -7,6 +7,12 @@ interface TrackList {
 
 const noop = () => {};
 
+// Dev aid: Chromium has no tracks, so ?fakeTracks=1 fakes some. Vite replaces DEV statically, so production has no stub.
+const fake = import.meta.env.DEV && typeof location !== 'undefined' && /[?&]fakeTracks=1/.test(location.search);
+const fakeSel = { audio: 0, text: 0 };
+const fakeList = (kind: TrackKind): Track[] =>
+  (kind === 'audio' ? ['English 5.1', 'Russian 2.0', 'German'] : ['English', 'Russian']).map((label, index) => ({ index, label, current: index === fakeSel[kind] }));
+
 export function createHtml5(host: HTMLElement): Player {
   const v = document.createElement('video');
   v.className = 'player-video';
@@ -26,6 +32,7 @@ export function createHtml5(host: HTMLElement): Player {
     position: () => v.currentTime || 0,
     duration: () => (isFinite(v.duration) ? v.duration : 0),
     tracks(kind: TrackKind): Track[] {
+      if (fake) return fakeList(kind);
       const list = (kind === 'audio' ? (v as any).audioTracks : v.textTracks) as TrackList | undefined; // audioTracks is not in lib.dom
       const out: Track[] = [];
       for (let i = 0; list && i < list.length; i++) {
@@ -35,6 +42,10 @@ export function createHtml5(host: HTMLElement): Player {
       return out;
     },
     setTrack(kind, index) {
+      if (fake) {
+        fakeSel[kind] = index;
+        return;
+      }
       const list = (kind === 'audio' ? (v as any).audioTracks : v.textTracks) as TrackList | undefined;
       for (let i = 0; list && i < list.length; i++) {
         if (kind === 'audio') list[i].enabled = i === index;

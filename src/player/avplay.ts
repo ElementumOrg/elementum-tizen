@@ -11,9 +11,16 @@ function safe<T>(f: () => T, fallback: T): T {
   }
 }
 
+const CHANNELS: { [n: string]: string } = { '1': '1.0', '2': '2.0', '6': '5.1', '8': '7.1' };
+
 function label(t: AVPlayTrack): string {
-  const info = safe(() => JSON.parse(t.extra_info) as { language?: string; track_lang?: string }, {} as { language?: string; track_lang?: string });
-  return info.language || info.track_lang || String(t.index + 1);
+  const info = safe(() => (JSON.parse(t.extra_info) || {}) as { [k: string]: string | undefined }, {} as { [k: string]: string | undefined });
+  const lang = info.language || info.track_lang || String(t.index + 1);
+  if (t.type !== 'AUDIO') return lang;
+  const codec = info.fourCC || info.codec || '';
+  const ch = info.channels ? CHANNELS[String(info.channels)] || info.channels + 'ch' : '';
+  const tail = [codec, ch].filter(Boolean).join(' ');
+  return tail ? lang + ' \u00B7 ' + tail : lang;
 }
 
 export function createAvplay(host: HTMLElement): Player {
@@ -64,7 +71,9 @@ export function createAvplay(host: HTMLElement): Player {
         av.prepareAsync(
           () => {
             if (closed) return;
-            if (selected('TEXT')) safe(() => av.setSilentSubtitle(false), undefined);
+            const st = selected('TEXT');
+            cur.text = st ? st.index : -1; // so the panel and Yellow know the real state
+            if (st) safe(() => av.setSilentSubtitle(false), undefined);
             const play = () => {
               safe(() => av.play(), undefined);
               p.onBuffering(100);

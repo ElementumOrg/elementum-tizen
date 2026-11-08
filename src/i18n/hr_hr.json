@@ -19,6 +19,7 @@
   "search.field": "Pretraživanje",
   "buffering.error": "Greška",
   "player.subtitles": "Podnaslovi",
+  "player.no_tracks": "Nedostupno",
   "player.paused": "Pauzirano",
   "common.cancel": "Odustani"
 }

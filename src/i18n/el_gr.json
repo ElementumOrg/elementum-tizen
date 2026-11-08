@@ -18,6 +18,7 @@
   "search.field": "Αναζήτηση",
   "buffering.error": "Σφάλμα",
   "player.subtitles": "Υπότιτλοι",
+  "player.no_tracks": "Κανένα",
   "player.paused": "Σε παύση",
   "common.cancel": "Ακύρωση"
 }

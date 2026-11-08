@@ -17,6 +17,7 @@
   "search.field": "Keresés",
   "buffering.error": "Hiba",
   "player.subtitles": "Feliratok",
+  "player.no_tracks": "Nincs",
   "player.paused": "Szüneteltetve",
   "common.cancel": "Mégse"
 }

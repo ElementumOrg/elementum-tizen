@@ -15,6 +15,7 @@
   "search.field": "Zoeken",
   "buffering.error": "Fout",
   "player.subtitles": "Ondertitels",
+  "player.no_tracks": "Geen",
   "player.paused": "Gepauzeerd",
   "common.cancel": "Annuleren"
 }

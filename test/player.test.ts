@@ -128,3 +128,42 @@ test('seeker accumulates rapid keys into one clamped seek after 300 ms', () => {
   expect(k.pending()).toBe(0);
   k.cancel();
 });
+
+import { columnIndices, nextTrack, panelKey, panelMove } from '../src/player/tracks';
+import type { Player, Track } from '../src/player';
+
+const A: Track[] = [{ index: 0, label: 'en', current: true }, { index: 1, label: 'ru', current: false }];
+const S: Track[] = [{ index: 0, label: 'en', current: false }, { index: 1, label: 'ru', current: false }];
+
+test('key mapping: green/yellow cycle tracks', () => {
+  expect(playerCmd('green')).toEqual({ type: 'audio' });
+  expect(playerCmd('yellow')).toEqual({ type: 'subs' });
+});
+
+test('panel cursor moves within bounds and between columns', () => {
+  const rows: [number, number] = [2, 3];
+  expect(panelMove({ col: 0, row: 0 }, 'up', rows)).toEqual({ col: 0, row: 0 });
+  expect(panelMove({ col: 0, row: 1 }, 'down', rows)).toEqual({ col: 0, row: 1 });
+  expect(panelMove({ col: 0, row: 1 }, 'right', rows)).toEqual({ col: 1, row: 1 });
+  expect(panelMove({ col: 1, row: 2 }, 'left', rows)).toEqual({ col: 0, row: 1 });
+  expect(columnIndices('text', S)).toEqual([-1, 0, 1]);
+  expect(columnIndices('audio', A)).toEqual([0, 1]);
+});
+
+test('cycling audio wraps, subtitles pass through Off', () => {
+  expect(nextTrack('audio', A)).toBe(1);
+  expect(nextTrack('audio', [{ index: 0, label: 'a', current: false }, { index: 1, label: 'b', current: true }])).toBe(0);
+  expect(nextTrack('text', S)).toBe(0); // Off -> first
+  expect(nextTrack('text', [S[0], { ...S[1], current: true }])).toBe(-1); // last -> Off
+  expect(nextTrack('audio', [A[0]])).toBeUndefined();
+});
+
+test('panel keys: Enter picks, Back closes, transport keys pass through, the rest is swallowed', () => {
+  const c = { col: 1 as const, row: 0 };
+  expect(panelKey(c, 'enter', A, S)).toEqual({ cursor: c, pick: ['text', -1], handled: true });
+  expect(panelKey({ col: 0, row: 1 }, 'enter', A, S).pick).toEqual(['audio', 1]);
+  expect(panelKey(c, 'back', A, S).close).toBe(true);
+  for (const a of ['stop', 'playpause', 'play', 'pause'] as const) expect(panelKey(c, a, A, S).handled).toBe(false);
+  for (const a of ['red', 'green', 'yellow', 'ff'] as const) expect(panelKey(c, a, A, S)).toEqual({ cursor: c, handled: true });
+  expect(panelKey({ col: 0, row: 0 }, 'right', A, S).cursor).toEqual({ col: 1, row: 0 }); // no subtitle current: Off
+});

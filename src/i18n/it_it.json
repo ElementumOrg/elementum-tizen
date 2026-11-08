@@ -15,6 +15,7 @@
   "search.field": "Cerca",
   "buffering.error": "Errore",
   "player.subtitles": "Sottotitoli",
+  "player.no_tracks": "Nessuno",
   "player.paused": "In pausa",
   "common.cancel": "Annulla"
 }

@@ -16,6 +16,7 @@
   "search.field": "Szukaj",
   "buffering.error": "Błąd",
   "player.subtitles": "Napisy",
+  "player.no_tracks": "Brak",
   "player.paused": "Wstrzymane",
   "common.cancel": "Anuluj"
 }

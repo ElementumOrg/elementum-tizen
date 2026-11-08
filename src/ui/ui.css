@@ -735,3 +735,129 @@
 .dialog .stream-error {
   margin: 0 0 32px 0;
 }
+
+/* Player OSD: item info, gradients, track panel, toast */
+.player-top {
+  height: 260px;
+  padding: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+}
+
+.player-bottom {
+  padding-top: 120px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 0));
+}
+
+.player-info {
+  position: absolute;
+  left: 60px;
+  bottom: 300px;
+  width: 1000px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.player-poster {
+  width: 200px;
+  height: 300px;
+  margin-right: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 20px #000;
+}
+
+.player-info-text {
+  flex: 1;
+  min-width: 0;
+  text-shadow: 0 0 8px #000, 0 0 8px #000;
+}
+
+.player-title {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.player-sub {
+  margin-top: 8px;
+  font-size: 30px;
+}
+
+.player-year {
+  margin-top: 8px;
+  font-size: 26px;
+  color: #c0c0ca;
+}
+
+.player-overview {
+  margin-top: 16px;
+  font-size: 26px;
+  line-height: 36px;
+  max-height: 108px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.tp {
+  z-index: 3;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 760px;
+  height: 880px; /* ends above the progress bar and time */
+  box-sizing: border-box;
+  padding: 60px 40px;
+  display: flex;
+  background: rgba(16, 16, 22, 0.94);
+}
+
+.tp-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tp-col h3 {
+  margin: 0 0 24px 0;
+  font-size: 32px;
+  color: #a0a0aa;
+}
+
+.tp-list {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tp-row {
+  margin: 0 12px 8px 0;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tp-cur {
+  color: #7fb4ff;
+}
+
+.tp-sel {
+  background: #3d8bfd;
+  color: #fff;
+}
+
+.player-toast {
+  z-index: 4;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 32px;
+  background: rgba(16, 16, 22, 0.92);
+}

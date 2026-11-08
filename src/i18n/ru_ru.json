@@ -19,6 +19,7 @@
   "search.field": "Поиск",
   "buffering.error": "Ошибка",
   "player.subtitles": "Субтитры",
+  "player.no_tracks": "Нет",
   "player.paused": "Приостановлен",
   "common.cancel": "Отмена"
 }

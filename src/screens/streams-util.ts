@@ -1,5 +1,6 @@
 import type { components } from '../api/schema';
 import { t } from '../i18n';
+import type { PlayerSession } from './Player';
 
 export type Stream = components['schemas']['Stream'];
 export type Session = components['schemas']['PlaybackSession'];
@@ -71,5 +72,23 @@ export function startPoller(
       stopped = true;
       clearTimeout(timer);
     },
+  };
+}
+
+/** What the player gets from a ready session and the stream target (plain title; episode label, year and overview go in their own OSD lines). */
+export function playerSession(
+  s: { id: string; stream_url: string; resume_s: number | null },
+  target: { title: string; poster?: string; backdrops?: string[]; year?: number | null; subtitle?: string; overview?: string },
+): PlayerSession {
+  return {
+    id: s.id,
+    stream_url: s.stream_url,
+    resume_s: s.resume_s,
+    title: target.title,
+    poster: target.poster,
+    backdrop: target.backdrops && target.backdrops[0],
+    subtitle: target.subtitle,
+    year: target.year,
+    overview: target.overview,
   };
 }

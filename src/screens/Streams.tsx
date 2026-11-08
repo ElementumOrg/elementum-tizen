@@ -12,7 +12,7 @@ import { ErrorView } from '../ui/ErrorView';
 import { ListItem } from '../ui/ListItem';
 import { Spinner } from '../ui/Spinner';
 import { openPlayer } from './Player';
-import { formatRate, formatSize, startPoller, streamBadges, type Poller, type Session, type Stream } from './streams-util';
+import { formatRate, formatSize, playerSession, startPoller, streamBadges, type Poller, type Session, type Stream } from './streams-util';
 
 /** `backdrops`/`poster`/`year`/`subtitle` (episode label, "S1E2 · Pilot")/`overview` are optional context for the backgrounds and the buffering dialog. */
 type Extra = { backdrops?: string[]; poster?: string; year?: number | null; subtitle?: string; overview?: string };
@@ -156,7 +156,7 @@ function Buffering({ first, body, target }: { first: Session; body: PlaybackBody
     if (s.state === 'ready' && s.stream_url) {
       if (!stack.isTop(layer)) return false; // keep polling (keeps the session alive); open the player once on top again
       left.current = true;
-      openPlayer({ id: s.id, stream_url: s.stream_url, resume_s: s.resume_s, title });
+      openPlayer(playerSession({ id: s.id, stream_url: s.stream_url, resume_s: s.resume_s }, target));
     } else if (s.state === 'stopped') {
       left.current = true;
       if (stack.isTop(layer)) stack.pop();
