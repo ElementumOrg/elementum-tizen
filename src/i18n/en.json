@@ -105,7 +105,7 @@
   "player.no_tracks": "None",
   "player.buffering": "Buffering {n}%",
   "player.paused": "Paused",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Up: tracks  |  Green: audio  |  Yellow: subtitles  |  Down: hide  |  Back: stop",
+  "player.hints": "Green: audio  |  Yellow: subtitles",
   "player.progress_warn": "Cannot reach the server; the session may expire",
   "player.error": "Playback error",
   "player.error_text": "The player could not play this stream.",
@@ -130,5 +130,9 @@
   "menu.failed": "Couldn't update",
   "settings.key_test": "Remote key test",
   "settings.key_test_hint": "Hold OK for 2 seconds, then tap it",
-  "keytest.empty": "Press a key on the remote"
+  "keytest.empty": "Press a key on the remote",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Play",
+  "player.pause": "Pause"
 }

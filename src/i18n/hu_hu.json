@@ -105,7 +105,7 @@
   "player.no_tracks": "Nincs",
   "player.buffering": "Pufferelés {n}%",
   "player.paused": "Szüneteltetve",
-  "player.hints": "◀ ▶ 10 mp  |  Rew/FF 60 mp  |  Fel: sávok  |  Zöld: hang  |  Sárga: feliratok  |  Le: elrejtés  |  Vissza: leállítás",
+  "player.hints": "Zöld: hang  |  Sárga: feliratok",
   "player.progress_warn": "A szerver nem érhető el; a munkamenet lejárhat",
   "player.error": "Lejátszási hiba",
   "player.error_text": "A lejátszó nem tudta lejátszani ezt a streamet.",
@@ -130,5 +130,9 @@
   "menu.failed": "A frissítés nem sikerült",
   "settings.key_test": "Távirányító gombteszt",
   "settings.key_test_hint": "Tartsa nyomva az OK gombot 2 másodpercig, majd koppintson rá",
-  "keytest.empty": "Nyomjon meg egy gombot a távirányítón"
+  "keytest.empty": "Nyomjon meg egy gombot a távirányítón",
+  "player.back10": "−10 mp",
+  "player.fwd10": "+10 mp",
+  "player.play": "Lejátszás",
+  "player.pause": "Szünet"
 }

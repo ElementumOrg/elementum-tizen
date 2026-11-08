@@ -36,10 +36,26 @@ export function createAvplay(host: HTMLElement): Player {
   const cur: { audio?: number; text?: number } = {};
   let subTimer: ReturnType<typeof setTimeout> | undefined;
   let closed = false;
+  let want = true; // the user's intent: playing unless they pressed Play/Pause
+  let resumeTimers: Array<ReturnType<typeof setTimeout>> = [];
+  let switching = false;
   const showSub = (text: string, ms: number) => {
     clearTimeout(subTimer);
     sub.textContent = text;
     if (text && ms > 0) subTimer = setTimeout(() => (sub.textContent = ''), ms);
+  };
+  // AVPlay may pause or rebuffer into PAUSED on a track switch; only the user may pause.
+  const fix = () => {
+    if (closed || !want) return;
+    const st = safe(() => av.getState(), '');
+    if (st === 'PAUSED' || st === 'READY') safe(() => av.play(), undefined);
+  };
+  const afterSwitch = () => {
+    switching = true;
+    resumeTimers.forEach(clearTimeout);
+    fix();
+    // keep watching until the first buffering-complete or 10 s (a slow rebuffer can come late)
+    resumeTimers = [300, 1000, 10000].map((ms) => setTimeout(() => (ms === 10000 ? (switching = false) : fix()), ms));
   };
   const selected = (type: string) => safe(() => av.getCurrentStreamInfo(), [] as AVPlayTrack[]).filter((t) => t.type === type)[0];
 
@@ -59,7 +75,7 @@ export function createAvplay(host: HTMLElement): Player {
           av.setListener({
             onbufferingstart: () => p.onBuffering(0),
             onbufferingprogress: (pc) => p.onBuffering(pc),
-            onbufferingcomplete: () => p.onBuffering(100),
+            onbufferingcomplete: () => (p.onBuffering(100), switching && (fix(), (switching = false))),
             onstreamcompleted: () => void setTimeout(() => p.onEnded(), 0),
             onerror: (e) => !closed && p.onError(String(e)),
             onsubtitlechange: (d, text) => showSub(text.replace(/<[^>]*>/g, ''), d),
@@ -75,6 +91,10 @@ export function createAvplay(host: HTMLElement): Player {
             cur.text = st ? st.index : -1; // so the panel and Yellow know the real state
             if (st) safe(() => av.setSilentSubtitle(false), undefined);
             const play = () => {
+              if (!want) { // the user paused before prepare finished
+                p.onBuffering(100);
+                return p.onState(false);
+              }
               safe(() => av.play(), undefined);
               p.onBuffering(100);
               p.onState(true);
@@ -94,10 +114,12 @@ export function createAvplay(host: HTMLElement): Player {
       }
     },
     play() {
+      want = true;
       safe(() => av.play(), undefined);
       p.onState(true);
     },
     pause() {
+      want = false;
       safe(() => av.pause(), undefined);
       p.onState(false);
     },
@@ -125,12 +147,14 @@ export function createAvplay(host: HTMLElement): Player {
       if (kind === 'text') {
         showSub('', 0);
         safe(() => av.setSilentSubtitle(index < 0), undefined);
-        if (index < 0) return;
+        if (index < 0) return afterSwitch();
       }
       safe(() => av.setSelectTrack(kind === 'audio' ? 'AUDIO' : 'TEXT', index), undefined);
+      afterSwitch();
     },
     close() {
       closed = true;
+      resumeTimers.forEach(clearTimeout);
       p.onState = p.onBuffering = p.onError = p.onEnded = noop;
       clearTimeout(subTimer);
       document.removeEventListener('visibilitychange', onVisibility);

@@ -105,7 +105,7 @@
   "player.no_tracks": "Keine",
   "player.buffering": "Puffern {n} %",
   "player.paused": "Pausiert",
-  "player.hints": "◀ ▶ 10 s  |  Zurück/Vor 60 s  |  Auf: Spuren  |  Grün: Audio  |  Gelb: Untertitel  |  Ab: ausblenden  |  Zurück: Stopp",
+  "player.hints": "Grün: Audio  |  Gelb: Untertitel",
   "player.progress_warn": "Server nicht erreichbar; die Sitzung könnte ablaufen",
   "player.error": "Wiedergabefehler",
   "player.error_text": "Der Player konnte diesen Stream nicht abspielen.",
@@ -130,5 +130,9 @@
   "menu.failed": "Aktualisierung fehlgeschlagen",
   "settings.key_test": "Fernbedienungstasten-Test",
   "settings.key_test_hint": "OK 2 Sekunden halten, dann antippen",
-  "keytest.empty": "Drücke eine Taste auf der Fernbedienung"
+  "keytest.empty": "Drücke eine Taste auf der Fernbedienung",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Wiedergabe",
+  "player.pause": "Pause"
 }

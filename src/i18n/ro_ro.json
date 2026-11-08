@@ -105,7 +105,7 @@
   "player.no_tracks": "Niciunul",
   "player.buffering": "Se încarcă {n}%",
   "player.paused": "În pauză",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Sus: piste  |  Verde: audio  |  Galben: subtitrări  |  Jos: ascunde  |  Înapoi: oprește",
+  "player.hints": "Verde: audio  |  Galben: subtitrări",
   "player.progress_warn": "Serverul nu poate fi contactat; sesiunea poate expira",
   "player.error": "Eroare de redare",
   "player.error_text": "Playerul nu a putut reda această sursă.",
@@ -130,5 +130,9 @@
   "menu.failed": "Actualizarea a eșuat",
   "settings.key_test": "Test taste telecomandă",
   "settings.key_test_hint": "Ține apăsat OK 2 secunde, apoi apasă-l scurt",
-  "keytest.empty": "Apasă o tastă de pe telecomandă"
+  "keytest.empty": "Apasă o tastă de pe telecomandă",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Redare",
+  "player.pause": "Pauză"
 }

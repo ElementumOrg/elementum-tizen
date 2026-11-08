@@ -105,7 +105,7 @@
   "player.no_tracks": "Nedostupno",
   "player.buffering": "Međuspremanje {n}%",
   "player.paused": "Pauzirano",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Gore: zapisi  |  Zeleno: zvuk  |  Žuto: podnaslovi  |  Dolje: sakrij  |  Natrag: zaustavi",
+  "player.hints": "Zeleno: zvuk  |  Žuto: podnaslovi",
   "player.progress_warn": "Poslužitelj nije dostupan; sesija bi mogla isteći",
   "player.error": "Greška reprodukcije",
   "player.error_text": "Reproduktor nije mogao reproducirati ovaj izvor.",
@@ -130,5 +130,9 @@
   "menu.failed": "Ažuriranje nije uspjelo",
   "settings.key_test": "Test tipki daljinskog",
   "settings.key_test_hint": "Držite OK 2 sekunde, zatim ga pritisnite",
-  "keytest.empty": "Pritisnite tipku na daljinskom"
+  "keytest.empty": "Pritisnite tipku na daljinskom",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Reproduciraj",
+  "player.pause": "Pauza"
 }

@@ -105,7 +105,7 @@
   "player.no_tracks": "Žiadna",
   "player.buffering": "Načítava sa {n}%",
   "player.paused": "Pozastavené",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Hore: stopy  |  Zelené: zvuk  |  Žlté: titulky  |  Dole: skryť  |  Späť: zastaviť",
+  "player.hints": "Zelené: zvuk  |  Žlté: titulky",
   "player.progress_warn": "Server je nedostupný; relácia môže vypršať",
   "player.error": "Chyba prehrávania",
   "player.error_text": "Prehrávač nedokázal prehrať tento stream.",
@@ -130,5 +130,9 @@
   "menu.failed": "Aktualizácia zlyhala",
   "settings.key_test": "Test tlačidiel ovládača",
   "settings.key_test_hint": "Podržte OK 2 sekundy a potom ho stlačte",
-  "keytest.empty": "Stlačte tlačidlo na ovládači"
+  "keytest.empty": "Stlačte tlačidlo na ovládači",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Prehrať",
+  "player.pause": "Pauza"
 }

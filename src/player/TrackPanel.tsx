@@ -12,12 +12,14 @@ interface Props {
   /** Applies a track at once; the panel stays open. */
   onPick(kind: TrackKind, index: number): void;
   onClose(): void;
+  /** Column to start on: 0 audio, 1 subtitles. */
+  col?: 0 | 1;
 }
 
 /** Right-side panel: Audio and Subtitles columns; it handles its own keys and swallows all others. */
-export function TrackPanel({ audio, text, onPick, onClose }: Props) {
+export function TrackPanel({ audio, text, onPick, onClose, col = 0 }: Props) {
   const layer = useContext(LayerContext);
-  const [cur, setCur] = useState<Cursor>({ col: 0, row: currentRow('audio', audio) });
+  const [cur, setCur] = useState<Cursor>({ col, row: currentRow(col ? 'text' : 'audio', col ? text : audio) });
   const live = useRef({ cur, audio, text, onPick, onClose });
   live.current = { cur, audio, text, onPick, onClose };
   const box = useRef<HTMLDivElement>(null);

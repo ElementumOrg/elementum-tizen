@@ -8,7 +8,7 @@ import { Dialog } from '../ui/Dialog';
 import { TrackPanel } from '../player/TrackPanel';
 import { nextTrack, trackLabel } from '../player/tracks';
 import { create, isAvplay, type Player, type Track } from '../player';
-import { createHider, createReporter, createSeeker, formatTime, playerCmd, startAt } from '../player/util';
+import { createHider, createReporter, createSeeker, formatTime, startAt } from '../player/util';
 
 export interface PlayerSession {
   id: string;
@@ -31,6 +31,21 @@ export function openPlayer(session: PlayerSession) {
 
 type Menu = 'tracks' | 'error' | null;
 
+// Focus order of the button row; PLAY is the primary one.
+const BTNS = ['back10', 'play', 'fwd10', 'audio', 'subs'] as const;
+const PLAY = 1;
+const ICONS: { [k: string]: string } = {
+  back10: 'M12 5V2L7 6.5 12 11V8a6 6 0 1 1-6 6H4a8 8 0 1 0 8-9z',
+  fwd10: 'M12 5V2l5 4.5L12 11V8a6 6 0 1 0 6 6h2a8 8 0 1 1-8-9z',
+  play: 'M8 5v14l11-7z',
+  pause: 'M6 5h4v14H6zM14 5h4v14h-4z',
+  audio: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z',
+  subs: 'M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM6 10h4v2H6v-2zm8 6H6v-2h8v2zm4 0h-2v-2h2v2zm0-4h-6v-2h6v2z',
+};
+const Icon = ({ k }: { k: string }) => (
+  <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d={ICONS[k]} /></svg>
+);
+
 function PlayerScreen({ session }: { session: PlayerSession }) {
   const layer = useContext(LayerContext);
   const host = useRef<HTMLDivElement>(null);
@@ -40,11 +55,15 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
   const [pos, setPos] = useState({ p: 0, d: 0 });
   const [seekTo, setSeekTo] = useState<number | null>(null);
   const [menu, setMenu] = useState<Menu>(null);
+  const [panelCol, setPanelCol] = useState<0 | 1>(0);
+  const [focus, setFocus] = useState(PLAY); // 0..4 buttons, -1 = progress bar
   const [tracks, setTracks] = useState<{ audio: Track[]; text: Track[] }>({ audio: [], text: [] });
   const [warn, setWarn] = useState(false);
   const [toast, setToast] = useState('');
-  const api = useRef<{ exit(): void; setTrack(kind: 'audio' | 'text', i: number): void; cycle(kind: 'audio' | 'text'): void; show(): void; menu: Menu }>({ exit() {}, setTrack() {}, cycle() {}, show() {}, menu: null });
+  const api = useRef<{ exit(): void; setTrack(kind: 'audio' | 'text', i: number): void; cycle(kind: 'audio' | 'text'): void; show(): void; menu: Menu; osd: boolean; focus: number }>({ exit() {}, setTrack() {}, cycle() {}, show() {}, menu: null, osd: true, focus: PLAY });
   api.current.menu = menu;
+  api.current.osd = osd;
+  api.current.focus = focus;
 
   // norigin stays paused while the player is up; only the error dialog needs it (the track panel takes keys itself).
   useEffect(() => {
@@ -129,26 +148,49 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
     const off = onKey((a) => {
       if (gone) return true;
       if (api.current.menu === 'error') return false; // the dialog handles its own keys (Back closes it)
-      const c = playerCmd(a);
-      if (!c) return false;
-      // the track panel swallows everything else; only these reach here
-      if (api.current.menu && !/^(toggle|play|pause|exit)$/.test(c.type)) return false;
-      if (c.type !== 'audio' && c.type !== 'subs') show(); // Green/Yellow only toast
-      switch (c.type) {
-        case 'seek': seeker.by(c.by); break;
-        case 'toggle': wasPlaying ? player.pause() : player.play(); break;
-        case 'play': player.play(); break;
-        case 'pause': player.pause(); break;
-        case 'tracks':
-          setTracks({ audio: player.tracks('audio'), text: player.tracks('text') });
-          setMenu('tracks');
-          hider.cancel();
-          break;
-        case 'audio': api.current.cycle('audio'); break;
-        case 'subs': api.current.cycle('text'); break;
-        case 'hide': setOsd(false); hider.cancel(); break;
-        case 'exit': exit(); break;
+      const openPanel = (col: 0 | 1) => {
+        setTracks({ audio: player.tracks('audio'), text: player.tracks('text') });
+        setPanelCol(col);
+        setMenu('tracks');
+        hider.cancel();
+      };
+      const f = api.current.focus;
+      const arrow = a === 'left' || a === 'right' || a === 'up' || a === 'down' || a === 'enter';
+      if (arrow && !api.current.menu) {
+        // Hidden OSD: any arrow or OK only shows it (OK must not pause).
+        if (!api.current.osd) {
+          setFocus(PLAY);
+          show();
+          return true;
+        }
+        show();
+        if (f < 0) {
+          if (a === 'left' || a === 'right') seeker.by(a === 'left' ? -10 : 10);
+          else if (a === 'down') setFocus(PLAY);
+        } else if (a === 'left' || a === 'right') setFocus(Math.max(0, Math.min(BTNS.length - 1, f + (a === 'left' ? -1 : 1))));
+        else if (a === 'up') setFocus(-1);
+        else if (a === 'down') (setOsd(false), hider.cancel());
+        else {
+          const b = BTNS[f];
+          if (b === 'back10') seeker.by(-10);
+          else if (b === 'fwd10') seeker.by(10);
+          else if (b === 'play') wasPlaying ? player.pause() : player.play();
+          else openPanel(b === 'audio' ? 0 : 1);
+        }
+        return true;
       }
+      const transport = a === 'playpause' || a === 'play' || a === 'pause' || a === 'ff' || a === 'rw' || a === 'back' || a === 'stop';
+      if (api.current.menu && !transport) return false; // the track panel swallows everything else
+      if (a === 'green') return api.current.cycle('audio'), true; // Green/Yellow only toast
+      if (a === 'yellow') return api.current.cycle('text'), true;
+      if (!transport) return false;
+      show();
+      if (a === 'ff') seeker.by(60);
+      else if (a === 'rw') seeker.by(-60);
+      else if (a === 'playpause') wasPlaying ? player.pause() : player.play();
+      else if (a === 'play') player.play();
+      else if (a === 'pause') player.pause();
+      else exit();
       return true;
     }, { layer });
     api.current.show = show;
@@ -198,25 +240,38 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
       {osd && (
         <div class="player-osd">
           <div class="player-top" />
-          <div class="player-info">
-            {(session.poster || session.backdrop) && (
-              <img class="player-poster" src={(session.poster || session.backdrop)!} onError={(e) => ((e.currentTarget as HTMLElement).style.display = 'none')} />
-            )}
-            <div class="player-info-text">
-              <div class="player-title">{session.title}</div>
-              {session.subtitle && <div class="player-sub">{session.subtitle}</div>}
-              {session.year && <div class="player-year">{session.year}</div>}
-              {session.overview && <div class="player-overview">{session.overview}</div>}
-            </div>
-          </div>
           <div class="player-bottom">
-            <div class="player-state">
-              {buffering < 100 ? t('player.buffering', { n: Math.round(buffering) }) : playing ? '▶' : '❚❚ ' + t('player.paused')}
+            <div class="player-info">
+              {(session.poster || session.backdrop) && (
+                <img class="player-poster" src={(session.poster || session.backdrop)!} onError={(e) => ((e.currentTarget as HTMLElement).style.display = 'none')} />
+              )}
+              <div class="player-info-text">
+                <div class="player-title">{session.title}</div>
+                {session.subtitle && <div class="player-sub">{session.subtitle}</div>}
+                {session.year && <div class="player-year">{session.year}</div>}
+                {session.overview && <div class="player-overview">{session.overview}</div>}
+              </div>
             </div>
-            <div class="player-bar">
+            {buffering < 100 && <div class="player-state">{t('player.buffering', { n: Math.round(buffering) })}</div>}
+            <div class={'player-bar' + (focus < 0 ? ' player-bar-focus' : '')}>
               <div class="player-bar-fill" style={`width:${pct}%`} />
+              <div class="player-bar-knob" style={`left:${pct}%`} />
             </div>
-            <div class="player-time">{formatTime(shown)} / {formatTime(pos.d)}</div>
+            <div class="player-time">
+              <span>{formatTime(shown)}</span>
+              <span>-{formatTime(Math.max(0, pos.d - shown))}</span>
+            </div>
+            <div class="player-btns">
+              {BTNS.map((b, i) => {
+                const label = b === 'play' ? t(playing ? 'player.pause' : 'player.play') : b === 'audio' ? t('player.audio') : b === 'subs' ? t('player.subtitles') : t('player.' + b);
+                return (
+                  <div key={b} class={'player-btn' + (b === 'play' ? ' player-btn-main' : '') + (focus === i ? ' player-btn-on' : '')}>
+                    <div class="player-btn-ico"><Icon k={b === 'play' && playing ? 'pause' : b} /></div>
+                    <div class="player-btn-label">{label}</div>
+                  </div>
+                );
+              })}
+            </div>
             <div class="player-hints">{t('player.hints')}</div>
             {warn && <div class="player-warn">{t('player.progress_warn')}</div>}
           </div>
@@ -224,7 +279,7 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
       )}
       {toast && <div class="player-toast">{toast}</div>}
       {menu === 'tracks' && (
-        <TrackPanel audio={tracks.audio} text={tracks.text} onPick={(k, i) => api.current.setTrack(k, i)} onClose={closeMenu} />
+        <TrackPanel audio={tracks.audio} text={tracks.text} onPick={(k, i) => api.current.setTrack(k, i)} onClose={closeMenu} col={panelCol} />
       )}
       {menu === 'error' && (
         <Dialog title={t('player.error')} onClose={() => api.current.exit()} actions={[{ label: t('common.back'), onPress: () => api.current.exit() }]}>

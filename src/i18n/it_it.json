@@ -105,7 +105,7 @@
   "player.no_tracks": "Nessuno",
   "player.buffering": "Buffering {n}%",
   "player.paused": "In pausa",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Su: tracce  |  Verde: audio  |  Giallo: sottotitoli  |  Giù: nascondi  |  Indietro: ferma",
+  "player.hints": "Verde: audio  |  Giallo: sottotitoli",
   "player.progress_warn": "Impossibile raggiungere il server; la sessione potrebbe scadere",
   "player.error": "Errore di riproduzione",
   "player.error_text": "Il player non è riuscito a riprodurre questo stream.",
@@ -130,5 +130,9 @@
   "menu.failed": "Aggiornamento non riuscito",
   "settings.key_test": "Test tasti del telecomando",
   "settings.key_test_hint": "Tieni premuto OK per 2 secondi, poi premilo",
-  "keytest.empty": "Premi un tasto del telecomando"
+  "keytest.empty": "Premi un tasto del telecomando",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Riproduci",
+  "player.pause": "Pausa"
 }

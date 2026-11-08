@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
-import { createHider, createReporter, createSeeker, formatTime, playerCmd, startAt } from '../src/player/util';
+import { createHider, createReporter, createSeeker, formatTime, startAt } from '../src/player/util';
 import { create } from '../src/player';
 import { createStack } from '../src/nav/stack';
 
@@ -18,18 +18,6 @@ test('formatTime', () => {
 
 test('startAt resumes only past 30 s', () => {
   expect([startAt(null), startAt(30), startAt(31), startAt(900)]).toEqual([0, 0, 31, 900]);
-});
-
-test('key mapping', () => {
-  expect(playerCmd('left')).toEqual({ type: 'seek', by: -10 });
-  expect(playerCmd('right')).toEqual({ type: 'seek', by: 10 });
-  expect(playerCmd('ff')).toEqual({ type: 'seek', by: 60 });
-  expect(playerCmd('rw')).toEqual({ type: 'seek', by: -60 });
-  expect(playerCmd('up')).toEqual({ type: 'tracks' });
-  expect(playerCmd('enter')).toEqual({ type: 'toggle' });
-  expect(playerCmd('stop')).toEqual({ type: 'exit' });
-  expect(playerCmd('back')).toEqual({ type: 'exit' });
-  expect(playerCmd('red')).toBeUndefined();
 });
 
 test('OSD hides after 4 s without input; poke restarts, cancel stops', () => {
@@ -135,11 +123,6 @@ import type { Player, Track } from '../src/player';
 const A: Track[] = [{ index: 0, label: 'en', current: true }, { index: 1, label: 'ru', current: false }];
 const S: Track[] = [{ index: 0, label: 'en', current: false }, { index: 1, label: 'ru', current: false }];
 
-test('key mapping: green/yellow cycle tracks', () => {
-  expect(playerCmd('green')).toEqual({ type: 'audio' });
-  expect(playerCmd('yellow')).toEqual({ type: 'subs' });
-});
-
 test('panel cursor moves within bounds and between columns', () => {
   const rows: [number, number] = [2, 3];
   expect(panelMove({ col: 0, row: 0 }, 'up', rows)).toEqual({ col: 0, row: 0 });
@@ -163,7 +146,76 @@ test('panel keys: Enter picks, Back closes, transport keys pass through, the res
   expect(panelKey(c, 'enter', A, S)).toEqual({ cursor: c, pick: ['text', -1], handled: true });
   expect(panelKey({ col: 0, row: 1 }, 'enter', A, S).pick).toEqual(['audio', 1]);
   expect(panelKey(c, 'back', A, S).close).toBe(true);
-  for (const a of ['stop', 'playpause', 'play', 'pause'] as const) expect(panelKey(c, a, A, S).handled).toBe(false);
-  for (const a of ['red', 'green', 'yellow', 'ff'] as const) expect(panelKey(c, a, A, S)).toEqual({ cursor: c, handled: true });
+  for (const a of ['stop', 'playpause', 'play', 'pause', 'ff', 'rw'] as const) expect(panelKey(c, a, A, S).handled).toBe(false);
+  for (const a of ['red', 'green', 'yellow'] as const) expect(panelKey(c, a, A, S)).toEqual({ cursor: c, handled: true });
   expect(panelKey({ col: 0, row: 0 }, 'right', A, S).cursor).toEqual({ col: 1, row: 0 }); // no subtitle current: Off
+});
+
+const mkAv = (defer = false) => {
+  let prepared = () => {};
+  let state = 'PLAYING';
+  let listener: any = {};
+  const av: any = {
+    open() {}, setDisplayRect() {}, setListener: (l: any) => (listener = l), setSilentSubtitle() {},
+    prepareAsync: (ok: () => void) => (defer ? (prepared = ok) : ok()), seekTo() {}, stop() {}, close() {}, suspend() {}, restore() {},
+    getCurrentStreamInfo: () => [], getTotalTrackInfo: () => [], getCurrentTime: () => 0, getDuration: () => 0,
+    getState: () => state,
+    play: vi.fn(() => (state = 'PLAYING')),
+    pause: vi.fn(() => (state = 'PAUSED')),
+    setSelectTrack: vi.fn(() => (state = 'PAUSED')), // the TV pauses on a switch
+  };
+  vi.stubGlobal('window', { webapis: { avplay: av } });
+  vi.stubGlobal('document', { createElement: () => ({ setAttribute() {}, remove() {} }), addEventListener() {}, removeEventListener() {} });
+  const host = { appendChild() {}, classList: { add() {} } } as unknown as HTMLElement;
+  const p = create(host);
+  p.open('u', 0);
+  if (!defer) av.play.mockClear();
+  return { av, p, listener: () => listener, prepare: () => prepared() };
+};
+
+test('avplay: a track switch resumes playback only while the user wants to play', () => {
+  let r = mkAv();
+  r.p.setTrack('audio', 1);
+  expect(r.av.play).toHaveBeenCalledTimes(1); // right away
+  r.av.setSelectTrack.mockImplementation(() => {});
+  r.av.getState = () => 'PAUSED';
+  vi.advanceTimersByTime(300);
+  expect(r.av.play).toHaveBeenCalledTimes(2);
+  r.av.play.mockClear();
+  r.listener().onbufferingcomplete();
+  expect(r.av.play).toHaveBeenCalledTimes(1);
+
+  r = mkAv();
+  r.p.pause();
+  r.av.play.mockClear();
+  r.p.setTrack('audio', 1);
+  vi.advanceTimersByTime(2000);
+  expect(r.av.play).not.toHaveBeenCalled();
+
+  r = mkAv();
+  r.p.setTrack('audio', 1);
+  r.av.play.mockClear();
+  r.p.close();
+  vi.advanceTimersByTime(2000);
+  expect(r.av.play).not.toHaveBeenCalled();
+});
+
+test('avplay: a pause before prepare finishes is kept; a long rebuffer after a switch still resumes', () => {
+  let r = mkAv(true);
+  r.p.pause();
+  const onState = vi.fn();
+  r.p.onState = onState;
+  r.prepare();
+  expect(r.av.play).not.toHaveBeenCalled();
+  expect(onState).toHaveBeenLastCalledWith(false);
+
+  r = mkAv();
+  r.p.setTrack('audio', 1);
+  r.av.setSelectTrack.mockImplementation(() => {});
+  r.av.getState = () => 'PLAYING';
+  vi.advanceTimersByTime(3000);
+  r.av.getState = () => 'PAUSED';
+  r.av.play.mockClear();
+  r.listener().onbufferingcomplete();
+  expect(r.av.play).toHaveBeenCalledTimes(1);
 });

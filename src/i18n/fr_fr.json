@@ -105,7 +105,7 @@
   "player.no_tracks": "Aucun(e)",
   "player.buffering": "Mise en mémoire tampon {n} %",
   "player.paused": "Mis en pause",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Haut : pistes  |  Vert : audio  |  Jaune : sous-titres  |  Bas : masquer  |  Retour : arrêter",
+  "player.hints": "Vert : audio  |  Jaune : sous-titres",
   "player.progress_warn": "Serveur injoignable ; la session risque d’expirer",
   "player.error": "Erreur de lecture",
   "player.error_text": "Le lecteur n’a pas pu lire ce flux.",
@@ -130,5 +130,9 @@
   "menu.failed": "Échec de la mise à jour",
   "settings.key_test": "Test des touches de la télécommande",
   "settings.key_test_hint": "Maintenez OK pendant 2 secondes, puis appuyez dessus",
-  "keytest.empty": "Appuyez sur une touche de la télécommande"
+  "keytest.empty": "Appuyez sur une touche de la télécommande",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Lecture",
+  "player.pause": "Pause"
 }

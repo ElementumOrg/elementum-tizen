@@ -105,7 +105,7 @@
   "player.no_tracks": "ללא",
   "player.buffering": "מאגר {n}%",
   "player.paused": "מושהה",
-  "player.hints": "◀ ▶ 10 שנ'  |  Rew/FF 60 שנ'  |  למעלה: רצועות  |  ירוק: שמע  |  צהוב: כתוביות  |  למטה: הסתר  |  חזרה: עצור",
+  "player.hints": "ירוק: שמע  |  צהוב: כתוביות",
   "player.progress_warn": "אין חיבור לשרת; ייתכן שההפעלה תפוג",
   "player.error": "שגיאת הפעלה",
   "player.error_text": "הנגן לא הצליח להפעיל זרם זה.",
@@ -130,5 +130,9 @@
   "menu.failed": "העדכון נכשל",
   "settings.key_test": "בדיקת מקשי שלט",
   "settings.key_test_hint": "החזק OK למשך 2 שניות ואז הקש עליו",
-  "keytest.empty": "לחץ על מקש בשלט"
+  "keytest.empty": "לחץ על מקש בשלט",
+  "player.back10": "−10 שנ'",
+  "player.fwd10": "+10 שנ'",
+  "player.play": "נגן",
+  "player.pause": "השהה"
 }

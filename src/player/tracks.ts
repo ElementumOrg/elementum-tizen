@@ -48,7 +48,7 @@ export interface PanelResult {
 
 /** One key in the panel. Everything except the transport keys is swallowed; Enter picks, Back closes. */
 export function panelKey(c: Cursor, a: Action, audio: Track[], text: Track[]): PanelResult {
-  if (a === 'stop' || a === 'playpause' || a === 'play' || a === 'pause') return { cursor: c, handled: false };
+  if (a === 'stop' || a === 'playpause' || a === 'play' || a === 'pause' || a === 'ff' || a === 'rw') return { cursor: c, handled: false };
   if (a === 'back') return { cursor: c, close: true, handled: true };
   if (a === 'enter') {
     const kind: TrackKind = c.col ? 'text' : 'audio';

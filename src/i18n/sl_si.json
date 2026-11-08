@@ -105,7 +105,7 @@
   "player.no_tracks": "Brez",
   "player.buffering": "Medpomnjenje {n}%",
   "player.paused": "Zaustavljeno",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Gor: sledi  |  Zelena: zvok  |  Rumena: podnapisi  |  Dol: skrij  |  Nazaj: ustavi",
+  "player.hints": "Zelena: zvok  |  Rumena: podnapisi",
   "player.progress_warn": "Strežnik ni dosegljiv; seja lahko poteče",
   "player.error": "Napaka pri predvajanju",
   "player.error_text": "Predvajalnik tega pretoka ni mogel predvajati.",
@@ -130,5 +130,9 @@
   "menu.failed": "Posodobitev ni uspela",
   "settings.key_test": "Preizkus tipk daljinca",
   "settings.key_test_hint": "Držite V redu 2 sekundi, nato ga pritisnite",
-  "keytest.empty": "Pritisnite tipko na daljincu"
+  "keytest.empty": "Pritisnite tipko na daljincu",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Predvajaj",
+  "player.pause": "Premor"
 }

@@ -105,7 +105,7 @@
   "player.no_tracks": "Ninguno",
   "player.buffering": "Almacenando en búfer {n}%",
   "player.paused": "Pausado",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Arriba: pistas  |  Verde: audio  |  Amarillo: subtítulos  |  Abajo: ocultar  |  Atrás: detener",
+  "player.hints": "Verde: audio  |  Amarillo: subtítulos",
   "player.progress_warn": "No se puede conectar con el servidor; la sesión podría caducar",
   "player.error": "Error de reproducción",
   "player.error_text": "El reproductor no pudo reproducir este stream.",
@@ -130,5 +130,9 @@
   "menu.failed": "No se pudo actualizar",
   "settings.key_test": "Prueba de teclas del control remoto",
   "settings.key_test_hint": "Mantén pulsado OK durante 2 segundos y luego púlsalo",
-  "keytest.empty": "Pulsa una tecla del control remoto"
+  "keytest.empty": "Pulsa una tecla del control remoto",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Reproducir",
+  "player.pause": "Pausa"
 }

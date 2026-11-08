@@ -105,7 +105,7 @@
   "player.no_tracks": "Ingen",
   "player.buffering": "Buffrar {n}%",
   "player.paused": "Pausad",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Upp: spår  |  Grön: ljud  |  Gul: undertexter  |  Ner: dölj  |  Tillbaka: stoppa",
+  "player.hints": "Grön: ljud  |  Gul: undertexter",
   "player.progress_warn": "Kan inte nå servern; sessionen kan gå ut",
   "player.error": "Uppspelningsfel",
   "player.error_text": "Spelaren kunde inte spela upp strömmen.",
@@ -130,5 +130,9 @@
   "menu.failed": "Det gick inte att uppdatera",
   "settings.key_test": "Test av fjärrkontrollens knappar",
   "settings.key_test_hint": "Håll in OK i 2 sekunder och tryck sedan på den",
-  "keytest.empty": "Tryck på en knapp på fjärrkontrollen"
+  "keytest.empty": "Tryck på en knapp på fjärrkontrollen",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Spela",
+  "player.pause": "Paus"
 }

@@ -643,15 +643,16 @@
 }
 
 .player-bar {
+  position: relative;
   height: 12px;
   margin: 8px 0;
   border-radius: 6px;
   background: #3a3a44;
-  overflow: hidden;
 }
 
 .player-bar-fill {
   height: 12px;
+  border-radius: 6px;
   background: #3d8bfd;
 }
 
@@ -749,10 +750,8 @@
 }
 
 .player-info {
-  position: absolute;
-  left: 60px;
-  bottom: 300px;
   width: 1000px;
+  margin-bottom: 16px;
   display: flex;
   align-items: flex-end;
 }
@@ -805,7 +804,7 @@
   top: 0;
   right: 0;
   width: 760px;
-  height: 880px; /* ends above the progress bar and time */
+  bottom: 440px; /* ends above the bar, time and buttons, even with the buffering and warning lines */
   box-sizing: border-box;
   padding: 60px 40px;
   display: flex;
@@ -961,4 +960,99 @@
 
 .keytest td {
   padding: 6px 28px 6px 0;
+}
+
+/* Player controls */
+.player-bar-knob {
+  position: absolute;
+  top: -6px;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 0 8px #000;
+}
+
+.player-bar-focus {
+  height: 20px;
+  margin: 4px 0;
+  border-radius: 10px;
+}
+
+.player-bar-focus .player-bar-fill {
+  height: 20px;
+  border-radius: 10px;
+}
+
+.player-bar-focus .player-bar-knob {
+  top: -6px;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  border-radius: 16px;
+  box-shadow: 0 0 0 4px #3d8bfd, 0 0 12px #000;
+}
+
+.player-time {
+  display: flex;
+  justify-content: space-between;
+  font-size: 28px;
+  color: #d0d0da;
+}
+
+.player-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.player-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 150px;
+  margin: 0 12px;
+  padding: 16px 24px 12px 24px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e8e8ee;
+}
+
+.player-btn-main {
+  min-width: 190px;
+  padding-top: 24px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.player-btn-ico svg {
+  display: block;
+  width: 56px;
+  height: 56px;
+}
+
+.player-btn-main .player-btn-ico svg {
+  width: 80px;
+  height: 80px;
+}
+
+.player-btn-label {
+  margin-top: 8px;
+  font-size: 24px;
+}
+
+.player-btn-on {
+  background: #fff;
+  color: #14141a;
+  box-shadow: 0 0 0 6px #3d8bfd, 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.player-hints {
+  margin-top: 12px;
+  font-size: 26px;
+  color: #c8c8d2;
+  text-align: center;
 }

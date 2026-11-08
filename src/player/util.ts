@@ -1,5 +1,3 @@
-import type { Action } from '../nav/keys';
-
 /** 83 -> "1:23", 3725 -> "1:02:05" */
 export function formatTime(s: number): string {
   s = Math.max(0, Math.floor(s || 0));
@@ -11,28 +9,6 @@ export function formatTime(s: number): string {
 
 /** Resume only when it is meaningful (> 30 s in). */
 export const startAt = (resume: number | null) => (resume != null && resume > 30 ? resume : 0);
-
-export type PlayerCmd =
-  | { type: 'seek'; by: number }
-  | { type: 'toggle' | 'play' | 'pause' | 'exit' | 'tracks' | 'hide' | 'audio' | 'subs' };
-
-/** Left/Right +-10 s, FF/Rewind +-60 s, Up = tracks panel, Green/Yellow = next audio/subtitles, Down = hide OSD, Enter/play keys, Back/Stop exit. */
-export function playerCmd(a: Action): PlayerCmd | undefined {
-  switch (a) {
-    case 'left': return { type: 'seek', by: -10 };
-    case 'right': return { type: 'seek', by: 10 };
-    case 'rw': return { type: 'seek', by: -60 };
-    case 'ff': return { type: 'seek', by: 60 };
-    case 'up': return { type: 'tracks' };
-    case 'green': return { type: 'audio' };
-    case 'yellow': return { type: 'subs' };
-    case 'down': return { type: 'hide' };
-    case 'enter': case 'playpause': return { type: 'toggle' };
-    case 'play': return { type: 'play' };
-    case 'pause': return { type: 'pause' };
-    case 'back': case 'stop': return { type: 'exit' };
-  }
-}
 
 /** Calls `hide` after `ms` without `poke()`; `cancel()` stops it (paused, menu open). */
 export function createHider(hide: () => void, ms = 4000) {

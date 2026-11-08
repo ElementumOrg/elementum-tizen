@@ -105,7 +105,7 @@
   "player.no_tracks": "Geen",
   "player.buffering": "Bufferen {n}%",
   "player.paused": "Gepauzeerd",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Omhoog: sporen  |  Groen: audio  |  Geel: ondertitels  |  Omlaag: verbergen  |  Terug: stoppen",
+  "player.hints": "Groen: audio  |  Geel: ondertitels",
   "player.progress_warn": "Server niet bereikbaar; de sessie kan verlopen",
   "player.error": "Afspeelfout",
   "player.error_text": "De speler kon deze stream niet afspelen.",
@@ -130,5 +130,9 @@
   "menu.failed": "Bijwerken mislukt",
   "settings.key_test": "Afstandsbedieningstest",
   "settings.key_test_hint": "Houd OK 2 seconden ingedrukt en tik er daarna op",
-  "keytest.empty": "Druk op een toets van de afstandsbediening"
+  "keytest.empty": "Druk op een toets van de afstandsbediening",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Afspelen",
+  "player.pause": "Pauze"
 }

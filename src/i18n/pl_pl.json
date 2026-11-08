@@ -105,7 +105,7 @@
   "player.no_tracks": "Brak",
   "player.buffering": "Buforowanie {n}%",
   "player.paused": "Wstrzymane",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Góra: ścieżki  |  Zielony: dźwięk  |  Żółty: napisy  |  Dół: ukryj  |  Wstecz: zatrzymaj",
+  "player.hints": "Zielony: dźwięk  |  Żółty: napisy",
   "player.progress_warn": "Brak połączenia z serwerem; sesja może wygasnąć",
   "player.error": "Błąd odtwarzania",
   "player.error_text": "Odtwarzacz nie mógł odtworzyć tego strumienia.",
@@ -130,5 +130,9 @@
   "menu.failed": "Nie udało się zaktualizować",
   "settings.key_test": "Test przycisków pilota",
   "settings.key_test_hint": "Przytrzymaj OK przez 2 sekundy, a potem naciśnij go",
-  "keytest.empty": "Naciśnij przycisk na pilocie"
+  "keytest.empty": "Naciśnij przycisk na pilocie",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Odtwórz",
+  "player.pause": "Pauza"
 }

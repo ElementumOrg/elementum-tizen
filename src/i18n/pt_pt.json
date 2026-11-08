@@ -105,7 +105,7 @@
   "player.no_tracks": "Nenhum",
   "player.buffering": "A carregar {n}%",
   "player.paused": "Em pausa",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Cima: faixas  |  Verde: áudio  |  Amarelo: legendas  |  Baixo: ocultar  |  Voltar: parar",
+  "player.hints": "Verde: áudio  |  Amarelo: legendas",
   "player.progress_warn": "Não é possível contactar o servidor; a sessão pode expirar",
   "player.error": "Erro de reprodução",
   "player.error_text": "O leitor não conseguiu reproduzir este stream.",
@@ -130,5 +130,9 @@
   "menu.failed": "Não foi possível atualizar",
   "settings.key_test": "Teste das teclas do comando",
   "settings.key_test_hint": "Mantenha OK premido durante 2 segundos e depois toque",
-  "keytest.empty": "Prima uma tecla do comando"
+  "keytest.empty": "Prima uma tecla do comando",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Reproduzir",
+  "player.pause": "Pausa"
 }

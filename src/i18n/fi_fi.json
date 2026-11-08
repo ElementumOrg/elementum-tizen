@@ -105,7 +105,7 @@
   "player.no_tracks": "Ei mitään",
   "player.buffering": "Puskuroidaan {n} %",
   "player.paused": "Keskeytetty",
-  "player.hints": "◀ ▶ 10 s  |  Rew/FF 60 s  |  Ylös: raidat  |  Vihreä: ääni  |  Keltainen: tekstitys  |  Alas: piilota  |  Takaisin: pysäytä",
+  "player.hints": "Vihreä: ääni  |  Keltainen: tekstitys",
   "player.progress_warn": "Palvelimeen ei saada yhteyttä; istunto voi vanhentua",
   "player.error": "Toistovirhe",
   "player.error_text": "Soitin ei voinut toistaa tätä streamia.",
@@ -130,5 +130,9 @@
   "menu.failed": "Päivitys epäonnistui",
   "settings.key_test": "Kaukosäätimen näppäintesti",
   "settings.key_test_hint": "Pidä OK painettuna 2 sekuntia ja napauta sitä sitten",
-  "keytest.empty": "Paina kaukosäätimen näppäintä"
+  "keytest.empty": "Paina kaukosäätimen näppäintä",
+  "player.back10": "−10 s",
+  "player.fwd10": "+10 s",
+  "player.play": "Toista",
+  "player.pause": "Tauko"
 }

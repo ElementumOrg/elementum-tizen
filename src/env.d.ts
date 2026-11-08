@@ -41,6 +41,7 @@ interface AVPlayAPI {
   getDuration(): number;
   getTotalTrackInfo(): AVPlayTrack[];
   getCurrentStreamInfo(): AVPlayTrack[];
+  getState(): string;
   setSelectTrack(type: 'AUDIO' | 'TEXT', index: number): void;
   setSilentSubtitle(silent: boolean): void;
 }
