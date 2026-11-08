@@ -273,7 +273,7 @@ The user ran B9's `.wgt` on a real TV. Items are grouped by where the work is. S
 - The audio/subtitle panel has two columns. OK applies a track at once, without closing the panel or pausing.
 - Green cycles audio and Yellow cycles subtitles, including Off.
 - The sidebar switches screens 400 ms after focus settles.
-- List GETs time out after 45 s, with a spinner, instead of 15 s.
+- List GETs time out after 75 s (was 45 s; the user saw 40–60 s), with a spinner, instead of 15 s.
 
 ## 8. Risks / open questions
 
