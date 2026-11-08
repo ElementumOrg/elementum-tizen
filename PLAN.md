@@ -281,9 +281,9 @@ User's TV key log: OK sends one `keydown` on press and one `keyup` on release, w
 
 | ID | Repo | Step | Depends on |
 |---|---|---|---|
-| A7 | elementum (`api`) | Torrents API: list active torrents (name, size, progress, rates, seeds/peers, state, tmdb ids if known), pause/resume, remove with optional file deletion. People API: person details and combined credits as `MediaItem`s. Both reuse Elementum's torrent service and TMDB code. | — |
-| B16 | tizen | Long press = OK still held (no keyup) at 600 ms. Smooth animated scrolling in Row/Grid. Watched posters dimmed. | — |
-| B17 | tizen | Player redesign: human-friendly on-screen controls (Stremio/Nuvio-like focusable icon buttons). Track switch never pauses on AVPlay (check the state after the switch and resume if needed). Pause only from Play/Pause key or button. | — |
+| A7 ✅ | elementum (`api`) | Torrents API: list active torrents (name, size, progress, rates, seeds/peers, state, tmdb ids if known), pause/resume, remove with optional file deletion. People API: person details and combined credits as `MediaItem`s. Both reuse Elementum's torrent service and TMDB code. | — |
+| B16 ✅ | tizen | Long press = OK still held (no keyup) at 600 ms. Smooth animated scrolling in Row/Grid. Watched posters dimmed. | — |
+| B17 ✅ | tizen | Player redesign: human-friendly on-screen controls (Stremio/Nuvio-like focusable icon buttons). Track switch never pauses on AVPlay (check the state after the switch and resume if needed). Pause only from Play/Pause key or button. | — |
 | B18 | tizen | Torrents screen (sidebar entry: list plus pause/resume/remove), and a Person screen from cast cards (header plus Movies/Shows rows) | A7, B16 |
 
 **Decisions:**
