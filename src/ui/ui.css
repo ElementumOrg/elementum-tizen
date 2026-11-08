@@ -272,3 +272,188 @@
   font-size: 32px;
   opacity: 0.7;
 }
+/* Captioned poster (cast, seasons): name + caption sit over the bottom of the image */
+.poster.captioned .poster-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 48px 12px 12px 12px;
+  font-size: 22px;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+}
+
+.poster-title small {
+  display: block;
+  font-size: 20px;
+  opacity: 0.7;
+}
+
+/* Wide row (gallery): 16:9 cells */
+.row.wide .row-viewport {
+  height: 330px;
+}
+
+.row.wide .poster {
+  width: 480px;
+  height: 270px;
+}
+
+/* Details */
+.details {
+  position: relative;
+  padding-top: 0;
+}
+
+.details-bg,
+.details-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+}
+
+.details-shade {
+  background: linear-gradient(to right, rgba(16, 16, 20, 0.95) 25%, rgba(16, 16, 20, 0.4)),
+    linear-gradient(rgba(16, 16, 20, 0), #101014 85%);
+}
+
+.details-head {
+  position: relative;
+  box-sizing: border-box;
+  width: 1100px;
+  height: 620px;
+  padding: 80px 0 0 48px;
+  overflow: hidden;
+}
+
+.details-logo {
+  max-width: 700px;
+  max-height: 200px;
+}
+
+.details-head h1 {
+  margin: 0;
+  font-size: 72px;
+}
+
+.details-meta,
+.details-tagline {
+  margin: 16px 0 0 0;
+  opacity: 0.8;
+}
+
+.details-tagline {
+  font-style: italic;
+}
+
+.details-overview {
+  height: 160px; /* ~4 lines */
+  margin: 16px 0 24px 0;
+  overflow: hidden;
+  line-height: 40px;
+}
+
+.details-h2 {
+  position: relative;
+  margin: 0 0 8px 48px;
+  font-size: 36px;
+}
+
+.details .row {
+  position: relative;
+}
+
+.screen-end {
+  height: 900px; /* lets the last block scroll to the top */
+}
+
+.list-item {
+  position: relative;
+  margin: 0 48px 8px 48px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  background: #1e1e26;
+}
+
+.list-item.focused {
+  box-shadow: 0 0 0 5px #f0f0f0;
+}
+
+/* Season screen */
+.season .episode {
+  display: flex;
+  padding: 12px;
+}
+
+.episode .still {
+  width: 356px;
+  height: 200px;
+  flex: none;
+  background: #2a2a33;
+}
+
+.episode .still img {
+  width: 356px;
+  height: 200px;
+}
+
+.episode .info {
+  flex: 1;
+  height: 200px;
+  padding: 0 0 0 24px;
+  overflow: hidden;
+}
+
+.episode h3 {
+  margin: 0;
+}
+
+.episode p {
+  margin: 8px 0 0 0;
+  line-height: 36px;
+}
+
+/* Image viewer */
+.viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  z-index: 10;
+  background: #000;
+}
+
+.viewer img {
+  width: 1920px;
+  height: 1080px;
+  object-fit: contain;
+}
+
+.viewer span {
+  position: absolute;
+  right: 40px;
+  bottom: 24px;
+}
+
+/* Season screen: fixed title, list scrolls under it */
+.season {
+  position: relative;
+  padding-top: 140px;
+}
+
+.season h1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 1920px;
+  height: 120px;
+  margin: 0;
+  padding: 40px 0 0 48px;
+  box-sizing: border-box;
+  background: #101014;
+}

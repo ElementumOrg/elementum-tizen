@@ -4,6 +4,7 @@ import { useClaimFocus } from '../nav/focus';
 import { Poster, useList, type PosterItem } from './Poster';
 
 const STRIDE = 264; // poster width 240 + 24 margin, keep in sync with ui.css
+const WIDE_STRIDE = 504; // .row.wide poster width 480 + 24 margin
 const BEFORE = 2; // cells kept left of focus (off-screen, so Left has a target)
 const AFTER = 13; // cells right of focus; ~6.5 are visible
 
@@ -14,12 +15,16 @@ interface RowProps<T extends PosterItem> {
   items: T[];
   onSelect: (item: T, index: number) => void;
   onEndReached?: () => void;
+  /** 16:9 cells (image gallery) instead of posters. */
+  wide?: boolean;
+  /** false: don't take focus on mount (a parent claims it instead). */
+  claim?: boolean;
 }
 
 /** Horizontal poster row; the focused poster stays at the left edge and only ~15 cells are in the DOM. */
-export function Row<T extends PosterItem>({ focusKey, title, items, onSelect, onEndReached }: RowProps<T>) {
+export function Row<T extends PosterItem>({ focusKey, title, items, onSelect, onEndReached, wide, claim }: RowProps<T>) {
   const { ref, focusKey: key, focusSelf, hasFocusedChild } = useFocusable({ focusKey, trackChildren: true });
-  useClaimFocus(key, focusSelf);
+  useClaimFocus(key, claim === false ? () => {} : focusSelf);
   const { index, onItemFocus, onItemSelect } = useList(items, onSelect, onEndReached, 6);
 
   // Bring the row into view when focus enters it from another row.
@@ -27,19 +32,20 @@ export function Row<T extends PosterItem>({ focusKey, title, items, onSelect, on
     if (hasFocusedChild) (ref.current as HTMLElement).scrollIntoView(true);
   }, [hasFocusedChild]);
 
+  const stride = wide ? WIDE_STRIDE : STRIDE;
   const cells = [];
   for (let i = Math.max(0, index - BEFORE), end = Math.min(items.length, index + AFTER); i < end; i++) {
     cells.push(
-      <Poster key={i} item={items[i]} focusKey={`${key}-${i}`} index={i} left={i * STRIDE} top={0}
+      <Poster key={i} item={items[i]} focusKey={`${key}-${i}`} index={i} left={i * stride} top={0}
         onFocus={onItemFocus} onSelect={onItemSelect} />,
     );
   }
   return (
     <FocusContext.Provider value={key}>
-      <div ref={ref} class="row">
+      <div ref={ref} class={wide ? 'row wide' : 'row'}>
         {title && <h2>{title}</h2>}
         <div class="row-viewport">
-          <div class="track" style={`transform:translate3d(${-index * STRIDE}px,0,0)`}>{cells}</div>
+          <div class="track" style={`transform:translate3d(${-index * stride}px,0,0)`}>{cells}</div>
         </div>
       </div>
     </FocusContext.Provider>

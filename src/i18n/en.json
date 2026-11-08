@@ -65,5 +65,18 @@
   "chart.popular": "Popular",
   "chart.anticipated": "Anticipated",
   "chart.watched": "Most watched",
-  "chart.played": "Most played"
+  "chart.played": "Most played",
+  "common.back": "Back",
+  "details.find_streams": "Find streams",
+  "details.seasons": "Seasons",
+  "details.specials": "Specials",
+  "details.episodes_count": "{n} episodes",
+  "details.cast": "Cast",
+  "details.gallery": "Images",
+  "details.trailers": "Videos",
+  "details.no_episodes": "No episodes.",
+  "details.image_of": "{i} / {n}",
+  "details.minutes": "{m} min",
+  "details.hours_minutes": "{h} h {m} min",
+  "streams.coming_soon": "Streams (coming soon)"
 }

@@ -6,6 +6,8 @@ import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 export interface PosterItem {
   title: string;
   poster?: string | null;
+  /** Second line; when set, the title and caption stay visible over the bottom of the image (cast, seasons). */
+  caption?: string;
 }
 
 interface PosterProps {
@@ -40,12 +42,12 @@ export const Poster = memo(function Poster({ item, focusKey, index, left, top, o
   return (
     <div
       ref={ref}
-      class={focused ? 'poster focused' : 'poster'}
+      class={'poster' + (focused ? ' focused' : '') + (item.caption ? ' captioned' : '')}
       style={`left:${left}px;top:${top}px`}
       onClick={() => onSelect(index)}
     >
       {/* The title stays underneath; it shows until the image loads, and if it never does. */}
-      <span class="poster-title">{item.title}</span>
+      <span class="poster-title">{item.title}{item.caption && <small>{item.caption}</small>}</span>
       {src && <img src={src} alt="" class={loaded ? 'loaded' : ''} onLoad={() => setLoaded(true)} />}
     </div>
   );
