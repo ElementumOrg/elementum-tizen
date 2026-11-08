@@ -7,6 +7,10 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      // AVPlay only exists on Tizen; the document.write'd classic script blocks, so webapis is ready before the app (deferred) runs.
+      if (typeof tizen !== 'undefined' || /Tizen/.test(navigator.userAgent)) document.write('<script src="$WEBAPIS/webapis/webapis.js"><\/script>');
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

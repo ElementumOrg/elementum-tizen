@@ -15,5 +15,7 @@
   "chart.trending": "Les plus tendances (en ce moment)",
   "search.field": "Rechercher",
   "buffering.error": "Erreur",
+  "player.subtitles": "Sous-titres",
+  "player.paused": "Mis en pause",
   "common.cancel": "Annuler"
 }

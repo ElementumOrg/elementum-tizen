@@ -56,6 +56,17 @@ export function createStack(focus: FocusIO) {
       focus.set(top.focus, top.id);
       return true;
     },
+    /** Removes the entry `id` and the `below` entries under it (never the root), wherever they are. */
+    removeWithBelow(id: number, below: number): boolean {
+      const i = entries.findIndex((e) => e.id === id);
+      if (i < 0) return false;
+      const wasTop = i === entries.length - 1;
+      entries = entries.slice(0, Math.max(1, i - below)).concat(entries.slice(i + 1));
+      emit();
+      const top = entries[entries.length - 1];
+      if (wasTop) focus.set(top.focus, top.id);
+      return true;
+    },
     subscribe(fn: () => void): () => void {
       subs.push(fn);
       return () => {

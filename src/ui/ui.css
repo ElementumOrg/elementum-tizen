@@ -324,7 +324,7 @@
   position: relative;
   box-sizing: border-box;
   width: 1100px;
-  height: 620px;
+  min-height: 620px;
   padding: 80px 0 0 48px;
   overflow: hidden;
 }
@@ -350,7 +350,11 @@
 }
 
 .details-overview {
-  height: 160px; /* ~4 lines */
+  height: auto;
+  max-height: 120px; /* 3 lines */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
   margin: 16px 0 24px 0;
   overflow: hidden;
   line-height: 40px;
@@ -578,7 +582,96 @@
   background: #3d8bfd;
 }
 
-.player video {
-  margin: 0 0 16px 24px;
+.player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
   background: #000;
+}
+
+.player-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  background: #000;
+}
+
+.player.avplay,
+.player.avplay .player-video {
+  background: transparent;
+}
+
+.player-subs {
+  z-index: 1;
+  position: absolute;
+  left: 160px;
+  width: 1600px;
+  bottom: 200px;
+  text-align: center;
+  font-size: 40px;
+  text-shadow: 0 0 6px #000, 0 0 6px #000;
+}
+
+.player-osd {
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+}
+
+.player-top {
+  padding: 40px 60px 60px 60px;
+  font-size: 36px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.player-bottom {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1920px;
+  box-sizing: border-box;
+  padding: 40px 60px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.player-state,
+.player-time {
+  height: 40px;
+  line-height: 40px;
+}
+
+.player-time {
+  text-align: right;
+}
+
+.player-bar {
+  height: 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  background: #3a3a44;
+  overflow: hidden;
+}
+
+.player-bar-fill {
+  height: 12px;
+  background: #3d8bfd;
+}
+
+.player-hints {
+  margin-top: 8px;
+  font-size: 22px;
+  color: #a0a0aa;
+}
+
+.player-warn {
+  margin-top: 8px;
+  font-size: 22px;
+  color: #ffb347;
 }

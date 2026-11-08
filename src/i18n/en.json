@@ -96,5 +96,15 @@
   "buffering.stopped": "Stopped",
   "buffering.choose_file": "Choose a file",
   "buffering.failed": "Playback failed.",
+  "player.off": "Off",
+  "player.audio": "Audio",
+  "player.subtitles": "Subtitles",
+  "player.tracks": "Audio and subtitles",
+  "player.buffering": "Buffering {n}%",
+  "player.paused": "Paused",
+  "player.hints": "\u25C0 \u25B6 10 s  |  Rew/FF 60 s  |  Up: audio and subtitles  |  Down: hide  |  Back: stop",
+  "player.progress_warn": "Cannot reach the server; the session may expire",
+  "player.error": "Playback error",
+  "player.error_text": "The player could not play this stream.",
   "common.cancel": "Cancel"
 }

@@ -14,3 +14,8 @@ test('dist has config.xml with the package.json version, and the icon', () => {
   expect(configXml).toMatch(new RegExp(`<widget [^>]*version="${pkg.version.replace(/\./g, '\\.')}"`));
   expect(icon.length).toBeGreaterThan(0);
 });
+
+test('dist/index.html injects webapis.js on Tizen only', () => {
+  expect(html).toContain('$WEBAPIS/webapis/webapis.js');
+  expect(html).toMatch(/typeof tizen !== 'undefined'[^\n]*document\.write/);
+});
