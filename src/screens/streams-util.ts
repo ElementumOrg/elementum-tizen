@@ -1,4 +1,5 @@
 import type { components } from '../api/schema';
+import { t } from '../i18n';
 
 export type Stream = components['schemas']['Stream'];
 export type Session = components['schemas']['PlaybackSession'];
@@ -6,12 +7,12 @@ export type Session = components['schemas']['PlaybackSession'];
 /** 1.50 GB / 700 MB (1024-based, like most torrent clients). */
 export function formatSize(bytes: number): string {
   const mb = bytes / 1048576;
-  return mb >= 1024 ? (mb / 1024).toFixed(2) + ' GB' : Math.round(mb) + ' MB';
+  return mb >= 1024 ? t('unit.gb', { n: (mb / 1024).toFixed(2) }) : t('unit.mb', { n: Math.round(mb) });
 }
 
 /** 2.5 MB/s / 300 KB/s */
 export function formatRate(bytesPerSec: number): string {
-  return bytesPerSec >= 1048576 ? (bytesPerSec / 1048576).toFixed(1) + ' MB/s' : Math.round(bytesPerSec / 1024) + ' KB/s';
+  return bytesPerSec >= 1048576 ? t('unit.mbps', { n: (bytesPerSec / 1048576).toFixed(1) }) : t('unit.kbps', { n: Math.round(bytesPerSec / 1024) });
 }
 
 /** Badge texts in display order; fields the provider did not report are left out. */

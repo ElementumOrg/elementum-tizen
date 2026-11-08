@@ -6,7 +6,7 @@ import { ApiError, del, errorText, get, post } from '../api/client';
 import { LayerContext, stack } from '../nav/stack';
 import { onKey } from '../nav/keys';
 import { useClaimFocus } from '../nav/focus';
-import { Button } from '../ui/Button';
+import { Backdrop } from '../ui/Backdrop';
 import { Dialog } from '../ui/Dialog';
 import { ErrorView } from '../ui/ErrorView';
 import { ListItem } from '../ui/ListItem';
@@ -14,9 +14,11 @@ import { Spinner } from '../ui/Spinner';
 import { openPlayer } from './Player';
 import { formatRate, formatSize, startPoller, streamBadges, type Poller, type Session, type Stream } from './streams-util';
 
+/** `backdrops`/`poster`/`year`/`subtitle` (episode label, "S1E2 · Pilot")/`overview` are optional context for the backgrounds and the buffering dialog. */
+type Extra = { backdrops?: string[]; poster?: string; year?: number | null; subtitle?: string; overview?: string };
 export type StreamTarget =
-  | { type: 'movie'; tmdb_id: number; title: string }
-  | { type: 'episode'; tmdb_id: number; season: number; episode: number; title: string };
+  | ({ type: 'movie'; tmdb_id: number; title: string } & Extra)
+  | ({ type: 'episode'; tmdb_id: number; season: number; episode: number; title: string } & Extra);
 
 export function openStreams(target: StreamTarget) {
   stack.push(() => <StreamsScreen target={target} />);
@@ -54,20 +56,26 @@ function StreamsScreen({ target }: { target: StreamTarget }) {
   }, [reload]);
 
   const retry = () => setReload((n) => n + 1);
+  let body;
   if (error) {
     const code = error instanceof ApiError ? error.code : '';
     const msg = code === 'providers_unavailable' ? t('streams.providers_unavailable') : code === 'timeout' ? t('streams.timeout') : errorText(error);
-    return <ErrorView message={msg} onRetry={retry} />;
-  }
-  if (!list)
-    return (
+    body = <ErrorView message={msg} onRetry={retry} />;
+  } else if (!list)
+    body = (
       <div class="searching">
         <Spinner />
         <p>{t('streams.searching', { s: secs })}</p>
       </div>
     );
-  if (!list.length) return <ErrorView message={t('streams.none')} onRetry={retry} />;
-  return <StreamList target={target} list={list} />;
+  else if (!list.length) body = <ErrorView message={t('streams.none')} onRetry={retry} />;
+  else body = <StreamList target={target} list={list} />;
+  return (
+    <>
+      <Backdrop images={target.backdrops || []} />
+      {body}
+    </>
+  );
 }
 
 function StreamList({ target, list }: { target: StreamTarget; list: Stream[] }) {
@@ -87,7 +95,7 @@ function StreamList({ target, list }: { target: StreamTarget; list: Stream[] }) 
     post('/playback', { body }).then(
       (session) => {
         busy.current = false;
-        if (alive.current) openBuffering(session, body, target.title);
+        if (alive.current) openBuffering(session, body, target);
         else del('/playback/{id}', { path: { id: session.id }, quiet: true }).catch(() => {});
       },
       (e) => {
@@ -100,7 +108,7 @@ function StreamList({ target, list }: { target: StreamTarget; list: Stream[] }) 
   return (
     <FocusContext.Provider value={focusKey}>
       <div ref={ref} class="screen streams">
-        <h1>{target.title}</h1>
+        <h1>{target.title + (target.subtitle ? ' · ' + target.subtitle : '')}</h1>
         {failed != null && <p class="stream-error">{errorText(failed)}</p>}
         {list.map((s, i) => (
           <ListItem key={i} cls="stream" onPress={() => start(s)}>
@@ -112,7 +120,6 @@ function StreamList({ target, list }: { target: StreamTarget; list: Stream[] }) 
             </div>
           </ListItem>
         ))}
-        <div class="screen-end" />
       </div>
     </FocusContext.Provider>
   );
@@ -120,11 +127,14 @@ function StreamList({ target, list }: { target: StreamTarget; list: Stream[] }) 
 
 type PlaybackBody = components['schemas']['PlaybackRequest'];
 
-function openBuffering(first: Session, body: PlaybackBody, title: string) {
-  stack.push(() => <Buffering first={first} body={body} title={title} />);
+function openBuffering(first: Session, body: PlaybackBody, target: StreamTarget) {
+  stack.push(() => <Buffering first={first} body={body} target={target} />);
 }
 
-function Buffering({ first, body, title }: { first: Session; body: PlaybackBody; title: string }) {
+const ROTATE_S = 8;
+
+function Buffering({ first, body, target }: { first: Session; body: PlaybackBody; target: StreamTarget }) {
+  const title = target.title + (target.subtitle ? ' · ' + target.subtitle : '');
   const layer = useContext(LayerContext);
   const [session, setSession] = useState(first);
   const [error, setError] = useState<unknown>(null);
@@ -186,33 +196,40 @@ function Buffering({ first, body, title }: { first: Session; body: PlaybackBody;
     );
   };
 
-  if (error != null || session.state === 'error') {
-    const msg = error != null ? errorText(error) : (session.error && session.error.message) || t('buffering.failed');
-    return (
-      <div class="screen buffering">
-        <h1>{title}</h1>
-        <p class="stream-error">{msg}</p>
-        <div style="margin-left:24px">
-          <Button label={t('common.back')} onPress={cancel} />
-        </div>
-      </div>
-    );
-  }
+  const failedMsg = error != null || session.state === 'error';
   const pct = Math.max(0, Math.min(100, session.buffer_progress || 0));
+  const picking = session.state === 'choosing_file' && session.files;
   return (
-    <div class="screen buffering">
-      <h1>{title}</h1>
-      <p class="buffer-state">{t('buffering.' + session.state)}</p>
-      <div class="progress"><div class="progress-fill" style={'width:' + pct + '%'} /></div>
-      <p class="buffer-stats">
-        {Math.round(pct) + '% · ' + formatRate(session.download_rate) + ' · ' + t('streams.seeds_peers', { seeds: session.seeds, peers: session.peers })}
-      </p>
-      <div style="margin-left:24px">
-        <Button label={t('common.cancel')} onPress={cancel} />
-      </div>
-      {session.state === 'choosing_file' && session.files && (
-        <Dialog title={t('buffering.choose_file')} onClose={cancel} actions={session.files.map((f) => ({ label: `${f.name} (${formatSize(f.size_bytes)})`, onPress: () => choose(f.index) }))} />
+    <>
+      <Backdrop images={target.backdrops || []} interval={ROTATE_S} />
+      {failedMsg ? (
+        <Dialog
+          clear
+          key="error"
+          title={target.title}
+          onClose={cancel}
+          actions={[{ label: t('common.back'), onPress: cancel }]}
+        >
+          <p class="stream-error">{error != null ? errorText(error) : t('buffering.failed')}</p>
+        </Dialog>
+      ) : picking ? (
+        <Dialog clear key="pick" title={t('buffering.choose_file')} onClose={cancel} actions={session.files!.map((f) => ({ label: `${f.name} (${formatSize(f.size_bytes)})`, onPress: () => choose(f.index) }))} />
+      ) : (
+        <Dialog clear key="buf" title={t('buffering.title')} onClose={cancel} actions={[{ label: t('common.cancel'), onPress: cancel }]}>
+          <div class="buffer-panel">
+            {target.poster && <img src={target.poster} alt="" />}
+            <div class="buffer-info">
+              <h3>{target.title}</h3>
+              {(target.subtitle || target.year) && <p>{target.subtitle || target.year}</p>}
+              <p class="buffer-state">{t('buffering.' + session.state)}</p>
+              <div class="progress"><div class="progress-fill" style={'width:' + pct + '%'} /></div>
+              <p class="buffer-stats">
+                {Math.round(pct) + '% · ' + formatRate(session.download_rate) + ' · ' + t('streams.seeds_peers', { seeds: session.seeds, peers: session.peers })}
+              </p>
+            </div>
+          </div>
+        </Dialog>
       )}
-    </div>
+    </>
   );
 }

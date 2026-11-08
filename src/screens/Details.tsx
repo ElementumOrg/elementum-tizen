@@ -6,6 +6,8 @@ import type { components } from '../api/schema';
 import { onKey } from '../nav/keys';
 import { useClaimFocus } from '../nav/focus';
 import { LayerContext, stack } from '../nav/stack';
+import { Backdrop } from '../ui/Backdrop';
+import { imageList } from '../ui/backdrop-util';
 import { Button } from '../ui/Button';
 import { ErrorView } from '../ui/ErrorView';
 import { ListItem } from '../ui/ListItem';
@@ -109,9 +111,9 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
   );
   const videos = trailers(data.videos);
   return (
+    <>
+    <Backdrop images={imageList([data.backdrop])} />
     <div class="screen details">
-      {data.backdrop && <img class="details-bg" src={data.backdrop} alt="" />}
-      <div class="details-shade" />
       <FocusContext.Provider value={head.focusKey}>
         <div ref={head.ref} class="details-head">
           {logo ? <img class="details-logo" src={logo} alt={data.title} /> : <h1>{data.title}</h1>}
@@ -121,7 +123,7 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
           {item.type === 'movie' && (
             <Button
               label={t('details.find_streams')}
-              onPress={() => openStreams({ type: 'movie', tmdb_id: item.tmdb_id, title: data.title })}
+              onPress={() => openStreams({ type: 'movie', tmdb_id: item.tmdb_id, title: data.title, year: data.year, overview: data.overview, poster: data.poster || undefined, backdrops: imageList([data.backdrop].concat(backdrops)) })}
             />
           )}
         </div>
@@ -130,7 +132,7 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
           claim={false}
           title={t('details.seasons')}
           items={seasonItems}
-          onSelect={(_, i) => openSeason({ tmdb_id: item.tmdb_id, title: data.title }, seasons[i].season_number)}
+          onSelect={(_, i) => openSeason({ tmdb_id: item.tmdb_id, title: data.title, year: data.year, poster: data.poster, backdrops: imageList([data.backdrop].concat(backdrops), 5) }, seasons[i].season_number)}
         />
       )}
       </FocusContext.Provider>
@@ -158,5 +160,6 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
       <div class="screen-end" />
       {viewer >= 0 && <Viewer urls={backdrops} start={viewer} onClose={() => setViewer(-1)} />}
     </div>
+    </>
   );
 }

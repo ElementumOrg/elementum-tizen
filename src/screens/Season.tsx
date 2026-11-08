@@ -5,6 +5,8 @@ import { errorText, get } from '../api/client';
 import type { components } from '../api/schema';
 import { stack } from '../nav/stack';
 import { useClaimFocus } from '../nav/focus';
+import { Backdrop } from '../ui/Backdrop';
+import { big, imageList } from '../ui/backdrop-util';
 import { ErrorView } from '../ui/ErrorView';
 import { ListItem } from '../ui/ListItem';
 import { Spinner } from '../ui/Spinner';
@@ -12,12 +14,14 @@ import { formatRuntime } from './meta';
 import { openStreams } from './Streams';
 
 type Season = components['schemas']['Season'];
+/** `backdrops`/`poster`/`year` are optional context for the backgrounds and the buffering dialog. */
+type Show = { tmdb_id: number; title: string; year?: number | null; poster?: string | null; backdrops?: string[] };
 
-export function openSeason(show: { tmdb_id: number; title: string }, season: number) {
+export function openSeason(show: Show, season: number) {
   stack.push(() => <SeasonScreen show={show} season={season} />);
 }
 
-function SeasonScreen({ show, season }: { show: { tmdb_id: number; title: string }; season: number }) {
+function SeasonScreen({ show, season }: { show: Show; season: number }) {
   const [data, setData] = useState<Season | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [reload, setReload] = useState(0);
@@ -36,12 +40,14 @@ function SeasonScreen({ show, season }: { show: { tmdb_id: number; title: string
 }
 
 // Separate so the focus claim runs once the list (not the spinner) is mounted.
-function Episodes({ show, data }: { show: { tmdb_id: number; title: string }; data: Season }) {
+function Episodes({ show, data }: { show: Show; data: Season }) {
   const [cur, setCur] = useState(0); // stills only load near the focus
   const { ref, focusKey, focusSelf } = useFocusable();
   useClaimFocus(focusKey, focusSelf);
+  const shows = show.backdrops || [];
   return (
     <FocusContext.Provider value={focusKey}>
+      <Backdrop images={imageList(shows.length ? shows : [big(data.poster)])} />
       <div ref={ref} class="screen season">
         <h1>{show.title + ' · ' + data.name}</h1>
         {!data.episodes.length && <p style="margin-left:24px">{t('details.no_episodes')}</p>}
@@ -56,7 +62,12 @@ function Episodes({ show, data }: { show: { tmdb_id: number; title: string }; da
                 tmdb_id: show.tmdb_id,
                 season: e.season_number,
                 episode: e.episode_number,
-                title: `${show.title} · S${e.season_number}E${e.episode_number}`,
+                title: show.title,
+                subtitle: `S${e.season_number}E${e.episode_number} · ${e.name}`,
+                poster: data.poster || show.poster || e.still || undefined,
+                year: show.year,
+                overview: e.overview,
+                backdrops: imageList([big(e.still)].concat(shows.slice(0, 3), data.episodes.filter((x) => x !== e).map((x) => big(x.still)).slice(0, 3))),
               })
             }
           >
@@ -68,7 +79,6 @@ function Episodes({ show, data }: { show: { tmdb_id: number; title: string }; da
             </div>
           </ListItem>
         ))}
-        <div class="screen-end" />
       </div>
     </FocusContext.Provider>
   );

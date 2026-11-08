@@ -13,13 +13,15 @@ interface DialogProps {
   onClose: () => void;
   /** Shown between the title and the actions. */
   children?: ComponentChildren;
+  /** Lighter scrim, for dialogs over a backdrop image. */
+  clear?: boolean;
 }
 
 /**
  * Modal: arrows stay inside, Back closes it, and focus returns to where it was.
  * Opened on a hidden lower layer, it takes no keys or focus; it becomes that layer's restore target on pop instead.
  */
-export function Dialog({ title, actions, onClose, children }: DialogProps) {
+export function Dialog({ title, actions, onClose, children, clear }: DialogProps) {
   const layer = useContext(LayerContext);
   const { ref, focusKey, focusSelf } = useFocusable({ isFocusBoundary: true });
   const close = useRef(onClose);
@@ -47,7 +49,7 @@ export function Dialog({ title, actions, onClose, children }: DialogProps) {
 
   return (
     <FocusContext.Provider value={focusKey}>
-      <div class="dialog-backdrop">
+      <div class={clear ? 'dialog-backdrop clear' : 'dialog-backdrop'}>
         <div ref={ref} class="dialog">
           <h2>{title}</h2>
           {children}

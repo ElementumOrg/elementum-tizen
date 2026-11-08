@@ -316,20 +316,6 @@
   padding-top: 0;
 }
 
-.details-bg,
-.details-shade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1920px;
-  height: 1080px;
-}
-
-.details-shade {
-  background: linear-gradient(to right, rgba(16, 16, 20, 0.95) 25%, rgba(16, 16, 20, 0.4)),
-    linear-gradient(rgba(16, 16, 20, 0), #101014 85%);
-}
-
 .details-head {
   position: relative;
   box-sizing: border-box;
@@ -574,11 +560,6 @@
   color: #ff8a80;
 }
 
-.buffering p,
-.buffering .progress {
-  margin-left: 48px;
-}
-
 .progress {
   width: 900px;
   height: 24px;
@@ -684,4 +665,73 @@
   margin-top: 8px;
   font-size: 22px;
   color: #ffb347;
+}
+
+/* Backdrop: sits behind the screen that follows it */
+.backdrop,
+.backdrop-shade,
+.backdrop img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+}
+
+.backdrop img {
+  object-fit: cover;
+  transition: opacity 1s;
+}
+
+.backdrop-shade {
+  background: linear-gradient(to right, rgba(16, 16, 20, 0.95) 25%, rgba(16, 16, 20, 0.4)),
+    linear-gradient(rgba(16, 16, 20, 0), #101014 85%);
+}
+
+.backdrop ~ .screen,
+.backdrop ~ .searching,
+.backdrop ~ .error-view {
+  position: relative; /* paints above the backdrop; the offsetParent its list rows scroll */
+  z-index: 1;
+}
+
+.dialog-backdrop.clear {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.buffer-panel {
+  display: flex;
+  align-items: center;
+  margin: 0 0 32px 0;
+  text-align: left;
+}
+
+.buffer-panel img {
+  width: 200px;
+  height: 300px;
+  margin-right: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.buffer-panel .buffer-info {
+  width: 800px;
+}
+
+.buffer-panel h3 {
+  margin: 0 0 4px 0;
+  font-size: 40px;
+}
+
+.buffer-panel p {
+  margin: 12px 0 0 0;
+}
+
+.buffer-panel .progress {
+  width: 800px;
+  margin: 16px 0 0 0;
+}
+
+.dialog .stream-error {
+  margin: 0 0 32px 0;
 }

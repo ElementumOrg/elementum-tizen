@@ -108,5 +108,10 @@
   "player.progress_warn": "Cannot reach the server; the session may expire",
   "player.error": "Playback error",
   "player.error_text": "The player could not play this stream.",
-  "common.cancel": "Cancel"
+  "common.cancel": "Cancel",
+  "unit.gb": "{n} GB",
+  "unit.mb": "{n} MB",
+  "unit.mbps": "{n} MB/s",
+  "unit.kbps": "{n} KB/s",
+  "buffering.title": "Starting playback"
 }
