@@ -239,7 +239,7 @@ AVPlay needs `$WEBAPIS/webapis/webapis.js` in `index.html` (loaded only on Tizen
 **Done when:** 👤 the user plays the test torrent plus one real MKV (HEVC + multiple audio tracks) on a real TV: seeking, track switching, and stop all work, and the session is gone in Elementum afterwards.
 
 ### B10 — Hardening & release
-Test on the oldest available TV (performance: image sizes, row windowing); add an error state everywhere, handle a lost connection mid-play, and run a translation sync. README (features, screenshots, link to INSTALL.md). Elementum: API section in its README. Tag `v0.1.0` in this repo → release `.wgt`.
+Test on the oldest available TV (performance: image sizes, row windowing); add an error state everywhere, handle a lost connection mid-play, and run a translation sync. The `.po` sync only fills strings that match the addon's English text exactly, so most app strings are still English in other languages: a subagent drafts translations for the missing keys in all 21 languages, marked for native-speaker review in the README. README (features, screenshots, link to INSTALL.md). Elementum: API section in its README. Tag `v0.1.0` in this repo → release `.wgt`.
 **Done when:** 👤 the user signs off on the release on a real TV.
 
 ## 8. Risks / open questions
