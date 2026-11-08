@@ -237,6 +237,11 @@ The streams screen calls the stream endpoint, with a spinner and cancel. The lis
 **Done when:** the full flow with the legal test torrent reaches the player in Chrome (html5 fallback); the cancel path deletes the session; the poller has a unit test.
 
 ### B9 — Player
+From the B8 review:
+- The player replaces Buffering, so leaving it must return to details (pop twice, or add a `popTo`), not to the stream list.
+- Send progress every 10 s from the start: without a keepalive, the 60 s reaper stops the session and the signed link starts returning 403.
+- Pause norigin while the player is up, including for its Back handling.
+- Don't put the signed `stream_url` on screen.
 AVPlay needs `$WEBAPIS/webapis/webapis.js` in `index.html` (loaded only on Tizen). While the player is active, pause norigin spatial navigation (`pause()`/`resume()`), so the OSD's arrow/seek keys don't also move focus (B4 review). `player/avplay.ts` (`open`, `setDisplayRect(0,0,1920,1080)`, `prepareAsync`, play/pause/seek, `getTotalTrackInfo` for audio and subtitle tracks, buffering and error listeners, suspend/resume on `visibilitychange`) and `player/html5.ts`, both behind the same tiny interface. OSD: title, progress bar, time, play/pause, ±10 s / ±60 s seek, audio/subtitle track menu; it auto-hides. Media keys are handled. `progress` is posted every 10 s; Back/Stop sends `DELETE` and returns to details.
 **Done when:** 👤 the user plays the test torrent plus one real MKV (HEVC + multiple audio tracks) on a real TV: seeking, track switching, and stop all work, and the session is gone in Elementum afterwards.
 
