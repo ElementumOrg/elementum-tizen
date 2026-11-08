@@ -54,6 +54,19 @@ export function keyAction(e: Pick<KeyboardEvent, 'keyCode' | 'target'>): Action 
   return ACTIONS[e.keyCode];
 }
 
+/** Enter's state as the key layer saw it: held (down without an up), and whether the latest down is a fresh press. */
+export const enter = { held: false, last: 0, fresh: false };
+const FRESH_GAP_MS = 300;
+
+/** Updates `enter` for a key event (Enter only); a down is "fresh" when it isn't a repeat and follows the last one by over 300 ms. */
+export function trackEnter(type: 'keydown' | 'keyup', keyCode: number, repeat: boolean, now: number) {
+  if (keyCode !== 13) return;
+  if (type === 'keyup') return void (enter.held = false);
+  enter.fresh = !repeat && now - enter.last > FRESH_GAP_MS;
+  enter.last = now;
+  enter.held = true;
+}
+
 export function initKeys() {
   if (typeof tizen !== 'undefined') {
     for (const k of TIZEN_KEYS) {
@@ -64,7 +77,9 @@ export function initKeys() {
       }
     }
   }
+  window.addEventListener('keyup', (e) => trackEnter('keyup', e.keyCode, false, Date.now()));
   window.addEventListener('keydown', (e) => {
+    trackEnter('keydown', e.keyCode, e.repeat, Date.now());
     const action = keyAction(e);
     if (action && dispatch(action, e, stack.isTop)) e.preventDefault();
   });

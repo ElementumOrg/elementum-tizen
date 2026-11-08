@@ -18,5 +18,9 @@
   "player.subtitles": "Sous-titres",
   "player.no_tracks": "Aucun(e)",
   "player.paused": "Mis en pause",
-  "common.cancel": "Annuler"
+  "common.cancel": "Annuler",
+  "menu.library_add": "Ajouter à la médiathèque",
+  "menu.library_remove": "Supprimer de la médiathèque",
+  "menu.watched": "Marquer comme vu",
+  "menu.unwatched": "Marquer comme non vu"
 }

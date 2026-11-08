@@ -20,5 +20,9 @@
   "player.subtitles": "Legendas",
   "player.no_tracks": "Nenhum",
   "player.paused": "Em pausa",
-  "common.cancel": "Cancelar"
+  "common.cancel": "Cancelar",
+  "menu.library_add": "Adicionar à biblioteca",
+  "menu.library_remove": "Remover da biblioteca",
+  "menu.watched": "Marcar como visto",
+  "menu.unwatched": "Marcar como não visto"
 }

@@ -19,5 +19,9 @@
   "player.subtitles": "Undertexter",
   "player.no_tracks": "Ingen",
   "player.paused": "Pausad",
-  "common.cancel": "Avbryt"
+  "common.cancel": "Avbryt",
+  "menu.library_add": "Lägg till i biblioteket",
+  "menu.library_remove": "Ta bort från biblioteket",
+  "menu.watched": "Markera som sedd",
+  "menu.unwatched": "Markera som osedd"
 }

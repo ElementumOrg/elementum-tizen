@@ -20,5 +20,9 @@
   "player.subtitles": "Titulky",
   "player.no_tracks": "Žiadna",
   "player.paused": "Pozastavené",
-  "common.cancel": "Zrušiť"
+  "common.cancel": "Zrušiť",
+  "menu.library_add": "Pridať do knižnice",
+  "menu.library_remove": "Odstrániť z knižnice",
+  "menu.watched": "Označiť ako pozreté",
+  "menu.unwatched": "Označiť ako nepozreté"
 }

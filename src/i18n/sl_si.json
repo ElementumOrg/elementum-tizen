@@ -20,5 +20,9 @@
   "player.subtitles": "Podnapisi",
   "player.no_tracks": "Brez",
   "player.paused": "Zaustavljeno",
-  "common.cancel": "Prekliči"
+  "common.cancel": "Prekliči",
+  "menu.library_add": "Dodaj v videoteko",
+  "menu.library_remove": "Odstrani iz videoteke",
+  "menu.watched": "Označi kot ogledano",
+  "menu.unwatched": "Označi kot neogledano"
 }

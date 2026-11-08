@@ -21,5 +21,9 @@
   "player.subtitles": "כתוביות",
   "player.no_tracks": "ללא",
   "player.paused": "מושהה",
-  "common.cancel": "ביטול"
+  "common.cancel": "ביטול",
+  "menu.library_add": "הוספה לספריה",
+  "menu.library_remove": "הסרה מהספריה",
+  "menu.watched": "סמן כנצפה",
+  "menu.unwatched": "סמן כלא נצפה"
 }

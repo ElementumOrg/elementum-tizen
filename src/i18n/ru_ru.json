@@ -21,5 +21,9 @@
   "player.subtitles": "Субтитры",
   "player.no_tracks": "Нет",
   "player.paused": "Приостановлен",
-  "common.cancel": "Отмена"
+  "common.cancel": "Отмена",
+  "menu.library_add": "Добавить в библиотеку",
+  "menu.library_remove": "Удалить из библиотеки",
+  "menu.watched": "Отметить просмотренным",
+  "menu.unwatched": "Отметить непросмотренным"
 }

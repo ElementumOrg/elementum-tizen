@@ -9,6 +9,8 @@ import { LayerContext, stack } from '../nav/stack';
 import { Backdrop } from '../ui/Backdrop';
 import { imageList } from '../ui/backdrop-util';
 import { Button } from '../ui/Button';
+import { openItemMenu } from '../ui/ItemMenu';
+import { firstUnwatched, useItemState, useRefreshAfterChanges, type Ref } from '../ui/item-state';
 import { ErrorView } from '../ui/ErrorView';
 import { ListItem } from '../ui/ListItem';
 import { Row } from '../ui/Row';
@@ -77,6 +79,7 @@ function Details({ item }: { item: Item }) {
     req.then(setData, (e) => e.code !== 'aborted' && setError(e));
     return req.abort;
   }, [lang, reload]);
+  useRefreshAfterChanges(() => setReload((n) => n + 1));
 
   if (error) return <ErrorView message={errorText(error)} onRetry={() => setReload((n) => n + 1)} />;
   if (!data) return <Spinner />;
@@ -88,7 +91,6 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
   const [viewer, setViewer] = useState(-1);
   // The header scrolls the screen back to the top when it takes focus.
   const head = useFocusable({ trackChildren: true });
-  useClaimFocus(head.focusKey, head.focusSelf);
   useEffect(() => {
     if (head.hasFocusedChild) (head.ref.current as HTMLElement).scrollIntoView(true);
   }, [head.hasFocusedChild]);
@@ -100,9 +102,20 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
       title: s.season_number ? s.name : t('details.specials'),
       poster: s.poster,
       caption: t('details.episodes_count', { n: s.episode_count }),
+      watched: s.watched,
+      watched_episodes: s.watched_episodes,
+      ref: { kind: 'season' as const, tmdb_id: item.tmdb_id, season: s.season_number, total: s.episode_count },
     })),
     [data, lang],
   );
+  // The first regular season not fully watched (Specials never); all watched: the last regular season.
+  const regular = seasons.filter((x) => x.season_number > 0);
+  const startSeason = Math.max(0, firstUnwatched(regular, regular.length - 1));
+  const seasonsKey = head.focusKey + '-seasons';
+  // The head is the only claimer: shows land on their first unwatched season, movies on the buttons.
+  useClaimFocus(head.focusKey, () => (seasons.length ? void setFocus(`${seasonsKey}-${startSeason}`) : head.focusSelf()));
+  const ref: Ref = { kind: item.type, tmdb_id: item.tmdb_id };
+  const state = useItemState(ref, data);
   const castItems = useMemo(() => data.cast.map((c) => ({ title: c.name, poster: c.profile, caption: c.character })), [data, lang]);
   const backdrops = useMemo(() => data.images.backdrops.map((b) => b.url), [data]);
   const galleryItems = useMemo(
@@ -120,16 +133,21 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
           <p class="details-meta">{metaLine(data)}</p>
           {data.tagline && <p class="details-tagline">{data.tagline}</p>}
           <p class="details-overview">{data.overview}</p>
-          {item.type === 'movie' && (
-            <Button
-              label={t('details.find_streams')}
-              onPress={() => openStreams({ type: 'movie', tmdb_id: item.tmdb_id, title: data.title, year: data.year, overview: data.overview, poster: data.poster || undefined, backdrops: imageList([data.backdrop].concat(backdrops)) })}
-            />
-          )}
+          <div class="details-actions">
+            {item.type === 'movie' && (
+              <Button
+                label={t('details.find_streams')}
+                onPress={() => openStreams({ type: 'movie', tmdb_id: item.tmdb_id, title: data.title, year: data.year, overview: data.overview, poster: data.poster || undefined, backdrops: imageList([data.backdrop].concat(backdrops)) })}
+              />
+            )}
+            <Button label={t('details.options')} onPress={() => openItemMenu(ref, state)} />
+          </div>
         </div>
       {seasons.length > 0 && (
         <Row
           claim={false}
+          focusKey={seasonsKey}
+          start={startSeason}
           title={t('details.seasons')}
           items={seasonItems}
           onSelect={(_, i) => openSeason({ tmdb_id: item.tmdb_id, title: data.title, year: data.year, poster: data.poster, backdrops: imageList([data.backdrop].concat(backdrops), 5) }, seasons[i].season_number)}

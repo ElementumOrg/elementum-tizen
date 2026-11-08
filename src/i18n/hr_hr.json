@@ -21,5 +21,9 @@
   "player.subtitles": "Podnaslovi",
   "player.no_tracks": "Nedostupno",
   "player.paused": "Pauzirano",
-  "common.cancel": "Odustani"
+  "common.cancel": "Odustani",
+  "menu.library_add": "Dodaj u videoteku",
+  "menu.library_remove": "Ukloni iz videoteke",
+  "menu.watched": "Označi kao odgledano",
+  "menu.unwatched": "Označi kao neodgledano"
 }

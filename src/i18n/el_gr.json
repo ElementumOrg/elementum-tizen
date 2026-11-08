@@ -20,5 +20,9 @@
   "player.subtitles": "Υπότιτλοι",
   "player.no_tracks": "Κανένα",
   "player.paused": "Σε παύση",
-  "common.cancel": "Ακύρωση"
+  "common.cancel": "Ακύρωση",
+  "menu.library_add": "Προσθήκη στην συλλογή",
+  "menu.library_remove": "Διαγραφή από την συλλογή",
+  "menu.watched": "Σήμανση ως παρακολουθημένο",
+  "menu.unwatched": "Σήμανση ως μη παρακολουθημένο"
 }

@@ -17,5 +17,9 @@
   "player.subtitles": "Untertitel",
   "player.no_tracks": "Keine",
   "player.paused": "Pausiert",
-  "common.cancel": "Abbrechen"
+  "common.cancel": "Abbrechen",
+  "menu.library_add": "Zur Bibliothek hinzufügen",
+  "menu.library_remove": "Aus Bibliothek entfernen",
+  "menu.watched": "Als gesehen markieren",
+  "menu.unwatched": "Als ungesehen markieren"
 }

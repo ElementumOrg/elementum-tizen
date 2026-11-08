@@ -6,6 +6,7 @@ import { loadServer } from '../settings';
 import { LANGUAGES, language, languageChoice, setLanguage, t } from '../i18n';
 import { Button } from '../ui/Button';
 import { Dialog } from '../ui/Dialog';
+import { openKeyTest } from './KeyTest';
 
 export function Settings() {
   // The error itself, not its text, so a language switch re-translates it.
@@ -39,6 +40,10 @@ export function Settings() {
         <span>{t('settings.language')}</span>
         <b>{LANGUAGES[language()] + (choice ? '' : ` (${t('settings.language_auto')})`)}</b>
         <Button label={t('settings.change_language')} onPress={() => setLangOpen(true)} />
+      </div>
+      <div class="settings-row">
+        <span>{t('settings.key_test')}</span>
+        <Button label={t('settings.key_test')} onPress={openKeyTest} />
       </div>
       <h2>{t('settings.about')}</h2>
       <p>{t('settings.app_version', { version: __APP_VERSION__ })}</p>

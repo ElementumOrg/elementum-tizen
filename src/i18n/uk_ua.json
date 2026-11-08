@@ -21,5 +21,9 @@
   "player.subtitles": "Саби",
   "player.no_tracks": "Нема",
   "player.paused": "Призупинений",
-  "common.cancel": "Скасувати"
+  "common.cancel": "Скасувати",
+  "menu.library_add": "Додати до бібліотеки",
+  "menu.library_remove": "Видалити з бібліотеки",
+  "menu.watched": "Позначати як переглянуте",
+  "menu.unwatched": "Позначати як непереглянуте"
 }

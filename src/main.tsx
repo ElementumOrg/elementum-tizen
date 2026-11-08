@@ -19,6 +19,7 @@ import { Settings } from './screens/Settings';
 import { Home } from './screens/Home';
 import { Library, MediaTab, Tracker } from './screens/Browse';
 import { setTracker } from './tracker';
+import { ItemMenuHost } from './ui/ItemMenu';
 import { Search } from './screens/Search';
 
 // getBoundingClientRect so positions include the Row/Grid track transforms; throttle keeps held keys smooth on old TVs.
@@ -140,6 +141,7 @@ function App() {
   return (
     <>
       {entries.map((e, i) => <Layer key={e.id} entry={e} visible={i === entries.length - 1} lang={language()} />)}
+      <ItemMenuHost />
       <WaitingDialog />
     </>
   );

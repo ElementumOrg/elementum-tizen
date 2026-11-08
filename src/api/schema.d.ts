@@ -235,6 +235,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/library/{media}/{tmdb_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a movie or show to the Elementum library
+         * @description Writes the library files like the Kodi "add to library" action (a movie removed earlier is added again), and syncs the linked tracker
+         *     when Elementum's settings ask for that. Adding an item that is already there is a no-op.
+         *     Kodi's library scan is not triggered; an Elementum-only library does not need it.
+         */
+        post: operations["addToLibrary"];
+        /** Remove a movie or show from the Elementum library */
+        delete: operations["removeFromLibrary"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/watched/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark a movie, show, season or episode watched
+         * @description Sets Elementum's local watched state and the linked tracker's, like the Kodi context menu.
+         *     `season` is required for `season` and `episode`, `episode` for `episode`.
+         */
+        post: operations["markWatched"];
+        /** Mark a movie, show, season or episode unwatched */
+        delete: operations["markUnwatched"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/trakt/{media}/lists/{list}": {
         parameters: {
             query?: never;
@@ -434,7 +479,7 @@ export interface components {
             message: string;
         };
         /** @enum {string} */
-        ErrorCode: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "tracker_not_authorized" | "tracker_unsupported" | "providers_unavailable" | "playback_failed" | "not_implemented" | "internal_error";
+        ErrorCode: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "tracker_not_authorized" | "already_in_library" | "tracker_unsupported" | "providers_unavailable" | "playback_failed" | "not_implemented" | "internal_error";
         SystemInfo: {
             /** @example 0.1.120 */
             version: string;
@@ -460,6 +505,25 @@ export interface components {
         MediaKind: "movies" | "shows";
         /** @enum {string} */
         MediaType: "movie" | "show";
+        /** @enum {string} */
+        WatchedKind: "movie" | "show" | "season" | "episode";
+        WatchedRequest: {
+            /**
+             * @description The movie's or the show's TMDB id.
+             * @example 1396
+             */
+            tmdb_id: number;
+            /**
+             * @description Required for `season` and `episode`.
+             * @example 1
+             */
+            season?: number;
+            /**
+             * @description Required for `episode`.
+             * @example 1
+             */
+            episode?: number;
+        };
         /**
          * @description `now_playing` = recently released, `by_genre` = popular in `genre` (optionally in `year`).
          * @enum {string}
@@ -506,6 +570,19 @@ export interface components {
              *     ]
              */
             genres: string[];
+            /** @description In the Elementum library. */
+            in_library?: boolean | null;
+            /** @description In the tracker collection. Null without a synced tracker. */
+            in_collection?: boolean | null;
+            /** @description In the tracker watchlist. Null without a synced tracker. */
+            in_watchlist?: boolean | null;
+            /** @description Watched (a show: all of it). Null when unknown. */
+            watched?: boolean | null;
+            /**
+             * Format: float
+             * @description Resume point as a fraction of the runtime. Null when there is none.
+             */
+            progress?: number | null;
         };
         MediaItemPage: {
             items: components["schemas"]["MediaItem"][];
@@ -643,6 +720,10 @@ export interface components {
             air_date: string | null;
             /** Format: uri */
             poster: string | null;
+            /** @description All `episode_count` episodes are watched, aired or not, so a running season stays false. Null when unknown. */
+            watched?: boolean | null;
+            /** @description Count of watched episodes. Null when unknown. */
+            watched_episodes?: number | null;
         };
         Season: {
             /** @example 1 */
@@ -686,6 +767,13 @@ export interface components {
              * @example 8.3
              */
             rating: number;
+            /** @description Null when unknown. */
+            watched?: boolean | null;
+            /**
+             * Format: float
+             * @description Resume position in seconds, null when there is none.
+             */
+            resume_s?: number | null;
         };
         NextEpisode: {
             show: components["schemas"]["MediaItem"];
@@ -972,6 +1060,23 @@ export interface components {
                 "application/json": components["schemas"]["Error"];
             };
         };
+        /** @description The item is already in the Kodi library, outside Elementum's own (`already_in_library`). Adding it again would duplicate it. */
+        AlreadyInLibrary: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                /**
+                 * @example {
+                 *       "error": {
+                 *         "code": "already_in_library",
+                 *         "message": "already in the Kodi library"
+                 *       }
+                 *     }
+                 */
+                "application/json": components["schemas"]["Error"];
+            };
+        };
         /** @description Kodi or the search providers can't be reached (`providers_unavailable`) */
         ProvidersUnavailable: {
             headers: {
@@ -1021,6 +1126,7 @@ export interface components {
         EpisodeParam: number;
         SessionIdParam: string;
         MediaParam: components["schemas"]["MediaKind"];
+        WatchedKindParam: components["schemas"]["WatchedKind"];
         /** @description TMDB genre id. Required for `by_genre`, ignored by other lists. */
         GenreParam: number;
         /** @description Release (movies) or first-air (shows) year. Used by `by_genre` only. */
@@ -1389,6 +1495,112 @@ export interface operations {
         responses: {
             200: components["responses"]["MediaItemPage"];
             401: components["responses"]["Unauthorized"];
+            default: components["responses"]["Error"];
+        };
+    };
+    addToLibrary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media: components["parameters"]["MediaParam"];
+                tmdb_id: components["parameters"]["TmdbIdParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Added */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["AlreadyInLibrary"];
+            default: components["responses"]["Error"];
+        };
+    };
+    removeFromLibrary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media: components["parameters"]["MediaParam"];
+                tmdb_id: components["parameters"]["TmdbIdParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            default: components["responses"]["Error"];
+        };
+    };
+    markWatched: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: components["parameters"]["WatchedKindParam"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WatchedRequest"];
+            };
+        };
+        responses: {
+            /** @description Marked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            409: components["responses"]["TrackerUnavailable"];
+            default: components["responses"]["Error"];
+        };
+    };
+    markUnwatched: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: components["parameters"]["WatchedKindParam"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WatchedRequest"];
+            };
+        };
+        responses: {
+            /** @description Marked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            409: components["responses"]["TrackerUnavailable"];
             default: components["responses"]["Error"];
         };
     };

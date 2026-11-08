@@ -17,5 +17,9 @@
   "player.subtitles": "Ondertitels",
   "player.no_tracks": "Geen",
   "player.paused": "Gepauzeerd",
-  "common.cancel": "Annuleren"
+  "common.cancel": "Annuleren",
+  "menu.library_add": "Toevoegen aan bibliotheek",
+  "menu.library_remove": "Verwijderen van bibliotheek",
+  "menu.watched": "Als bekeken markeren",
+  "menu.unwatched": "Als onbekeken markeren"
 }

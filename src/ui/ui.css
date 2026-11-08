@@ -861,3 +861,104 @@
   font-size: 32px;
   background: rgba(16, 16, 22, 0.92);
 }
+
+/* State badges (Badges.tsx): corner icons on posters, a resume bar at the bottom */
+.sbadges {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  text-align: right;
+}
+
+.sbadge {
+  display: block;
+  margin: 0 0 4px auto;
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: rgba(16, 16, 22, 0.85);
+}
+
+.sbadge.watched {
+  background: #2e9d57;
+}
+
+.sbadge.count {
+  display: block;
+  width: auto;
+  padding: 2px 10px;
+  border-radius: 14px;
+  font-size: 22px;
+  background: rgba(16, 16, 22, 0.85);
+}
+
+.pbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.pbar i {
+  display: block;
+  height: 8px;
+  background: #3d8bfd;
+}
+
+.episode .still {
+  position: relative;
+}
+
+.episode .sbadges {
+  top: 6px;
+  right: 6px;
+}
+
+/* Toast (ItemMenu.tsx) */
+.toast {
+  position: absolute;
+  z-index: 20;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1400px;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 32px;
+  background: rgba(16, 16, 22, 0.95);
+  box-shadow: 0 0 0 2px #3d8bfd;
+}
+
+.details-actions .btn {
+  margin-bottom: 8px;
+}
+
+/* Item menu: one entry per line */
+.dialog.menu .btn {
+  display: block;
+  margin: 8px auto;
+}
+
+.dialog.menu {
+  min-width: 600px;
+}
+
+/* Remote key test */
+.keytest p {
+  margin: 0 0 24px 24px;
+  opacity: 0.8;
+}
+
+.keytest table {
+  margin-left: 24px;
+  border-collapse: collapse;
+  font-size: 30px;
+}
+
+.keytest td {
+  padding: 6px 28px 6px 0;
+}

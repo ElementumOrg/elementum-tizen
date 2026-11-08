@@ -20,5 +20,9 @@
   "player.subtitles": "Tekstitykset",
   "player.no_tracks": "Ei mitään",
   "player.paused": "Keskeytetty",
-  "common.cancel": "Peruuta"
+  "common.cancel": "Peruuta",
+  "menu.library_add": "Lisää kirjastoon",
+  "menu.library_remove": "Poista kirjastosta",
+  "menu.watched": "Merkitse katsotuksi",
+  "menu.unwatched": "Merkitse katsomattomaksi"
 }

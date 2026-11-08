@@ -18,5 +18,9 @@
   "player.subtitles": "Napisy",
   "player.no_tracks": "Brak",
   "player.paused": "Wstrzymane",
-  "common.cancel": "Anuluj"
+  "common.cancel": "Anuluj",
+  "menu.library_add": "Dodaj do biblioteki",
+  "menu.library_remove": "Usuń z biblioteki",
+  "menu.watched": "Oznacz jako obejrzane",
+  "menu.unwatched": "Oznacz jako nieobejrzane"
 }

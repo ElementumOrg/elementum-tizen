@@ -19,5 +19,9 @@
   "player.subtitles": "Subtitrări",
   "player.no_tracks": "Niciunul",
   "player.paused": "În pauză",
-  "common.cancel": "Anulează"
+  "common.cancel": "Anulează",
+  "menu.library_add": "Adaugă în librărie",
+  "menu.library_remove": "Șterge din librărie",
+  "menu.watched": "Marchează ca vizionat",
+  "menu.unwatched": "Marchează ca nevizionat"
 }

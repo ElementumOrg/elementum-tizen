@@ -19,5 +19,9 @@
   "player.subtitles": "Feliratok",
   "player.no_tracks": "Nincs",
   "player.paused": "Szüneteltetve",
-  "common.cancel": "Mégse"
+  "common.cancel": "Mégse",
+  "menu.library_add": "Hozzáadás a könyvtárához",
+  "menu.library_remove": "Eltávolítás a könyvtárából",
+  "menu.watched": "Megjelölés megtekintettként",
+  "menu.unwatched": "Megjelölés meg nem tekintettként"
 }

@@ -17,5 +17,9 @@
   "player.subtitles": "Sottotitoli",
   "player.no_tracks": "Nessuno",
   "player.paused": "In pausa",
-  "common.cancel": "Annulla"
+  "common.cancel": "Annulla",
+  "menu.library_add": "Aggiungi alla libreria",
+  "menu.library_remove": "Rimuovi dalla libreria",
+  "menu.watched": "Segna come visto",
+  "menu.unwatched": "Segna come non visto"
 }
