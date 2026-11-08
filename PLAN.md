@@ -249,6 +249,32 @@ AVPlay needs `$WEBAPIS/webapis/webapis.js` in `index.html` (loaded only on Tizen
 Test on the oldest available TV (performance: image sizes, row windowing); add an error state everywhere, handle a lost connection mid-play, and run a translation sync. The `.po` sync only fills strings that match the addon's English text exactly, so most app strings are still English in other languages: a subagent drafts translations for the missing keys in all 21 languages, marked for native-speaker review in the README. README (features, screenshots, link to INSTALL.md). Elementum: API section in its README. Tag `v0.1.0` in this repo → release `.wgt`.
 **Done when:** 👤 the user signs off on the release on a real TV.
 
+## 7b. Round 2: feedback from the first TV run (2026-11-08)
+
+The user ran B9's `.wgt` on a real TV. Items are grouped by where the work is. Same protocol as §6: Sonnet implementers, Opus reviewers, and the main session verifies and merges.
+
+| ID | Repo | Step | Depends on |
+|---|---|---|---|
+| A6 | elementum | Research + fix: slow lists (40–60 s), late resolve errors, item state data (library/collection/watchlist/watched/progress), library and watched actions | — |
+| B11 | tizen | Shell: app icon from the addon logo, sidebar icons, sidebar switches on focus (debounced), tracker name instead of "Tracker", tracker Movies/Shows as two menu items, longer list timeouts | — |
+| B12 | tizen | Backgrounds: one Backdrop used by details, season, streams and buffering (rotating item images while buffering); buffering as a centered dialog on the backdrop; stream list scrolls with focus | — |
+| B13 | tizen | Player: item info in the OSD (poster/still, title, year, S/E and episode name, overview); a quicker audio/subtitle panel; switching tracks never pauses | — |
+| B14 | tizen | State UI: library/collection/watchlist/watched badges on posters, watched episodes and seasons, focus on the first unwatched item, a context menu (long-press OK) for library add/remove and watched/unwatched | A6, B11, B12 |
+| B15 | tizen | Translations: draft every missing key in all 21 languages; a test that every `en` key exists everywhere | B11–B14 |
+
+**A6:**
+- **(a) Slow lists:** measure which endpoints are slow and why, on a cold and a warm cache: per-item TMDB detail fetches, tracker full-list fetches, `tmdb.Find` lookups, rate limiting. Fix it with the existing cache and concurrency, not a new layer.
+- **(b) Late errors:** when torrent resolution fails, the session must go to `error` immediately; check how quickly the server reports it.
+- **(c) Item state:** expose it on `MediaItem`, `SeasonSummary`, `Episode` and the details responses. Fields: `in_library`, `in_collection`, `in_watchlist`, `watched`, `progress`/`resume_s`, and season/episode watched counts. Reuse Elementum's existing library and tracker state.
+- **(d) Actions:** endpoints to add/remove library items and to mark watched/unwatched (movie, show, season, episode), reusing the Kodi handlers' logic. The spec changes are additive.
+
+**Decisions taken:**
+- The context menu opens on a long press of OK (≥ 600 ms).
+- The audio/subtitle panel has two columns. OK applies a track at once, without closing the panel or pausing.
+- Green cycles audio and Yellow cycles subtitles, including Off.
+- The sidebar switches screens 400 ms after focus settles.
+- List GETs time out after 45 s, with a spinner, instead of 15 s.
+
 ## 8. Risks / open questions
 
 1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
