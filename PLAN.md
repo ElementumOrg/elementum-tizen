@@ -302,6 +302,10 @@ Elementum must start and run without an active Kodi. Follow lt2http's approach: 
   - the binary creates a default file if none exists;
   - token write-backs go to the file (and to Kodi when connected);
   - Trakt device auth and Burst search return clear errors without Kodi.
+- **User decisions (2026-11-08):**
+  - shared-library mode (`elementum.so`) stays and uses the settings file through the env var `ELEMENTUM_CONFIG_PATH` (its args are one space-joined string);
+  - `addon.xml` gets a new version before release (part of B10);
+  - A9 is approved with the recommendations in `docs/ui-host.md`, incl. long-poll, broadcast with first answer wins, Kodi fallback only when no client is connected, toasts only during playback, Kodi route handlers left as they are, `client_id` in the spec now, and Elementum translating `LOCALIZE` ids server-side from the addon `.po` files in the client's language.
 - **A9 (user idea): a UI host interface.** Elementum's dialogs, notifications, progress and confirmations go through an interface. Kodi is one implementation; another serves clients over HTTP (e.g. the TV app), with Elementum queuing a UI request and the client answering it. The design comes first, in `docs/ui-host.md`.
 
 ## 8. Risks / open questions
