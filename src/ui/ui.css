@@ -512,3 +512,73 @@
   left: 0;
   height: auto;
 }
+
+/* Streams & buffering */
+.searching {
+  padding: 200px 0 0 0;
+  text-align: center;
+}
+
+.searching .spinner {
+  margin: 0 auto 32px auto;
+}
+
+.stream-name {
+  max-height: 72px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 30px;
+  line-height: 36px;
+  word-break: break-all;
+}
+
+.badges {
+  margin-top: 8px;
+}
+
+.badge {
+  display: inline-block;
+  margin: 0 8px 4px 0;
+  padding: 2px 12px;
+  border-radius: 6px;
+  background: #34343f;
+  font-size: 22px;
+}
+
+.badge.seeds {
+  background: #1f4d34;
+}
+
+.badge.provider {
+  background: #2a3f66;
+}
+
+.stream-error {
+  margin: 0 0 16px 48px;
+  color: #ff8a80;
+}
+
+.buffering p,
+.buffering .progress {
+  margin-left: 48px;
+}
+
+.progress {
+  width: 900px;
+  height: 24px;
+  border-radius: 12px;
+  background: #2a2a33;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 24px;
+  background: #3d8bfd;
+}
+
+.player video {
+  margin: 0 0 16px 24px;
+  background: #000;
+}

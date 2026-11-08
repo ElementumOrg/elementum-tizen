@@ -15,5 +15,7 @@
   "list.trending": "Τελευταίες τάσεις",
   "list.genres": "Είδη",
   "chart.trending": "Τελευταίες τάσεις",
-  "search.field": "Αναζήτηση"
+  "search.field": "Αναζήτηση",
+  "buffering.error": "Σφάλμα",
+  "common.cancel": "Ακύρωση"
 }

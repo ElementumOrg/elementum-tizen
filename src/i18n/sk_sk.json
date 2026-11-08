@@ -15,5 +15,7 @@
   "list.trending": "Trendy",
   "list.genres": "Žánre",
   "chart.trending": "Trendy",
-  "search.field": "Vyhľadať"
+  "search.field": "Vyhľadať",
+  "buffering.error": "Chyba",
+  "common.cancel": "Zrušiť"
 }

@@ -15,5 +15,7 @@
   "list.trending": "Tendências",
   "list.genres": "Géneros",
   "chart.trending": "Tendências",
-  "search.field": "Pesquisar"
+  "search.field": "Pesquisar",
+  "buffering.error": "Erro",
+  "common.cancel": "Cancelar"
 }

@@ -13,5 +13,7 @@
   "list.trending": "Na czasie",
   "list.genres": "Gatunki",
   "chart.trending": "Na czasie",
-  "search.field": "Szukaj"
+  "search.field": "Szukaj",
+  "buffering.error": "Błąd",
+  "common.cancel": "Anuluj"
 }

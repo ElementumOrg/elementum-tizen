@@ -14,5 +14,7 @@
   "list.trending": "Trendigt",
   "list.genres": "Genrer",
   "chart.trending": "Trendigt",
-  "search.field": "Sök"
+  "search.field": "Sök",
+  "buffering.error": "Fel",
+  "common.cancel": "Avbryt"
 }

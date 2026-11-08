@@ -16,5 +16,7 @@
   "list.trending": "טרנדי",
   "list.genres": "ז'אנרים",
   "chart.trending": "טרנדי",
-  "search.field": "חיפוש"
+  "search.field": "חיפוש",
+  "buffering.error": "שגיאה",
+  "common.cancel": "ביטול"
 }

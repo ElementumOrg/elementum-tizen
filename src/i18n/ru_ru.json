@@ -16,5 +16,7 @@
   "list.trending": "В тренде",
   "list.genres": "Жанры",
   "chart.trending": "В тренде",
-  "search.field": "Поиск"
+  "search.field": "Поиск",
+  "buffering.error": "Ошибка",
+  "common.cancel": "Отмена"
 }

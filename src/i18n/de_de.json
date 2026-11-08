@@ -12,5 +12,7 @@
   "settings.language_auto": "Automatisch",
   "list.trending": "Im Trend",
   "chart.trending": "Im Trend",
-  "search.field": "Suche"
+  "search.field": "Suche",
+  "buffering.error": "Fehler",
+  "common.cancel": "Abbrechen"
 }

@@ -12,5 +12,7 @@
   "list.trending": "Di tendenza",
   "list.genres": "Generi",
   "chart.trending": "Di tendenza",
-  "search.field": "Cerca"
+  "search.field": "Cerca",
+  "buffering.error": "Errore",
+  "common.cancel": "Annulla"
 }

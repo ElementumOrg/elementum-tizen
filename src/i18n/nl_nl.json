@@ -12,5 +12,7 @@
   "setup.save": "Opslaan",
   "settings.language": "Taal",
   "settings.language_auto": "Automatisch",
-  "search.field": "Zoeken"
+  "search.field": "Zoeken",
+  "buffering.error": "Fout",
+  "common.cancel": "Annuleren"
 }

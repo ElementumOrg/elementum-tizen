@@ -13,5 +13,7 @@
   "settings.language_auto": "Automatique",
   "list.trending": "Les plus tendances (en ce moment)",
   "chart.trending": "Les plus tendances (en ce moment)",
-  "search.field": "Rechercher"
+  "search.field": "Rechercher",
+  "buffering.error": "Erreur",
+  "common.cancel": "Annuler"
 }

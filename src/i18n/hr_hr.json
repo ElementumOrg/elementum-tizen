@@ -16,5 +16,7 @@
   "list.trending": "U trendu",
   "list.genres": "Žanrovi",
   "chart.trending": "U trendu",
-  "search.field": "Pretraživanje"
+  "search.field": "Pretraživanje",
+  "buffering.error": "Greška",
+  "common.cancel": "Odustani"
 }

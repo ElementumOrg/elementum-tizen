@@ -15,5 +15,7 @@
   "list.trending": "Nousussa",
   "list.genres": "Lajityypit",
   "chart.trending": "Nousussa",
-  "search.field": "Etsi"
+  "search.field": "Etsi",
+  "buffering.error": "Virhe",
+  "common.cancel": "Peruuta"
 }

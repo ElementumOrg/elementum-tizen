@@ -14,5 +14,7 @@
   "list.trending": "Feltörekvő",
   "list.genres": "Műfajok",
   "chart.trending": "Feltörekvő",
-  "search.field": "Keresés"
+  "search.field": "Keresés",
+  "buffering.error": "Hiba",
+  "common.cancel": "Mégse"
 }

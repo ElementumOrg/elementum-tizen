@@ -15,5 +15,7 @@
   "list.trending": "V trendu",
   "list.genres": "Žanri",
   "chart.trending": "V trendu",
-  "search.field": "Iskanje"
+  "search.field": "Iskanje",
+  "buffering.error": "Napaka",
+  "common.cancel": "Prekliči"
 }
