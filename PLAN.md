@@ -145,7 +145,7 @@ Independent steps may run in parallel worktrees (see the dependency column).
 | B4 ✅ | tizen | Navigation shell & UI kit | B1 |
 | B5 ✅ | tizen | Browse screens (Home, Movies, Shows, Library, Trakt) | A2, A3, B3, B4 |
 | B6 | tizen | Search | A2, B4 |
-| B7 | tizen | Details, seasons, episodes, media | A2, B4 |
+| B7 ✅ | tizen | Details, seasons, episodes, media | A2, B4 |
 | B8 | tizen | Streams list & buffering flow | A4, A5, B7 |
 | B9 | tizen | Player 👤 | A5, B8 |
 | B10 | both | Hardening & v0.1.0 release 👤 | all |
