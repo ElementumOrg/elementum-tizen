@@ -291,6 +291,12 @@ User's TV key log: OK sends one `keydown` on press and one `keyup` on release, w
 - **Player:** the progress bar plus one row of focusable buttons (−10 s, Play/Pause, +10 s, Audio, Subtitles). Left/Right move between buttons, OK activates the focused one, Up/Down move between the bar and the button row, and seeking on the bar uses Left/Right. Media keys work everywhere. Green/Yellow keep cycling tracks.
 - **Torrent removal** asks whether to also delete the downloaded files.
 
+### A8: settings from a JSON file (user request, 2026-11-08)
+Elementum must start and run without an active Kodi. Follow lt2http's approach: the addon writes all addon settings to a JSON file (initially and on every settings change), and the binary reads its settings from that file and reloads when it changes, instead of always pulling them from Kodi.
+- **A8a (research, read-only):** compare lt2http (`/home/elgato/Develop/lt2http` plus its Kodi addon) with Elementum (`config.Reload`, the existing `-configPath`/`-exportConfig`, `importConfig`/`exportConfig`, and where Kodi-only values are used: paths via `TranslatePath`, the addon info bundle, `xbmcHost` callbacks), and with the Python addon (`/home/elgato/Develop/plugin.video.elementum`). Write `docs/settings-json.md`: the file format and location, who writes it and when, how Elementum picks it up (startup plus watch/reload trigger), what still needs Kodi (and how to degrade), migration/compatibility, and the step list for Go plus the addon.
+- 👤 The user approves the design, and which addon branch to use, before A8b.
+- **A8b/A8c:** implement it in Elementum (`api`) and in the addon.
+
 ## 8. Risks / open questions
 
 1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
