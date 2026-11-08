@@ -14,5 +14,6 @@
   "settings.language_auto": "Automaattinen",
   "list.trending": "Nousussa",
   "list.genres": "Lajityypit",
-  "chart.trending": "Nousussa"
+  "chart.trending": "Nousussa",
+  "search.field": "Etsi"
 }

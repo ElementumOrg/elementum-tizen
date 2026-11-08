@@ -11,5 +11,6 @@
   "setup.password": "Wachtwoord",
   "setup.save": "Opslaan",
   "settings.language": "Taal",
-  "settings.language_auto": "Automatisch"
+  "settings.language_auto": "Automatisch",
+  "search.field": "Zoeken"
 }

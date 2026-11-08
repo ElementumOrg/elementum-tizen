@@ -15,5 +15,6 @@
   "settings.language_auto": "Automatski",
   "list.trending": "U trendu",
   "list.genres": "Žanrovi",
-  "chart.trending": "U trendu"
+  "chart.trending": "U trendu",
+  "search.field": "Pretraživanje"
 }

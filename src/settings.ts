@@ -1,7 +1,7 @@
 // App settings in localStorage. Every access is guarded: storage can be missing or throw (private mode, quota).
 export const DEFAULT_PORT = '65220';
 
-export type SettingKey = 'ip' | 'port' | 'user' | 'password' | 'language';
+export type SettingKey = 'ip' | 'port' | 'user' | 'password' | 'language' | 'recent';
 
 export function load(key: SettingKey): string {
   try {
@@ -52,3 +52,22 @@ export function cleanServer(input: Server): { server: Server } | { error: string
   if (!(port >= 1 && port <= 65535 && port % 1 === 0)) return { error: 'setup.invalid_port' };
   return { server: { ip, port: String(port), user: input.user, password: input.password } };
 }
+
+export const RECENT_MAX = 10;
+
+/** Puts `q` first, drops its earlier copy (case-insensitive) and keeps the newest RECENT_MAX. */
+export function addRecent(list: string[], q: string): string[] {
+  const low = q.toLowerCase();
+  return [q].concat(list.filter((x) => x.toLowerCase() !== low)).slice(0, RECENT_MAX);
+}
+
+export function loadRecent(): string[] {
+  try {
+    const v = JSON.parse(load('recent'));
+    return Array.isArray(v) ? v.filter((x) => typeof x === 'string').slice(0, RECENT_MAX) : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+export const saveRecent = (list: string[]) => save('recent', list.length ? JSON.stringify(list) : '');

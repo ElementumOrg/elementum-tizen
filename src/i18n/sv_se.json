@@ -13,5 +13,6 @@
   "settings.language_auto": "Automatiskt",
   "list.trending": "Trendigt",
   "list.genres": "Genrer",
-  "chart.trending": "Trendigt"
+  "chart.trending": "Trendigt",
+  "search.field": "Sök"
 }

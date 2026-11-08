@@ -15,5 +15,6 @@
   "settings.language_auto": "Автоматично",
   "list.trending": "В тренді",
   "list.genres": "Жанри",
-  "chart.trending": "В тренді"
+  "chart.trending": "В тренді",
+  "search.field": "Пошук"
 }

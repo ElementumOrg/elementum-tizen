@@ -12,5 +12,6 @@
   "settings.language_auto": "Automatycznie",
   "list.trending": "Na czasie",
   "list.genres": "Gatunki",
-  "chart.trending": "Na czasie"
+  "chart.trending": "Na czasie",
+  "search.field": "Szukaj"
 }

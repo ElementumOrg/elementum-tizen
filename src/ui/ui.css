@@ -456,4 +456,59 @@
   padding: 40px 0 0 48px;
   box-sizing: border-box;
   background: #101014;
+
+
+/* Search */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 24px 24px;
+}
+
+.chips .btn {
+  margin: 0 16px 16px 0;
+}
+
+.chips-title {
+  margin: 0 0 16px 24px;
+  opacity: 0.7;
+}
+
+.screen.search {
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.search-bar .field {
+  margin-bottom: 0;
+  margin-right: 24px;
+}
+
+/* The results fill what is left; the grid is absolute because a percent height inside auto-height parents is 0. */
+.search-results {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.search-results .grid {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: auto;
 }

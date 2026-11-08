@@ -18,7 +18,7 @@ import { loadServer } from './settings';
 import { Settings } from './screens/Settings';
 import { Home } from './screens/Home';
 import { Library, MediaTab, Tracker } from './screens/Browse';
-import { SearchPlaceholder } from './screens/Search';
+import { Search } from './screens/Search';
 
 // getBoundingClientRect so positions include the Row/Grid track transforms; throttle keeps held keys smooth on old TVs.
 init({ layoutAdapter: GetBoundingClientRectAdapter, throttle: 80, throttleKeypresses: true });
@@ -52,7 +52,7 @@ const screens: Record<Tab, () => ComponentChild> = {
   shows: () => <MediaTab key="shows" media="shows" />,
   library: () => <Library />,
   tracker: () => <Tracker />,
-  search: () => <SearchPlaceholder />,
+  search: () => <Search />,
   settings: () => <Settings />,
 };
 

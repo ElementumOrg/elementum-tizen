@@ -11,5 +11,6 @@
   "settings.language_auto": "Automatico",
   "list.trending": "Di tendenza",
   "list.genres": "Generi",
-  "chart.trending": "Di tendenza"
+  "chart.trending": "Di tendenza",
+  "search.field": "Cerca"
 }

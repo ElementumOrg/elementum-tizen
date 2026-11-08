@@ -13,5 +13,6 @@
   "settings.language_auto": "Automático",
   "list.trending": "Tendencia",
   "list.genres": "Géneros",
-  "chart.trending": "Tendencia"
+  "chart.trending": "Tendencia",
+  "search.field": "Buscar"
 }

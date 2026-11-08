@@ -78,5 +78,10 @@
   "details.image_of": "{i} / {n}",
   "details.minutes": "{m} min",
   "details.hours_minutes": "{h} h {m} min",
-  "streams.coming_soon": "Streams (coming soon)"
+  "streams.coming_soon": "Streams (coming soon)",
+  "search.field": "Search",
+  "search.hint": "Type to search",
+  "search.none": "Nothing found for “{q}”",
+  "search.recent": "Recent searches",
+  "search.clear": "Clear"
 }

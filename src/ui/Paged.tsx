@@ -26,9 +26,9 @@ export function errorMessage(e: unknown) {
 }
 
 /** A grid screen body. Give it a new `key` when its list changes. */
-export function PagedGrid({ fetchPage, empty }: { fetchPage: FetchPage<MediaItem>; empty?: string }) {
+export function PagedGrid({ fetchPage, empty, onSelect = openDetails }: { fetchPage: FetchPage<MediaItem>; empty?: string; onSelect?: (item: MediaItem) => void }) {
   const p = usePaged(fetchPage);
-  if (p.items.length) return <Grid items={p.items} onSelect={openDetails} onEndReached={p.more} />;
+  if (p.items.length) return <Grid items={p.items} onSelect={onSelect} onEndReached={p.more} />;
   if (p.error) return <ErrorView message={errorMessage(p.error)} onRetry={p.more} />;
   if (p.loading) return <Spinner />;
   return <p class="empty">{empty || t('browse.empty')}</p>;

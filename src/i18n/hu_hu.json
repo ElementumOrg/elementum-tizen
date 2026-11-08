@@ -13,5 +13,6 @@
   "settings.language_auto": "Automatikus",
   "list.trending": "Feltörekvő",
   "list.genres": "Műfajok",
-  "chart.trending": "Feltörekvő"
+  "chart.trending": "Feltörekvő",
+  "search.field": "Keresés"
 }

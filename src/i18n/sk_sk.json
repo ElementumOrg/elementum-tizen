@@ -14,5 +14,6 @@
   "settings.language_auto": "Automaticky",
   "list.trending": "Trendy",
   "list.genres": "Žánre",
-  "chart.trending": "Trendy"
+  "chart.trending": "Trendy",
+  "search.field": "Vyhľadať"
 }
