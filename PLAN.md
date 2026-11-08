@@ -275,6 +275,22 @@ The user ran B9's `.wgt` on a real TV. Items are grouped by where the work is. S
 - The sidebar switches screens 400 ms after focus settles.
 - List GETs time out after 75 s (was 45 s; the user saw 40–60 s), with a spinner, instead of 15 s.
 
+## 7c. Round 3: second TV run (2026-11-08)
+
+User's TV key log: OK sends one `keydown` on press and one `keyup` on release, with **no repeats**. The B14 rule (long press only if a keydown arrived in the last 250 ms) therefore never fires on the TV.
+
+| ID | Repo | Step | Depends on |
+|---|---|---|---|
+| A7 | elementum (`api`) | Torrents API: list active torrents (name, size, progress, rates, seeds/peers, state, tmdb ids if known), pause/resume, remove with optional file deletion. People API: person details and combined credits as `MediaItem`s. Both reuse Elementum's torrent service and TMDB code. | — |
+| B16 | tizen | Long press = OK still held (no keyup) at 600 ms. Smooth animated scrolling in Row/Grid. Watched posters dimmed. | — |
+| B17 | tizen | Player redesign: human-friendly on-screen controls (Stremio/Nuvio-like focusable icon buttons). Track switch never pauses on AVPlay (check the state after the switch and resume if needed). Pause only from Play/Pause key or button. | — |
+| B18 | tizen | Torrents screen (sidebar entry: list plus pause/resume/remove), and a Person screen from cast cards (header plus Movies/Shows rows) | A7, B16 |
+
+**Decisions:**
+- All Elementum work stays on `api` until the user merges `api` into `master`. That includes the WSL path fix.
+- **Player:** the progress bar plus one row of focusable buttons (−10 s, Play/Pause, +10 s, Audio, Subtitles). Left/Right move between buttons, OK activates the focused one, Up/Down move between the bar and the button row, and seeking on the bar uses Left/Right. Media keys work everywhere. Green/Yellow keep cycling tracks.
+- **Torrent removal** asks whether to also delete the downloaded files.
+
 ## 8. Risks / open questions
 
 1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
