@@ -111,6 +111,8 @@ INSTALL.md README.md
 
 ## 6. Execution protocol (every step)
 
+**Models (user, 2026-11-08):** implementers run on Sonnet 5.5, reviewers on Opus 5.5, and the main session (Opus 5.5) orchestrates, verifies and merges.
+
 1. **Implement**: the orchestrator (main session) spawns one implementer subagent (`general-purpose`, `isolation: worktree`, branch `step/<id>`, cut from `api` in the Elementum repo and from `main` here). Its prompt contains the step section below, the "Done when" list, and these rules: stay in scope, add tests for new logic, update docs the step touches, never edit the spec outside step A1 without saying so.
 2. **Verify**: the orchestrator runs the step's checks itself (build, tests, generators, curl/Swagger calls). It does not take the subagent's report on trust.
 3. **Review**: a fresh reviewer subagent (read-only) reviews the branch diff with `/code-review` (correctness) and `ponytail-review` (scope/bloat), checking it against the "Done when" list, the API contract, and trust-boundary security. For Elementum steps it also flags any re-implemented fetch, cache, or business logic that already exists (the "Reuse first" rule in §3), and any change in Kodi route output.
