@@ -259,7 +259,7 @@ The user ran B9's `.wgt` on a real TV. Items are grouped by where the work is. S
 | B11 ✅ | tizen | Shell: app icon from the addon logo, sidebar icons, sidebar switches on focus (debounced), tracker name instead of "Tracker", tracker Movies/Shows as two menu items, longer list timeouts | — |
 | B12 ✅ | tizen | Backgrounds: one Backdrop used by details, season, streams and buffering (rotating item images while buffering); buffering as a centered dialog on the backdrop; stream list scrolls with focus | — |
 | B13 ✅ | tizen | Player: item info in the OSD (poster/still, title, year, S/E and episode name, overview); a quicker audio/subtitle panel; switching tracks never pauses | — |
-| B14 | tizen | State UI: library/collection/watchlist/watched badges on posters, watched episodes and seasons, focus on the first unwatched item, a context menu (long-press OK) for library add/remove and watched/unwatched | A6, B11, B12 |
+| B14 ✅ | tizen | State UI: library/collection/watchlist/watched badges on posters, watched episodes and seasons, focus on the first unwatched item, a context menu (long-press OK) for library add/remove and watched/unwatched | A6, B11, B12 |
 | B15 | tizen | Translations: draft every missing key in all 21 languages; a test that every `en` key exists everywhere | B11–B14 |
 
 **A6:**
