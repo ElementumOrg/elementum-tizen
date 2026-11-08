@@ -1,11 +1,12 @@
-import { useEffect } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { FocusContext, useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 import { useClaimFocus } from '../nav/focus';
+import { scrollTopTo } from './tween';
 import { Poster, useList, type PosterItem } from './Poster';
 
 const STRIDE = 264; // poster width 240 + 24 margin, keep in sync with ui.css
 const WIDE_STRIDE = 504; // .row.wide poster width 480 + 24 margin
-const BEFORE = 2; // cells kept left of focus (off-screen, so Left has a target)
+const BEFORE = 3; // cells kept left of focus (off-screen, so Left has a target)
 const VISIBLE = 6; // posters on screen (3 wide cells)
 const AFTER = 13; // cells right of focus; ~6.5 are visible
 
@@ -27,12 +28,19 @@ interface RowProps<T extends PosterItem> {
 /** Horizontal poster row; the focused poster stays at the left edge and only ~15 cells are in the DOM. */
 export function Row<T extends PosterItem>({ focusKey, title, items, onSelect, onEndReached, wide, claim, start }: RowProps<T>) {
   const { ref, focusKey: key, focusSelf, hasFocusedChild } = useFocusable({ focusKey, trackChildren: true });
-  useClaimFocus(key, claim === false ? () => {} : focusSelf);
+  const instant = useRef(false); // the mount-time focus claim must not animate
+  useClaimFocus(key, claim === false ? () => {} : () => {
+    instant.current = true;
+    setTimeout(() => (instant.current = false), 200); // a claim that no focus change followed must not leak into the first Down
+    focusSelf();
+  });
   const { index, onItemFocus, onItemSelect } = useList(items, onSelect, onEndReached, 6, start);
 
   // Bring the row into view when focus enters it from another row.
   useEffect(() => {
-    if (hasFocusedChild) (ref.current as HTMLElement).scrollIntoView(true);
+    if (!hasFocusedChild) return;
+    scrollTopTo(ref.current as HTMLElement, instant.current);
+    instant.current = false;
   }, [hasFocusedChild]);
 
   const stride = wide ? WIDE_STRIDE : STRIDE;

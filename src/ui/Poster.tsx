@@ -46,9 +46,11 @@ export const Poster = memo(function Poster({ item, focusKey, index, left, top, o
   const { ref, focused } = useFocusable({
     focusKey,
     onFocus: () => onFocus(index),
+    onBlur: press.cancel,
     onEnterPress: () => (target ? press.press() : onSelect(index)),
     onEnterRelease: () => target && press.release(),
   });
+  useEffect(() => press.cancel, []);
   const [src, setSrc] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
@@ -61,7 +63,7 @@ export const Poster = memo(function Poster({ item, focusKey, index, left, top, o
   return (
     <div
       ref={ref}
-      class={'poster' + (focused ? ' focused' : '') + (item.caption ? ' captioned' : '')}
+      class={'poster' + (focused ? ' focused' : '') + (state.watched === true ? ' watched' : '') + (item.caption ? ' captioned' : '')}
       style={`left:${left}px;top:${top}px`}
       onClick={() => onSelect(index)}
     >

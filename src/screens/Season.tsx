@@ -74,7 +74,7 @@ function EpisodeRow({ e, i, cur, setCur, focusKey, show, data }: { e: Episode; i
   return (
     <ListItem
       focusKey={focusKey}
-      cls="episode"
+      cls={st.watched === true ? 'episode watched' : 'episode'}
       onFocus={() => setCur(i)}
       onMenu={() => openItemMenu(ref, st)}
       onPress={() =>

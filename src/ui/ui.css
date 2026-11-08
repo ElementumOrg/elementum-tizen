@@ -1056,3 +1056,27 @@
   color: #c8c8d2;
   text-align: center;
 }
+
+/* Watched: a dark overlay (not image opacity, which shows the title underneath); the badges stay above it. */
+.poster.watched::after,
+.episode.watched .still::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.poster.watched.focused::after {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.list-item.watched .info {
+  opacity: 0.6;
+}
+
+.list-item.watched.focused .info {
+  opacity: 0.9;
+}

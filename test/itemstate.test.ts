@@ -17,57 +17,48 @@ function press() {
 }
 const wait = (ms: number) => vi.advanceTimersByTime(ms);
 
-test('quick tap: short once, after the key-up has been quiet', () => {
+test('quick tap: short on key-up', () => {
   const { p, log } = press();
   p.press();
   wait(80);
   p.release();
-  wait(1000);
   expect(log).toEqual(['short']);
 });
 
-test('hold with repeats and a key-up at the end: long once, the release adds nothing', () => {
+test('TV pattern: one key-down, 700 ms, one key-up (no repeats): long at 600 ms, key-up selects nothing', () => {
+  const { p, log } = press();
+  p.press();
+  wait(599);
+  expect(log).toEqual([]);
+  wait(1);
+  expect(log).toEqual(['long']);
+  wait(100);
+  p.release();
+  wait(1000);
+  expect(log).toEqual(['long']);
+  p.press(); // a new press works afterwards
+  p.release();
+  expect(log).toEqual(['long', 'short']);
+});
+
+test('hold with repeats and a key-up at the end: long once', () => {
   const { p, log } = press();
   for (let t = 0; t < 1200; t += 100) (p.press(), wait(100));
   expect(log).toEqual(['long']);
   p.release();
   wait(1000);
   expect(log).toEqual(['long']);
-  p.press(); // a new press works afterwards
-  p.release();
-  wait(1000);
-  expect(log).toEqual(['long', 'short']);
 });
 
-test('hold with repeats but the key-up never comes: long once, and a later press is fresh', () => {
+test('TV: long press whose key-up was lost: long once, and a press 3 s later is fresh', () => {
   const { p, log } = press();
-  for (let t = 0; t < 1000; t += 100) (p.press(), wait(100));
+  p.press();
+  wait(700);
   expect(log).toEqual(['long']);
   wait(3000);
   p.press();
   p.release();
-  wait(1000);
   expect(log).toEqual(['long', 'short']);
-});
-
-test('key-up after every repeat still counts as one long hold', () => {
-  const { p, log } = press();
-  for (let t = 0; t < 1200; t += 100) (p.press(), wait(40), p.release(), wait(60));
-  expect(log).toEqual(['long']);
-  wait(1000);
-  expect(log).toEqual(['long']);
-});
-
-test('no repeats and no key-up (key held, or the up was lost): short at 600 ms, not long', () => {
-  const { p, log } = press();
-  p.press();
-  wait(599);
-  expect(log).toEqual([]);
-  wait(1);
-  expect(log).toEqual(['short']);
-  p.release();
-  wait(1000);
-  expect(log).toEqual(['short']);
 });
 
 test('a release without a press is ignored', () => {

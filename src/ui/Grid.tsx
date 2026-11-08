@@ -14,7 +14,7 @@ interface GridProps<T extends PosterItem> {
   onEndReached?: () => void;
 }
 
-/** Vertical poster grid; the focused row stays second from the top and only 4 rows are in the DOM. */
+/** Vertical poster grid; the focused row stays second from the top and only 5 rows are in the DOM. */
 export function Grid<T extends PosterItem>({ focusKey, items, columns = 6, onSelect, onEndReached }: GridProps<T>) {
   const { ref, focusKey: key, focusSelf } = useFocusable({ focusKey });
   useClaimFocus(key, focusSelf);
@@ -22,7 +22,7 @@ export function Grid<T extends PosterItem>({ focusKey, items, columns = 6, onSel
   const row = Math.floor(index / columns);
 
   const cells = [];
-  for (let i = Math.max(0, row - 1) * columns, end = Math.min(items.length, (row + 3) * columns); i < end; i++) {
+  for (let i = Math.max(0, row - 2) * columns, end = Math.min(items.length, (row + 3) * columns); i < end; i++) {
     cells.push(
       <Poster key={i} item={items[i]} focusKey={`${key}-${i}`} index={i}
         left={(i % columns) * COL} top={Math.floor(i / columns) * ROW}

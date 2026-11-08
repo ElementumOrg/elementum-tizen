@@ -18,6 +18,7 @@ import { Spinner } from '../ui/Spinner';
 import { metaLine, orderSeasons, pickLogo, trailers } from './meta';
 import { openSeason } from './Season';
 import { openStreams } from './Streams';
+import { scrollTopTo } from '../ui/tween';
 
 type Item = { type: 'movie' | 'show'; tmdb_id: number; title: string };
 type Data = components['schemas']['MovieDetails'] | components['schemas']['ShowDetails'];
@@ -92,7 +93,7 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
   // The header scrolls the screen back to the top when it takes focus.
   const head = useFocusable({ trackChildren: true });
   useEffect(() => {
-    if (head.hasFocusedChild) (head.ref.current as HTMLElement).scrollIntoView(true);
+    if (head.hasFocusedChild) scrollTopTo(head.ref.current as HTMLElement);
   }, [head.hasFocusedChild]);
 
   const logo = pickLogo(data.images.logos, lang);
