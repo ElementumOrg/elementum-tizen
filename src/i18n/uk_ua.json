@@ -3,6 +3,7 @@
   "nav.shows": "Серіали",
   "nav.search": "Пошук",
   "nav.settings": "Налаштування",
+  "common.ok": "ОК",
   "common.yes": "Так",
   "common.no": "Ні",
   "setup.ip": "Адреса IP",
@@ -11,5 +12,8 @@
   "setup.password": "Пароль",
   "setup.save": "Зберегти",
   "settings.language": "Мова",
-  "settings.language_auto": "Автоматично"
+  "settings.language_auto": "Автоматично",
+  "list.trending": "В тренді",
+  "list.genres": "Жанри",
+  "chart.trending": "В тренді"
 }

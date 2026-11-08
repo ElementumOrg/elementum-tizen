@@ -10,5 +10,8 @@
   "setup.password": "Clave",
   "setup.save": "Guardar",
   "settings.language": "Idioma",
-  "settings.language_auto": "Automático"
+  "settings.language_auto": "Automático",
+  "list.trending": "Tendencia",
+  "list.genres": "Géneros",
+  "chart.trending": "Tendencia"
 }

@@ -11,5 +11,8 @@
   "setup.password": "Συνθηματικό",
   "setup.save": "Αποθήκευση",
   "settings.language": "Γλώσσα",
-  "settings.language_auto": "Αυτόματα"
+  "settings.language_auto": "Αυτόματα",
+  "list.trending": "Τελευταίες τάσεις",
+  "list.genres": "Είδη",
+  "chart.trending": "Τελευταίες τάσεις"
 }

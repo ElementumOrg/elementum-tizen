@@ -11,5 +11,8 @@
   "setup.password": "Salasana",
   "setup.save": "Tallenna",
   "settings.language": "Kieli",
-  "settings.language_auto": "Automaattinen"
+  "settings.language_auto": "Automaattinen",
+  "list.trending": "Nousussa",
+  "list.genres": "Lajityypit",
+  "chart.trending": "Nousussa"
 }

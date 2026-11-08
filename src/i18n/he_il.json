@@ -3,6 +3,7 @@
   "nav.shows": "סדרות",
   "nav.search": "חיפוש",
   "nav.settings": "הגדרות",
+  "common.ok": "אישור",
   "common.yes": "כן",
   "common.no": "לא",
   "setup.ip": "כתובת IP",
@@ -11,5 +12,8 @@
   "setup.password": "ססמה",
   "setup.save": "שמור",
   "settings.language": "שפה",
-  "settings.language_auto": "אוטומטי"
+  "settings.language_auto": "אוטומטי",
+  "list.trending": "טרנדי",
+  "list.genres": "ז'אנרים",
+  "chart.trending": "טרנדי"
 }

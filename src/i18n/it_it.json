@@ -8,5 +8,8 @@
   "setup.port": "Porta",
   "setup.save": "Salva",
   "settings.language": "Lingua",
-  "settings.language_auto": "Automatico"
+  "settings.language_auto": "Automatico",
+  "list.trending": "Di tendenza",
+  "list.genres": "Generi",
+  "chart.trending": "Di tendenza"
 }

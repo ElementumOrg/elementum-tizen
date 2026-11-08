@@ -9,5 +9,8 @@
   "setup.password": "Hasło",
   "setup.save": "Zapisz",
   "settings.language": "Język",
-  "settings.language_auto": "Automatycznie"
+  "settings.language_auto": "Automatycznie",
+  "list.trending": "Na czasie",
+  "list.genres": "Gatunki",
+  "chart.trending": "Na czasie"
 }

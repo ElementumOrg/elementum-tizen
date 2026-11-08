@@ -66,13 +66,9 @@ export function useList<T>(
   const onItemFocus = useCallback((i: number) => setIndex(i), []);
   const onItemSelect = useCallback((i: number) => latest.current.onSelect(latest.current.items[i], i), []);
 
-  // Ask once per list length, so a slow page load isn't requested twice.
-  const askedAt = useRef(-1);
+  // The pager ignores calls while loading, so a failed page is retried by the next focus move near the end.
   useEffect(() => {
-    if (onEndReached && index >= items.length - threshold && askedAt.current !== items.length) {
-      askedAt.current = items.length;
-      onEndReached();
-    }
+    if (onEndReached && index >= items.length - threshold) onEndReached();
   }, [index, items.length]);
 
   return { index, onItemFocus, onItemSelect };

@@ -10,5 +10,7 @@
   "setup.password": "Mot de passe",
   "setup.save": "Enregistrer",
   "settings.language": "Langue",
-  "settings.language_auto": "Automatique"
+  "settings.language_auto": "Automatique",
+  "list.trending": "Les plus tendances (en ce moment)",
+  "chart.trending": "Les plus tendances (en ce moment)"
 }

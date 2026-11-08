@@ -3,6 +3,7 @@
   "nav.shows": "TV serije",
   "nav.search": "Pretraživanje",
   "nav.settings": "Postavke",
+  "common.ok": "U redu",
   "common.yes": "Da",
   "common.no": "Ne",
   "setup.ip": "IP adresa",
@@ -11,5 +12,8 @@
   "setup.password": "Lozinka",
   "setup.save": "Spremi",
   "settings.language": "Jezik",
-  "settings.language_auto": "Automatski"
+  "settings.language_auto": "Automatski",
+  "list.trending": "U trendu",
+  "list.genres": "Žanrovi",
+  "chart.trending": "U trendu"
 }

@@ -1,4 +1,4 @@
-import { render } from 'preact';
+import { render, type ComponentChild } from 'preact';
 import { memo } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { FocusContext, GetBoundingClientRectAdapter, init, useFocusable } from '@noriginmedia/norigin-spatial-navigation';
@@ -16,7 +16,9 @@ import { ApiError, errorText, get } from './api/client';
 import { markBooted, openSetup, setupIsOpen, WaitingDialog } from './connection';
 import { loadServer } from './settings';
 import { Settings } from './screens/Settings';
-import { demoScreens } from './demo';
+import { Home } from './screens/Home';
+import { Library, MediaTab, Tracker } from './screens/Browse';
+import { SearchPlaceholder } from './screens/Search';
 
 // getBoundingClientRect so positions include the Row/Grid track transforms; throttle keeps held keys smooth on old TVs.
 init({ layoutAdapter: GetBoundingClientRectAdapter, throttle: 80, throttleKeypresses: true });
@@ -44,6 +46,16 @@ const Layer = memo(function Layer({ entry, visible }: { entry: Entry; visible: b
   );
 });
 
+const screens: Record<Tab, () => ComponentChild> = {
+  home: () => <Home />,
+  movies: () => <MediaTab key="movies" media="movies" />,
+  shows: () => <MediaTab key="shows" media="shows" />,
+  library: () => <Library />,
+  tracker: () => <Tracker />,
+  search: () => <SearchPlaceholder />,
+  settings: () => <Settings />,
+};
+
 /** Root screen: sidebar + the current tab. Owns Back for every layer (global): pop, else go to Home, else ask to exit. */
 function Root() {
   const [tab, setTab] = useState<Tab>('home');
@@ -70,7 +82,7 @@ function Root() {
       <Sidebar current={tab} onSelect={setTab} />
       <FocusContext.Provider value={content.focusKey}>
         <div ref={content.ref} class="content">
-          {tab === 'settings' ? <Settings /> : demoScreens[tab]()}
+          {screens[tab]()}
         </div>
       </FocusContext.Provider>
       {exitOpen && <ExitDialog onClose={() => setExitOpen(false)} />}

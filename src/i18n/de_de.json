@@ -9,5 +9,7 @@
   "setup.password": "Passwort",
   "setup.save": "Speichern",
   "settings.language": "Sprache",
-  "settings.language_auto": "Automatisch"
+  "settings.language_auto": "Automatisch",
+  "list.trending": "Im Trend",
+  "chart.trending": "Im Trend"
 }

@@ -51,7 +51,7 @@ export function Dialog({ title, actions, onClose, children }: DialogProps) {
         <div ref={ref} class="dialog">
           <h2>{title}</h2>
           {children}
-          {actions.map((a) => <Button key={a.label} label={a.label} onPress={a.onPress} />)}
+          {actions.map((a, i) => <Button key={i} label={a.label} scroll onPress={a.onPress} />)}
         </div>
       </div>
     </FocusContext.Provider>

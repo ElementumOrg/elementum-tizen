@@ -10,5 +10,8 @@
   "setup.password": "Parolă",
   "setup.save": "Salvează",
   "settings.language": "Limbă",
-  "settings.language_auto": "Automat"
+  "settings.language_auto": "Automat",
+  "list.trending": "În tendințe",
+  "list.genres": "Genuri",
+  "chart.trending": "În tendințe"
 }

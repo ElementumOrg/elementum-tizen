@@ -180,6 +180,10 @@
 .dialog {
   min-width: 700px;
   max-width: 1600px; /* long action lists (languages) wrap into rows */
+  position: relative; /* offsetParent of the actions, for scrolling them into view */
+  max-height: 900px;
+  overflow-y: auto; /* many actions (user lists) scroll; focused actions scroll into view */
+  box-sizing: border-box;
   padding: 48px;
   border-radius: 12px;
   background: #1e1e26;
@@ -251,4 +255,20 @@
 
 .settings-row b {
   width: 560px;
+}
+
+/* Browse screens */
+.toolbar {
+  display: flex;
+  margin: 0 0 24px 24px;
+}
+
+.toolbar .btn {
+  margin-right: 16px;
+}
+
+.empty {
+  margin: 120px 24px 0 24px;
+  font-size: 32px;
+  opacity: 0.7;
 }

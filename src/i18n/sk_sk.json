@@ -3,6 +3,7 @@
   "nav.shows": "TV seriály",
   "nav.search": "Vyhľadať",
   "nav.settings": "Nastavenia",
+  "common.ok": "Potvrdiť",
   "common.yes": "Áno",
   "common.no": "Nie",
   "setup.ip": "IP adresa",
@@ -10,5 +11,8 @@
   "setup.password": "Heslo",
   "setup.save": "Uložiť",
   "settings.language": "Jazyk",
-  "settings.language_auto": "Automaticky"
+  "settings.language_auto": "Automaticky",
+  "list.trending": "Trendy",
+  "list.genres": "Žánre",
+  "chart.trending": "Trendy"
 }
