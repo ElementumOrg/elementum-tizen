@@ -1,9 +1,10 @@
-// Movies, TV Shows, Library and Tracker: a toolbar of switchers over a PagedGrid.
+// Movies, TV Shows, Library and the tracker's Movies/Shows: a toolbar of switchers over a PagedGrid.
 import { useState } from 'preact/hooks';
 import { get } from '../api/client';
 import type { components } from '../api/schema';
 import { apiLang, t } from '../i18n';
 import { Button } from '../ui/Button';
+import { trackerName } from '../tracker';
 import { Dialog } from '../ui/Dialog';
 import { LIMIT, PagedGrid, Picker, tick } from '../ui/Paged';
 import type { FetchPage } from '../ui/pager';
@@ -106,11 +107,9 @@ const sourceName = (s: Source) =>
 const sourceKey = (s: Source) => (s.kind === 'chart' ? s.chart : s.kind === 'list' ? s.id : s.kind);
 const gridKey = (s: Source) => s.kind + ':' + sourceKey(s);
 let trackerSource: Source = { kind: 'watchlist' };
-let trackerMedia: Media = 'movies';
 
-export function Tracker() {
+export function Tracker({ media }: { media: Media }) {
   const [src, setSrc] = useState(trackerSource);
-  const [media, setMedia] = useState(trackerMedia);
   const [lists, setLists] = useState(false);
   const pick = (s: Source) => setSrc((trackerSource = s));
   const fetchPage: Fetch = (page) => {
@@ -130,10 +129,9 @@ export function Tracker() {
   }
   return (
     <div class="screen">
-      <h1>{t('nav.tracker')}</h1>
+      <h1>{t(`tracker.${media}`, { name: trackerName() })}</h1>
       <div class="toolbar">
         <Chooser label={sourceName(src)} title={t('browse.list')} choices={choices} />
-        <Button label={mediaLabel(media)} onPress={() => setMedia((trackerMedia = other(media)))} />
       </div>
       <PagedGrid key={gridKey(src) + media} fetchPage={fetchPage} />
       {lists && (

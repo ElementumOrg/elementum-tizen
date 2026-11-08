@@ -3,6 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { ApiError, errorText, type Request } from '../api/client';
 import type { components } from '../api/schema';
 import { t } from '../i18n';
+import { trackerName } from '../tracker';
 import { openDetails } from '../screens/Details';
 import { Dialog } from './Dialog';
 import { ErrorView } from './ErrorView';
@@ -22,7 +23,7 @@ const trackerOff = (e: unknown) =>
 /** errorText, plus the tracker states the screens explain. */
 export function errorMessage(e: unknown) {
   if (!trackerOff(e)) return errorText(e);
-  return t((e as ApiError).code === 'tracker_not_authorized' ? 'tracker.not_linked' : 'tracker.unsupported');
+  return t((e as ApiError).code === 'tracker_not_authorized' ? 'tracker.not_linked' : 'tracker.unsupported', { name: trackerName() });
 }
 
 /** A grid screen body. Give it a new `key` when its list changes. */

@@ -25,6 +25,9 @@ export const hooks = {
 };
 
 export const DEFAULT_TIMEOUT = 15000;
+/** Lists (Elementum can take 40-60 s to build one) get a longer default (75 s); still "not custom", so they are resent after an outage. */
+export const LIST_TIMEOUT = 75000;
+const isList = (path: string) => /^\/(library|search|tracker|trakt)\b|\/(lists|genres)\b/.test(path);
 
 type Method = 'get' | 'post' | 'delete';
 type PathsWith<M extends Method> = { [P in keyof paths]: [NonNullable<paths[P][M]>] extends [never] ? never : P }[keyof paths];
@@ -38,7 +41,7 @@ export interface Options<O> {
   path?: Params<O> extends { path?: infer X } ? X : never;
   query?: Params<O> extends { query?: infer X } ? X : never;
   body?: Body<O>;
-  /** ms; default 15 s. Stream search passes 60 s; a call with its own timeout is never resent. */
+  /** ms; default 15 s (75 s for list GETs). Stream search passes 60 s; a call with its own timeout is never resent. */
   timeout?: number;
   /**
    * Skip the waiting dialog and the 401 → Setup handling: Setup's own test, the waiting dialog's probe,
@@ -84,7 +87,7 @@ function request<T>(method: string, path: string, opts: Options<unknown>): Reque
       try {
         const s = opts.server || loadServer();
         xhr = new XMLHttpRequest();
-        return await send<T>(xhr, method, buildUrl(s, path, opts.path, opts.query), s, opts);
+        return await send<T>(xhr, method, path, buildUrl(s, path, opts.path, opts.query), s, opts);
       } catch (e) {
         // Anything else comes from xhr.open/send, e.g. a SyntaxError for an unusable host.
         err = e instanceof ApiError ? e : new ApiError('api', 0, 'bad_url');
@@ -114,10 +117,10 @@ function request<T>(method: string, path: string, opts: Options<unknown>): Reque
   return promise;
 }
 
-function send<T>(xhr: XMLHttpRequest, method: string, url: string, s: Server, opts: Options<unknown>): Promise<T> {
+function send<T>(xhr: XMLHttpRequest, method: string, path: string, url: string, s: Server, opts: Options<unknown>): Promise<T> {
   return new Promise((resolve, reject) => {
     xhr.open(method, url);
-    xhr.timeout = opts.timeout || DEFAULT_TIMEOUT;
+    xhr.timeout = opts.timeout || (method === 'GET' && isList(path) ? LIST_TIMEOUT : DEFAULT_TIMEOUT);
     xhr.setRequestHeader('Accept', 'application/json');
     if (s.user || s.password) {
       // UTF-8 bytes, as Go compares them; btoa alone only takes Latin-1.

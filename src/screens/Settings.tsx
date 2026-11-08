@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { errorText, get } from '../api/client';
 import { openSetup } from '../connection';
+import { setTracker } from '../tracker';
 import { loadServer } from '../settings';
 import { LANGUAGES, language, languageChoice, setLanguage, t } from '../i18n';
 import { Button } from '../ui/Button';
@@ -14,7 +15,7 @@ export function Settings() {
 
   useEffect(() => {
     const req = get('/system/info');
-    req.then((info) => setVersion({ v: info.version }), (e) => e.code !== 'aborted' && setVersion({ error: e }));
+    req.then((info) => (setTracker(info.tracker), setVersion({ v: info.version })), (e) => e.code !== 'aborted' && setVersion({ error: e }));
     return req.abort;
   }, [reload]);
 

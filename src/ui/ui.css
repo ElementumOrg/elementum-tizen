@@ -16,7 +16,7 @@
 }
 
 .content {
-  width: 1640px;
+  width: 1600px;
   height: 1080px;
   overflow: hidden;
 }
@@ -35,16 +35,26 @@
 
 /* Sidebar */
 .sidebar {
-  width: 280px;
-  padding: 120px 0 0 0;
+  width: 320px;
+  padding: 80px 0 0 0;
   background: #17171d;
 }
 
 .sidebar-item {
   margin: 0 16px 8px 16px;
-  padding: 18px 24px;
+  padding: 12px 16px;
   border-radius: 8px;
   border-left: 6px solid transparent;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.sidebar-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 16px;
+  flex: none;
 }
 
 .sidebar-item.active {

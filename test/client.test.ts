@@ -54,10 +54,19 @@ test('builds the URL from settings, path params and query; parses JSON', async (
   const x = last();
   expect(x.method).toBe('GET');
   expect(x.url).toBe('http://192.168.1.2:65220/api/v1/movies/lists/top_rated?page=2&lang=de-DE');
-  expect(x.timeout).toBe(15000);
+  expect(x.timeout).toBe(75000);
   expect(x.headers.Authorization).toBeUndefined();
   x.respond(200, '{"items":[{"title":"Ä"}],"page":2}');
   expect(await req).toEqual({ items: [{ title: 'Ä' }], page: 2 });
+});
+
+test('list GETs get a 75 s default timeout (custom wins); other GETs 15 s', () => {
+  for (const [path, ms] of [['/tracker/lists', 75000], ['/movies/genres', 75000], ['/library/shows', 75000], ['/system/info', 15000], ['/movies/{tmdb_id}', 15000]] as const) {
+    get(path as any, { server, path: { tmdb_id: 1 } as any });
+    expect(last().timeout).toBe(ms);
+  }
+  get('/movies/lists/{list}', { server, path: { list: 'popular' }, timeout: 3000 });
+  expect(last().timeout).toBe(3000);
 });
 
 test('Basic auth header (UTF-8), JSON body, timeout override, empty 204', async () => {

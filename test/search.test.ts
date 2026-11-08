@@ -47,3 +47,22 @@ test('loadRecent ignores garbage', () => {
   expect(loadRecent()).toEqual([]);
   vi.unstubAllGlobals();
 });
+
+test('sidebar switch debounce: settle waits, quick moves collapse, cancel drops', () => {
+  vi.useFakeTimers();
+  const sel = vi.fn();
+  const d = debounce(sel, 400);
+  d.call('a');
+  vi.advanceTimersByTime(399);
+  expect(sel).not.toHaveBeenCalled();
+  d.call('b'); // moved on before settling
+  vi.advanceTimersByTime(399);
+  expect(sel).not.toHaveBeenCalled();
+  vi.advanceTimersByTime(1);
+  expect(sel.mock.calls).toEqual([['b']]);
+  d.call('c'); // Enter/Back/unmount cancel
+  d.cancel();
+  vi.advanceTimersByTime(1000);
+  expect(sel).toHaveBeenCalledTimes(1);
+  vi.useRealTimers();
+});

@@ -18,6 +18,7 @@ import { loadServer } from './settings';
 import { Settings } from './screens/Settings';
 import { Home } from './screens/Home';
 import { Library, MediaTab, Tracker } from './screens/Browse';
+import { setTracker } from './tracker';
 import { Search } from './screens/Search';
 
 // getBoundingClientRect so positions include the Row/Grid track transforms; throttle keeps held keys smooth on old TVs.
@@ -51,7 +52,8 @@ const screens: Record<Tab, () => ComponentChild> = {
   movies: () => <MediaTab key="movies" media="movies" />,
   shows: () => <MediaTab key="shows" media="shows" />,
   library: () => <Library />,
-  tracker: () => <Tracker />,
+  tracker_movies: () => <Tracker key="movies" media="movies" />,
+  tracker_shows: () => <Tracker key="shows" media="shows" />,
   search: () => <Search />,
   settings: () => <Settings />,
 };
@@ -104,7 +106,7 @@ function Boot() {
         continue;
       }
       try {
-        await get('/system/info');
+        setTracker((await get('/system/info')).tracker);
         // The server came up while Setup is open: let the user finish there, then connect with what was saved.
         if (!setupIsOpen()) break;
         await openSetup();
