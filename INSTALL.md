@@ -91,6 +91,10 @@ certificate, so the downloaded `.wgt` may install without step 6 (unverified).
 
 **Apps2Samsung**
 
+- *The app tile shows a plain letter ("E") instead of the Elementum icon:* the TV keeps the tile it created at the
+  first install when you install a new version over an existing one. Uninstall Elementum on the TV (Apps →
+  Elementum → Delete), restart the TV, then install again. Verified on a real TV; your server settings need to be
+  entered again afterwards.
 - *The TV is not found or "not ready":* Apps2Samsung says what is missing (Developer Mode off, Host PC IP pointing
   at another computer, restart needed). Fix that on the TV and restart it; unplugging it for 15 seconds helps when
   a normal restart doesn't.
