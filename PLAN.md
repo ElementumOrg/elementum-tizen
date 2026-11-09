@@ -321,6 +321,15 @@ The pre-existing issues logged in §9, in the user's order (release → follow-u
 | F5 ✅ | elementum (`api`) | Keep `config/default_settings.xml` in sync with the addon's `resources/settings.xml` (a `go:generate` copy step from a given addon path). | — |
 | T1 ✅ | tizen | `test/css.test.ts` catches a dropped brace inside an @-rule block. | — |
 
+## 7e. UI-host extensions (2026-11-09)
+
+| ID | Repo | Step | Depends on |
+|---|---|---|---|
+| A10 | elementum (`api`) | `POST /api/v1/tracker/authorize`: starts the device-code login of the active tracker and returns `{tracker, user_code, verification_url, expires_in, interval}`; polling and the success/failure toasts stay server-side as today. Works without Kodi (Trakt included). Kodi's own dialogs are unchanged. | — |
+| B19 | tizen | "Link account" in Settings (and where a screen shows `tracker_not_authorized`): a dialog with the URL and code that polls `/system/info` until `tracker.authorized`, then closes. | A10 |
+
+The `urgent` flag for questions during playback is dropped for now: no question reaches the TV during API playback (the session handles file choice itself), so nothing would send it.
+
 ## 8. Risks / open questions
 
 1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
