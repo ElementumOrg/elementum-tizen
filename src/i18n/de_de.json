@@ -170,5 +170,9 @@
   "person.dept.crew": "Crew",
   "person.dept.costume": "Kostüm & Maske",
   "person.dept.vfx": "Visuelle Effekte",
-  "person.dept.lighting": "Beleuchtung"
+  "person.dept.lighting": "Beleuchtung",
+  "ui.title": "Elementum",
+  "ui.timeout": "Antwortet automatisch in {s} s",
+  "ui.cancel_hint": "Rot: Abbrechen",
+  "ui.invalid": "Die Antwort wurde nicht akzeptiert"
 }

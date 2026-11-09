@@ -7,6 +7,7 @@ import { loadServer } from './settings';
 import { t } from './i18n';
 import { Dialog, ExitDialog } from './ui/Dialog';
 import { Spinner } from './ui/Spinner';
+import { startUi, stopUi } from './uiClient';
 import { Setup } from './screens/Setup';
 
 const subs: Array<() => void> = [];
@@ -28,9 +29,11 @@ export const setupIsOpen = () => setupOpen !== null;
 /** Pushes Setup (once, even when several calls get a 401); resolves when it closes. */
 export function openSetup(): Promise<void> {
   if (!setupOpen) {
+    stopUi();
     setupOpen = new Promise((resolve) => {
       const close = () => {
         setupOpen = null;
+        if (booted) startUi(); // the server may have changed
         stack.pop();
         emit();
         resolve();

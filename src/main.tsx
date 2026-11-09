@@ -19,13 +19,16 @@ import { Settings } from './screens/Settings';
 import { Home } from './screens/Home';
 import { Library, MediaTab, Tracker } from './screens/Browse';
 import { setTracker } from './tracker';
-import { ItemMenuHost } from './ui/ItemMenu';
+import { ItemMenuHost, showToast } from './ui/ItemMenu';
+import { UiHost } from './ui/UiHost';
+import { setToastSink, startUi } from './uiClient';
 import { Search } from './screens/Search';
 import { Torrents } from './screens/Torrents';
 
 // getBoundingClientRect so positions include the Row/Grid track transforms; throttle keeps held keys smooth on old TVs.
 init({ layoutAdapter: GetBoundingClientRectAdapter, throttle: 80, throttleKeypresses: true });
 initKeys();
+setToastSink(showToast);
 
 /**
  * One stack entry. Lower entries stay mounted but hidden, so their state and focus keys survive a push.
@@ -120,6 +123,7 @@ function Boot() {
       }
     }
     markBooted();
+    startUi();
     stack.replace(() => <Root />);
   };
   useEffect(() => void connect(), []);
@@ -144,6 +148,7 @@ function App() {
     <>
       {entries.map((e, i) => <Layer key={e.id} entry={e} visible={i === entries.length - 1} lang={language()} />)}
       <ItemMenuHost />
+      <UiHost />
       <WaitingDialog />
     </>
   );

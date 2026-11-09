@@ -170,5 +170,9 @@
   "person.dept.crew": "Stáb",
   "person.dept.costume": "Jelmez és smink",
   "person.dept.vfx": "Vizuális effektek",
-  "person.dept.lighting": "Világítás"
+  "person.dept.lighting": "Világítás",
+  "ui.title": "Elementum",
+  "ui.timeout": "Alapértelmezett válasz {s} mp múlva",
+  "ui.cancel_hint": "Piros: mégse",
+  "ui.invalid": "A választ nem fogadta el"
 }

@@ -170,5 +170,9 @@
   "person.dept.crew": "Työryhmä",
   "person.dept.costume": "Puvustus ja maskeeraus",
   "person.dept.vfx": "Visuaaliset tehosteet",
-  "person.dept.lighting": "Valaistus"
+  "person.dept.lighting": "Valaistus",
+  "ui.title": "Elementum",
+  "ui.timeout": "Vastaa oletuksella {s} s kuluttua",
+  "ui.cancel_hint": "Punainen: peruuta",
+  "ui.invalid": "Vastausta ei hyväksytty"
 }

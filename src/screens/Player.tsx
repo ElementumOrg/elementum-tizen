@@ -4,6 +4,7 @@ import { LayerContext, stack } from '../nav/stack';
 import { onKey } from '../nav/keys';
 import { t } from '../i18n';
 import { del, post } from '../api/client';
+import { dispatcher } from '../uiClient';
 import { Dialog } from '../ui/Dialog';
 import { TrackPanel } from '../player/TrackPanel';
 import { nextTrack, trackLabel } from '../player/tracks';
@@ -64,6 +65,9 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
   api.current.menu = menu;
   api.current.osd = osd;
   api.current.focus = focus;
+
+  // Dialogs from Elementum wait while the player is up (toasts still show).
+  useEffect(() => (dispatcher.setPlayback(true), () => dispatcher.setPlayback(false)), []);
 
   // norigin stays paused while the player is up; only the error dialog needs it (the track panel takes keys itself).
   useEffect(() => {

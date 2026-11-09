@@ -170,5 +170,9 @@
   "person.dept.crew": "Echipă",
   "person.dept.costume": "Costume și machiaj",
   "person.dept.vfx": "Efecte vizuale",
-  "person.dept.lighting": "Iluminare"
+  "person.dept.lighting": "Iluminare",
+  "ui.title": "Elementum",
+  "ui.timeout": "Răspuns implicit în {s} s",
+  "ui.cancel_hint": "Roșu: anulare",
+  "ui.invalid": "Răspunsul nu a fost acceptat"
 }

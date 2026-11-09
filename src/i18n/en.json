@@ -170,5 +170,9 @@
   "person.dept.crew": "Crew",
   "person.dept.costume": "Costume & Make-Up",
   "person.dept.vfx": "Visual Effects",
-  "person.dept.lighting": "Lighting"
+  "person.dept.lighting": "Lighting",
+  "ui.title": "Elementum",
+  "ui.timeout": "Answers by default in {s} s",
+  "ui.cancel_hint": "Red: cancel",
+  "ui.invalid": "The answer was not accepted"
 }

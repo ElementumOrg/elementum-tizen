@@ -170,5 +170,9 @@
   "person.dept.crew": "צוות",
   "person.dept.costume": "תלבושות ואיפור",
   "person.dept.vfx": "אפקטים חזותיים",
-  "person.dept.lighting": "תאורה"
+  "person.dept.lighting": "תאורה",
+  "ui.title": "Elementum",
+  "ui.timeout": "תשובת ברירת מחדל בעוד {s} שניות",
+  "ui.cancel_hint": "אדום: ביטול",
+  "ui.invalid": "התשובה לא התקבלה"
 }

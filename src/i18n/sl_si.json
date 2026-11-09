@@ -170,5 +170,9 @@
   "person.dept.crew": "Ekipa",
   "person.dept.costume": "Kostumi in maska",
   "person.dept.vfx": "Vizualni učinki",
-  "person.dept.lighting": "Osvetlitev"
+  "person.dept.lighting": "Osvetlitev",
+  "ui.title": "Elementum",
+  "ui.timeout": "Privzet odgovor čez {s} s",
+  "ui.cancel_hint": "Rdeče: prekliči",
+  "ui.invalid": "Odgovor ni bil sprejet"
 }

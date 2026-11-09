@@ -170,5 +170,9 @@
   "person.dept.crew": "Équipe",
   "person.dept.costume": "Costumes et maquillage",
   "person.dept.vfx": "Effets visuels",
-  "person.dept.lighting": "Éclairage"
+  "person.dept.lighting": "Éclairage",
+  "ui.title": "Elementum",
+  "ui.timeout": "Réponse par défaut dans {s} s",
+  "ui.cancel_hint": "Rouge : annuler",
+  "ui.invalid": "La réponse n'a pas été acceptée"
 }

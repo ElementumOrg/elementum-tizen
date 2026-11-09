@@ -170,5 +170,9 @@
   "person.dept.crew": "Troupe",
   "person.dept.costume": "Costumi e trucco",
   "person.dept.vfx": "Effetti visivi",
-  "person.dept.lighting": "Illuminazione"
+  "person.dept.lighting": "Illuminazione",
+  "ui.title": "Elementum",
+  "ui.timeout": "Risposta predefinita tra {s} s",
+  "ui.cancel_hint": "Rosso: annulla",
+  "ui.invalid": "La risposta non è stata accettata"
 }

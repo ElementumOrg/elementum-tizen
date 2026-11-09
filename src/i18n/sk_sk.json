@@ -170,5 +170,9 @@
   "person.dept.crew": "Štáb",
   "person.dept.costume": "Kostýmy a masky",
   "person.dept.vfx": "Vizuálne efekty",
-  "person.dept.lighting": "Osvetlenie"
+  "person.dept.lighting": "Osvetlenie",
+  "ui.title": "Elementum",
+  "ui.timeout": "Predvolená odpoveď o {s} s",
+  "ui.cancel_hint": "Červené: zrušiť",
+  "ui.invalid": "Odpoveď nebola prijatá"
 }

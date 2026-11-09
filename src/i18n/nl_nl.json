@@ -170,5 +170,9 @@
   "person.dept.crew": "Crew",
   "person.dept.costume": "Kostuum & make-up",
   "person.dept.vfx": "Visuele effecten",
-  "person.dept.lighting": "Belichting"
+  "person.dept.lighting": "Belichting",
+  "ui.title": "Elementum",
+  "ui.timeout": "Standaardantwoord over {s} s",
+  "ui.cancel_hint": "Rood: annuleren",
+  "ui.invalid": "Het antwoord is niet geaccepteerd"
 }

@@ -48,6 +48,8 @@ export interface Options<O> {
    * and playback progress/DELETE (no dialog over the player or after leaving a screen).
    */
   quiet?: boolean;
+  /** Resolve `{status, epoch, body}` (epoch = the X-UI-Epoch header) instead of the body: for the UI long-poll, whose 204 carries the epoch. */
+  meta?: boolean;
   /** Use this server instead of the saved one (Setup's "Test connection"). */
   server?: Server;
 }
@@ -138,7 +140,9 @@ function send<T>(xhr: XMLHttpRequest, method: string, path: string, url: string,
         json = undefined;
         if (status >= 200 && status < 300) return reject(new ApiError('api', status, 'bad_response'));
       }
-      if (status >= 200 && status < 300) return resolve(json as T);
+      if (status >= 200 && status < 300) {
+        return resolve((opts.meta ? { status, epoch: xhr.getResponseHeader('X-UI-Epoch') || '', body: json } : json) as T);
+      }
       const body = json && json.error && typeof json.error === 'object' ? json.error : {};
       const message = typeof body.message === 'string' ? body.message : '';
       if (status === 0) reject(new ApiError('network', 0));

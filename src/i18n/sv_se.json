@@ -170,5 +170,9 @@
   "person.dept.crew": "Team",
   "person.dept.costume": "Kostym och mask",
   "person.dept.vfx": "Visuella effekter",
-  "person.dept.lighting": "Belysning"
+  "person.dept.lighting": "Belysning",
+  "ui.title": "Elementum",
+  "ui.timeout": "Svarar som standard om {s} s",
+  "ui.cancel_hint": "Röd: avbryt",
+  "ui.invalid": "Svaret godkändes inte"
 }

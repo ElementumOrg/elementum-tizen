@@ -1160,3 +1160,85 @@
 .person .row {
   position: relative;
 }
+
+/* UI host (ui/UiHost.tsx): dialog text, progress cards */
+.ui-msg {
+  margin: 0 0 32px 0;
+  max-width: 1000px;
+  white-space: pre-wrap;
+}
+
+.ui-text {
+  margin: 0 0 32px 0;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: left;
+  border: 2px solid transparent;
+}
+
+.ui-text.focused {
+  border-color: #3d8bfd;
+}
+
+.ui-text-box {
+  width: 1000px;
+  max-height: 520px;
+  overflow: hidden;
+  white-space: pre-wrap;
+}
+
+.ui-error {
+  margin: 0 0 24px 0;
+  color: #ff7b7b;
+}
+
+.ui-countdown {
+  margin: 0 0 24px 0;
+  opacity: 0.7;
+}
+
+.ui-progress-stack {
+  position: absolute;
+  z-index: 9; /* below dialogs (10) */
+  top: 40px;
+  right: 40px;
+  width: 560px;
+}
+
+.ui-progress {
+  margin-bottom: 12px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 28px;
+  background: rgba(16, 16, 22, 0.95);
+  box-shadow: 0 0 0 2px #3d8bfd;
+}
+
+.ui-line {
+  margin: 4px 0 10px 0;
+  opacity: 0.8;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ui-bar {
+  height: 10px;
+  margin-bottom: 6px;
+  border-radius: 5px;
+  background: #3a3a46;
+  overflow: hidden;
+}
+
+.ui-bar i {
+  display: block;
+  height: 10px;
+  background: #3d8bfd;
+}
+
+.ui-hint {
+  float: right;
+  font-size: 22px;
+  line-height: 36px;
+  opacity: 0.6;
+}

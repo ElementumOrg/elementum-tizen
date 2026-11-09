@@ -170,5 +170,9 @@
   "person.dept.crew": "Συνεργείο",
   "person.dept.costume": "Κοστούμια & Μακιγιάζ",
   "person.dept.vfx": "Οπτικά εφέ",
-  "person.dept.lighting": "Φωτισμός"
+  "person.dept.lighting": "Φωτισμός",
+  "ui.title": "Elementum",
+  "ui.timeout": "Αυτόματη απάντηση σε {s} δ",
+  "ui.cancel_hint": "Κόκκινο: ακύρωση",
+  "ui.invalid": "Η απάντηση δεν έγινε δεκτή"
 }

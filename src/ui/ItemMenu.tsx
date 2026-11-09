@@ -4,6 +4,7 @@ import { SpatialNavigation } from '@noriginmedia/norigin-spatial-navigation';
 import { ApiError, errorText, del, post } from '../api/client';
 import { t } from '../i18n';
 import { enter, onKey } from '../nav/keys';
+import { dispatcher } from '../uiClient';
 import { trackerLinked, trackerName } from '../tracker';
 import { bumpOps, getOverride, restoreOverride, setOverride, type ItemState, type Ref } from './item-state';
 
@@ -104,6 +105,7 @@ function Menu({ req, onClose }: { req: Req; onClose: () => void }) {
   live.current = { cur, ops, req, onClose };
   useEffect(() => {
     SpatialNavigation.pause();
+    dispatcher.modal(1);
     const off = onKey((a, e) => {
       const s = live.current;
       if (a === 'back') s.onClose();
@@ -113,6 +115,7 @@ function Menu({ req, onClose }: { req: Req; onClose: () => void }) {
     }, { global: true });
     return () => {
       off();
+      dispatcher.modal(-1);
       SpatialNavigation.resume();
     };
   }, []);

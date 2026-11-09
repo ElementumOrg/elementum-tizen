@@ -1,7 +1,7 @@
 // App settings in localStorage. Every access is guarded: storage can be missing or throw (private mode, quota).
 export const DEFAULT_PORT = '65220';
 
-export type SettingKey = 'ip' | 'port' | 'user' | 'password' | 'language' | 'recent';
+export type SettingKey = 'ip' | 'port' | 'user' | 'password' | 'language' | 'recent' | 'client_id';
 
 export function load(key: SettingKey): string {
   try {

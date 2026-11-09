@@ -170,5 +170,9 @@
   "person.dept.crew": "Съёмочная группа",
   "person.dept.costume": "Костюмы и грим",
   "person.dept.vfx": "Визуальные эффекты",
-  "person.dept.lighting": "Свет"
+  "person.dept.lighting": "Свет",
+  "ui.title": "Elementum",
+  "ui.timeout": "Ответ по умолчанию через {s} с",
+  "ui.cancel_hint": "Красная: отмена",
+  "ui.invalid": "Ответ не принят"
 }

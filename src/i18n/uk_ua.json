@@ -170,5 +170,9 @@
   "person.dept.crew": "Знімальна група",
   "person.dept.costume": "Костюми та грим",
   "person.dept.vfx": "Візуальні ефекти",
-  "person.dept.lighting": "Освітлення"
+  "person.dept.lighting": "Освітлення",
+  "ui.title": "Elementum",
+  "ui.timeout": "Відповідь за замовчуванням через {s} с",
+  "ui.cancel_hint": "Червона: скасувати",
+  "ui.invalid": "Відповідь не прийнято"
 }

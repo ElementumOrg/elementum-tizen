@@ -547,6 +547,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/ui/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Long-poll for UI events (toasts, questions, progress)
+         * @description Elementum's notifications, confirmations, lists, text prompts and progress dialogs, for clients that
+         *     have no Kodi. The client picks a `client_id` and keeps one request open at a time: the call returns
+         *     as soon as an event is queued, or 204 after `wait` seconds. Pass the last `seq` as `since` on the next call;
+         *     events up to it are dropped from the queue. A client that was away for more than 60 s is forgotten;
+         *     with `since` set it still gets the last 50 events newer than `since`, and open questions are always re-sent.
+         *     Without `since`, the queue is emptied by each call.
+         *     A question is sent to every connected client and the first answer wins; the others receive a
+         *     `cancelled` event with the same `id`. A `since` from before a restart is treated as 0. Elementum asks Kodi only when no client is connected.
+         *     Texts come already translated into `lang` (the addon's strings; English when missing).
+         */
+        get: operations["getUiEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ui/requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Answer a question, or cancel a progress dialog
+         * @description `yes` answers a `confirm`, `selected` a `select`, `text` an `input`; `cancel` dismisses a question
+         *     (the server then uses its default) or stops a `progress`. `text` events are closed with any answer.
+         *     400 also covers an invalid answer (index out of range, no index, text too long); the question stays open.
+         *     410 means another client answered first, or the request timed out.
+         */
+        post: operations["answerUiRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stream/{id}/{file_index}": {
         parameters: {
             query?: never;
@@ -584,7 +635,57 @@ export interface components {
             message: string;
         };
         /** @enum {string} */
-        ErrorCode: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "tracker_not_authorized" | "already_in_library" | "tracker_unsupported" | "providers_unavailable" | "playback_failed" | "not_implemented" | "internal_error";
+        ErrorCode: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "tracker_not_authorized" | "already_in_library" | "tracker_unsupported" | "providers_unavailable" | "playback_failed" | "not_implemented" | "internal_error" | "ui_request_expired";
+        UIEventBatch: {
+            /**
+             * Format: int64
+             * @description Use as `since` on the next call.
+             */
+            seq: number;
+            /** @description Same as the `X-UI-Epoch` header. */
+            epoch: string;
+            events: components["schemas"]["UIEvent"][];
+        };
+        UIEvent: {
+            /** @description Request id for questions and progress; use it in the answer URL. */
+            id: string;
+            /** Format: int64 */
+            seq: number;
+            /**
+             * @description `cancelled` closes the dialog with this `id` (answered elsewhere, expired or dismissed).
+             * @enum {string}
+             */
+            kind: "notify" | "confirm" | "select" | "input" | "text" | "progress" | "cancelled";
+            title: string;
+            message: string;
+            /** @description Choices of a `select`. */
+            options?: string[];
+            /** @description Pre-checked option indexes of a `select`. */
+            preselect?: number[];
+            /** @description A `select` answered with several indexes. */
+            multi?: boolean;
+            /** @description What Elementum assumes on timeout: a boolean for `confirm`, the initial text of an `input`. Free-form. */
+            default?: unknown;
+            /** @description An `input` is a password. */
+            hidden?: boolean;
+            /** @description Seconds until the question expires. */
+            timeout_s?: number;
+            progress?: components["schemas"]["UIProgress"];
+        };
+        UIProgress: {
+            id: string;
+            percent: number;
+            heading: string;
+            line: string;
+            done: boolean;
+        };
+        UIAnswer: {
+            client_id: string;
+            yes?: boolean;
+            selected?: number[];
+            text?: string;
+            cancel?: boolean;
+        };
         SystemInfo: {
             /** @example 0.1.120 */
             version: string;
@@ -595,6 +696,13 @@ export interface components {
              * @example de
              */
             language: string;
+            /** @description Kodi answers. Without it provider search, dialogs and Kodi-launched playback are unavailable. */
+            kodi_connected: boolean;
+            /**
+             * @description Where settings come from (`file` when Elementum runs with `-configPath`).
+             * @enum {string}
+             */
+            settings_source: "kodi" | "file";
             /** @description The tracker selected in Elementum's settings, or null when none is selected. */
             tracker: components["schemas"]["TrackerInfo"] | null;
         };
@@ -1308,7 +1416,10 @@ export interface components {
         YearParam: number;
     };
     requestBodies: never;
-    headers: never;
+    headers: {
+        /** @description Random id of the Elementum process. When it changes Elementum restarted; drop `since` and start from 0. */
+        UIEpoch: string;
+    };
     pathItems: never;
 }
 export type $defs = Record<string, never>;
@@ -2205,6 +2316,95 @@ export interface operations {
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
+            default: components["responses"]["Error"];
+        };
+    };
+    getUiEvents: {
+        parameters: {
+            query: {
+                client_id: string;
+                since?: number;
+                /** @description The `X-UI-Epoch` the client last saw. When it differs from the server's, Elementum restarted; `since` is then treated as 0 and the last 50 events are replayed. */
+                epoch?: string;
+                /** @description Seconds to hold the request open. */
+                wait?: number;
+                /**
+                 * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
+                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 */
+                lang?: components["parameters"]["LangParam"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description One or more events */
+            200: {
+                headers: {
+                    "X-UI-Epoch": components["headers"]["UIEpoch"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UIEventBatch"];
+                };
+            };
+            /** @description Nothing happened within `wait` */
+            204: {
+                headers: {
+                    "X-UI-Epoch": components["headers"]["UIEpoch"];
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            default: components["responses"]["Error"];
+        };
+    };
+    answerUiRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UIAnswer"];
+            };
+        };
+        responses: {
+            /** @description Accepted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            /** @description Already answered or expired (`ui_request_expired`) */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "ui_request_expired",
+                     *         "message": "request is closed"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
             default: components["responses"]["Error"];
         };
     };
