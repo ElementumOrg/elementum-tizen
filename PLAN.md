@@ -308,6 +308,19 @@ Elementum must start and run without an active Kodi. Follow lt2http's approach: 
   - A9 is approved with the recommendations in `docs/ui-host.md`, incl. long-poll, broadcast with first answer wins, Kodi fallback only when no client is connected, toasts only during playback, Kodi route handlers left as they are, `client_id` in the spec now, and Elementum translating `LOCALIZE` ids server-side from the addon `.po` files in the client's language.
 - **A9 (user idea): a UI host interface.** Elementum's dialogs, notifications, progress and confirmations go through an interface. Kodi is one implementation; another serves clients over HTTP (e.g. the TV app), with Elementum queuing a UI request and the client answering it. The design comes first, in `docs/ui-host.md`.
 
+## 7d. Follow-ups after v0.2.2 (2026-11-09)
+
+The pre-existing issues logged in §9, in the user's order (release → follow-ups → UI-host extensions). Elementum steps branch from `api`, in worktrees under the scratchpad.
+
+| ID | Repo | Step | Depends on |
+|---|---|---|---|
+| F1 ✅ | elementum (`api`) | Data races: `cache.NewDBStore` (`dbstore.go:43`), `reqapi.Request.Do` (`request.go:164`), and a lock in `bittorrent.Service.RemoveTorrent` between `FindByHash` and `Delete`/`Drop`. Run the touched packages under `-race`. | — |
+| F2 ✅ | elementum (`api`) | Typed tracker 401 in `util/reqapi` → API returns 409 `tracker_not_authorized` instead of 502. `trakt.Userlists()` returns its error (Kodi route keeps its toast, the API returns an error instead of 200 `[]`). | F1 (same package) |
+| F3 ✅ | elementum (`api`) | Non-silent Kodi search hang (`providers/search.go:242-262`: the progress reader can quit while resolvers still send). Notice Kodi starting after Elementum (today `xbmc.Init` runs once at startup). | — |
+| F4 ✅ | elementum (`api`) | TMDB images and logos honour the API `lang` (cache key includes the language). | — |
+| F5 ✅ | elementum (`api`) | Keep `config/default_settings.xml` in sync with the addon's `resources/settings.xml` (a `go:generate` copy step from a given addon path). | — |
+| T1 ✅ | tizen | `test/css.test.ts` catches a dropped brace inside an @-rule block. | — |
+
 ## 8. Risks / open questions
 
 1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
@@ -318,6 +331,9 @@ Elementum must start and run without an active Kodi. Follow lt2http's approach: 
 6. **Resolved:** the Elementum repo is at `/home/elgato/Develop/elementum` (branch `api` does not exist yet; A1 creates it from `master`). The codegen deps are approved. The app is named `Elementum`, with package id `ElmntmTV01` and app id `ElmntmTV01.Elementum`.
 
 ## 9. Decisions log
+- 2026-11-09: Follow-ups F1–F5 and T1 merged (Elementum `api` 9130810..f2ab52b, TV `main` f944587, 9049339). Kodi behaviour changes: the Trakt library sync now fails and retries when Trakt lists fail (as Simkl/MDBList already did), instead of a toast and an empty list; "select lists to sync" stops on an error. Late Kodi pickup (file mode only): a 10 s loop probes the JSON-RPC port and waits for the add-on port, then runs the skipped Kodi startup once; `kodi_connected` turns true within about 10 s of Kodi starting, and `/system/info` no longer probes.
+- 2026-11-09: Follow-ups found in F-step reviews (pre-existing, not fixed): with a revoked Trakt token, public Trakt charts still return 502 because the Bearer header is sent while `TraktAuthorized` is true (retry without auth or clear the flag on 401); in shared-library mode the library `closer` is never cleared, so a second start exits its loops at once; `progress` races and the unlocked `initialized` flag in library; Kodi JSON-RPC calls have no read deadline. `go test -race` in the user's checkout needs `GOWORK=off` (the go.work points at a local libtorrent-go that needs SWIG for race builds).
+- 2026-11-09: Incident: during the F3 live check a reviewer's test daemon (port 65290) reached the user's real Windows Kodi through WSL localhost forwarding for about 4 minutes and ran Elementum's normal startup against it (Ping, repository check and repo update, Burst check, DialogProgressBG cleanup, ResetRPC, library reads). Rule: live checks with a test daemon run in `unshare -rn` (isolated loopback), never on the host network.
 - 2026-11-06: All Elementum work goes to branch `api`; it is merged upstream once ready and tested.
 - 2026-11-06: Stream links are HMAC-signed (no auth headers on the player side).
 - 2026-11-06: How Elementum/Kodi runs is out of scope; the app waits for Elementum with a dialog.
