@@ -67,6 +67,11 @@ export function trackEnter(type: 'keydown' | 'keyup', keyCode: number, repeat: b
   enter.held = true;
 }
 
+/** Wraps an OK action so only a fresh press runs it: a repeat of the press that opened a dialog can't confirm it. */
+export const onFreshEnter = (fn: () => void) => () => {
+  if (enter.fresh) fn();
+};
+
 export function initKeys() {
   if (typeof tizen !== 'undefined') {
     for (const k of TIZEN_KEYS) {
@@ -77,9 +82,10 @@ export function initKeys() {
       }
     }
   }
-  window.addEventListener('keyup', (e) => trackEnter('keyup', e.keyCode, false, Date.now()));
+  // Capture phase: runs before norigin's own keydown listener, so Buttons see this press's `enter.fresh`.
+  window.addEventListener('keyup', (e) => trackEnter('keyup', e.keyCode, false, Date.now()), true);
+  window.addEventListener('keydown', (e) => trackEnter('keydown', e.keyCode, e.repeat, Date.now()), true);
   window.addEventListener('keydown', (e) => {
-    trackEnter('keydown', e.keyCode, e.repeat, Date.now());
     const action = keyAction(e);
     if (action && dispatch(action, e, stack.isTop)) e.preventDefault();
   });

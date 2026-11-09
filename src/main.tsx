@@ -21,6 +21,7 @@ import { Library, MediaTab, Tracker } from './screens/Browse';
 import { setTracker } from './tracker';
 import { ItemMenuHost } from './ui/ItemMenu';
 import { Search } from './screens/Search';
+import { Torrents } from './screens/Torrents';
 
 // getBoundingClientRect so positions include the Row/Grid track transforms; throttle keeps held keys smooth on old TVs.
 init({ layoutAdapter: GetBoundingClientRectAdapter, throttle: 80, throttleKeypresses: true });
@@ -53,6 +54,7 @@ const screens: Record<Tab, () => ComponentChild> = {
   movies: () => <MediaTab key="movies" media="movies" />,
   shows: () => <MediaTab key="shows" media="shows" />,
   library: () => <Library />,
+  torrents: () => <Torrents />,
   tracker_movies: () => <Tracker key="movies" media="movies" />,
   tracker_shows: () => <Tracker key="shows" media="shows" />,
   search: () => <Search />,

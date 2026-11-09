@@ -4,7 +4,7 @@ import { t } from '../i18n';
 import { debounce } from './debounce';
 import { trackerName } from '../tracker';
 
-export const TABS = ['home', 'movies', 'shows', 'library', 'tracker_movies', 'tracker_shows', 'search', 'settings'] as const;
+export const TABS = ['home', 'movies', 'shows', 'library', 'torrents', 'tracker_movies', 'tracker_shows', 'search', 'settings'] as const;
 export type Tab = (typeof TABS)[number];
 
 /** Focus must rest this long on an entry before its screen loads. */
@@ -16,6 +16,7 @@ const ICONS: Record<Tab, string> = {
   movies: 'M3 5h18v14H3zM7 5v14M17 5v14M3 9h4M3 15h4M17 9h4M17 15h4',
   shows: 'M3 7h18v13H3zM8 2l4 5 4-5',
   library: 'M4 4v16M9 4v16M14 5l5 15',
+  torrents: 'M12 3v12M7 10l5 5 5-5M4 20h16',
   tracker_movies: 'M5 3h14v18l-7-5-7 5zM9 9l5 0',
   tracker_shows: 'M5 3h14v18l-7-5-7 5zM8 8h8',
   search: 'M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM15 15l6 6',

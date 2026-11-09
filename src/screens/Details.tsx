@@ -16,6 +16,7 @@ import { ListItem } from '../ui/ListItem';
 import { Row } from '../ui/Row';
 import { Spinner } from '../ui/Spinner';
 import { metaLine, orderSeasons, pickLogo, trailers } from './meta';
+import { openPerson } from './Person';
 import { openSeason } from './Season';
 import { openStreams } from './Streams';
 import { scrollTopTo } from '../ui/tween';
@@ -160,7 +161,7 @@ function Body({ item, data, lang }: { item: Item; data: Data; lang: string }) {
           claim={false}
           title={t('details.cast')}
           items={castItems}
-          onSelect={() => {}}
+          onSelect={(_, i) => openPerson({ tmdb_id: data.cast[i].tmdb_id, name: data.cast[i].name })}
         />
       )}
       {backdrops.length > 0 && (

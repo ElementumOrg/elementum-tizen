@@ -442,6 +442,111 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/torrents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Active torrents (the same ones Kodi's torrent list shows) */
+        get: operations["listTorrents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/torrents/{info_hash}/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause a torrent */
+        post: operations["pauseTorrent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/torrents/{info_hash}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resume a paused torrent */
+        post: operations["resumeTorrent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/torrents/{info_hash}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove a torrent, optionally with its downloaded files
+         * @description Never asks Kodi anything. If the active playback session uses this torrent, the session is stopped too.
+         */
+        delete: operations["removeTorrent"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/people/{tmdb_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Person details */
+        get: operations["getPerson"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/people/{tmdb_id}/credits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Movies and shows a person appears in (cast and crew), most popular first */
+        get: operations["getPersonCredits"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stream/{id}/{file_index}": {
         parameters: {
             query?: never;
@@ -961,6 +1066,74 @@ export interface components {
             /** @example false */
             paused: boolean;
         };
+        Torrent: {
+            /**
+             * @description Lower-case.
+             * @example 08ada5a7a6183aae1e09d831df6748d566095a10
+             */
+            info_hash: string;
+            /** @example Sintel */
+            name: string;
+            /**
+             * Format: int64
+             * @description 0 until the metadata is in.
+             */
+            size_bytes: number;
+            /** Format: double */
+            progress: number;
+            /** @description Bytes per second. */
+            download_rate: number;
+            /** @description Bytes per second. */
+            upload_rate: number;
+            seeds: number;
+            peers: number;
+            state: components["schemas"]["TorrentState"];
+            /** @description True when the torrent is paused, also by Kodi's session-wide pause (then `state` is `paused` too). Resuming a torrent lifts that session pause. */
+            paused: boolean;
+            /**
+             * Format: int64
+             * @description Unix seconds.
+             */
+            added_at: number;
+            /** @description Set when Elementum knows what the torrent is for. For an episode it is the show's id. */
+            tmdb_id?: number;
+            /**
+             * @description Set together with tmdb_id.
+             * @enum {string}
+             */
+            media_type?: "movie" | "episode";
+            /** @description Episodes only; 0 is specials. */
+            season?: number;
+            /** @description Episodes only */
+            episode?: number;
+            /** @description A Kodi or API player is attached. */
+            has_player: boolean;
+        };
+        /** @enum {string} */
+        TorrentState: "queued" | "checking" | "finding" | "downloading" | "finished" | "seeding" | "allocating" | "stalled" | "paused" | "buffering" | "playing";
+        Person: {
+            /** @example 6384 */
+            tmdb_id: number;
+            /** @example Keanu Reeves */
+            name: string;
+            /**
+             * Format: uri
+             * @description w185 image.
+             */
+            profile: string | null;
+            biography: string;
+            /** Format: date */
+            birthday: string | null;
+            /** Format: date */
+            deathday: string | null;
+            place_of_birth: string | null;
+            /** @example Acting */
+            known_for_department: string | null;
+        };
+        PersonCredits: {
+            movies: components["schemas"]["MediaItem"][];
+            shows: components["schemas"]["MediaItem"][];
+        };
     };
     responses: {
         /** @description OK */
@@ -1125,6 +1298,8 @@ export interface components {
         SeasonParam: number;
         EpisodeParam: number;
         SessionIdParam: string;
+        /** @description 40 hex characters, case-insensitive. */
+        InfoHashParam: string;
         MediaParam: components["schemas"]["MediaKind"];
         WatchedKindParam: components["schemas"]["WatchedKind"];
         /** @description TMDB genre id. Required for `by_genre`, ignored by other lists. */
@@ -1862,6 +2037,170 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["Error"];
+        };
+    };
+    listTorrents: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Torrent"][];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            default: components["responses"]["Error"];
+        };
+    };
+    pauseTorrent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 40 hex characters, case-insensitive. */
+                info_hash: components["parameters"]["InfoHashParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paused */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["Error"];
+        };
+    };
+    resumeTorrent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 40 hex characters, case-insensitive. */
+                info_hash: components["parameters"]["InfoHashParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resumed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["Error"];
+        };
+    };
+    removeTorrent: {
+        parameters: {
+            query?: {
+                /** @description Also delete the downloaded data. When false the data is kept, whatever the Elementum "keep files" settings say. */
+                delete_files?: boolean;
+            };
+            header?: never;
+            path: {
+                /** @description 40 hex characters, case-insensitive. */
+                info_hash: components["parameters"]["InfoHashParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["Error"];
+        };
+    };
+    getPerson: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
+                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 */
+                lang?: components["parameters"]["LangParam"];
+            };
+            header?: never;
+            path: {
+                tmdb_id: components["parameters"]["TmdbIdParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["Error"];
+        };
+    };
+    getPersonCredits: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
+                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 */
+                lang?: components["parameters"]["LangParam"];
+            };
+            header?: never;
+            path: {
+                tmdb_id: components["parameters"]["TmdbIdParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonCredits"];
+                };
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];

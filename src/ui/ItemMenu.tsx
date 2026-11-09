@@ -16,6 +16,9 @@ interface Req {
 let show: (r: Req | null) => void = () => {};
 let notify: (msg: string) => void = () => {};
 
+/** The shared toast. */
+export const showToast = (msg: string) => notify(msg);
+
 export function openItemMenu(ref: Ref, state: ItemState) {
   // Watched state needs a linked tracker; without one a season or episode has nothing to offer.
   if (!menuOps(ref, state, trackerLinked()).length) return notify(t('tracker.link', { name: trackerName() }));
