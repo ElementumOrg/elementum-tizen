@@ -148,7 +148,7 @@ Independent steps may run in parallel worktrees (see the dependency column).
 | B7 ✅ | tizen | Details, seasons, episodes, media | A2, B4 |
 | B8 ✅ | tizen | Streams list & buffering flow | A4, A5, B7 |
 | B9 ✅ | tizen | Player 👤 (TV check pending) | A5, B8 |
-| B10 | both | Hardening & v0.1.0 release 👤 | all |
+| B10 | both | Hardening & v0.2.2 release 👤 | all |
 
 ---
 
