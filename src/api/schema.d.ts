@@ -1399,7 +1399,8 @@ export interface components {
         LimitParam: number;
         /**
          * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-         *     It does not affect images/logos, whose language comes from Elementum's config.
+         *     Images, logos and videos are also requested in this language first, then Elementum's second
+         *     language, English, and no language.
          */
         LangParam: string;
         TmdbIdParam: number;
@@ -1458,7 +1459,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1481,7 +1483,8 @@ export interface operations {
             query?: {
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1509,7 +1512,8 @@ export interface operations {
             query?: {
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1574,7 +1578,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1597,7 +1602,8 @@ export interface operations {
             query?: {
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1625,7 +1631,8 @@ export interface operations {
             query?: {
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1656,7 +1663,8 @@ export interface operations {
             query?: {
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1722,7 +1730,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1746,7 +1755,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1769,7 +1779,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1898,7 +1909,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1924,7 +1936,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1950,7 +1963,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -1976,7 +1990,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -2032,7 +2047,8 @@ export interface operations {
                 limit?: components["parameters"]["LimitParam"];
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -2260,7 +2276,8 @@ export interface operations {
             query?: {
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -2292,7 +2309,8 @@ export interface operations {
             query?: {
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
@@ -2330,7 +2348,8 @@ export interface operations {
                 wait?: number;
                 /**
                  * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
-                 *     It does not affect images/logos, whose language comes from Elementum's config.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
                  */
                 lang?: components["parameters"]["LangParam"];
             };
