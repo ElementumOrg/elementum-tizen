@@ -1,12 +1,20 @@
 # Installing Elementum on a Samsung TV
 
-> **Pending verification on a real TV.** These steps come from the Apps2Samsung and Samsung documentation and
-> from CI runs, but nobody has followed them on a TV yet. Report anything that differs and it will be fixed
-> here.
+> The Apps2Samsung path (Option A) was verified on a real TV on 2026-11-09. The Tizen CLI path (Option B) is
+> unverified: report anything that differs and it will be fixed here.
 
-Requirements: a Samsung TV with Tizen 4.0 or newer (2018+ models), and Elementum running on a machine in
-the same network (default port 65220). If Elementum has a login (`local_login`/`local_password`), the app
-asks for it. The app stores that password in plain text on the TV.
+Requirements:
+
+- A Samsung TV with Tizen 4.0 or newer (2018+ models), in Developer Mode (below).
+- Elementum built from the `api` branch (planned for the plugin.video.elementum 0.1.120 release), running on a
+  machine in the same network (default port 65220).
+- Kodi with Burst (or another provider add-on) for stream search and for tracker authorization (Trakt,
+  Simkl, MDBList, ...).
+
+If Elementum has a login, the app asks for it. Set it in Kodi under Elementum settings → Addon Startup →
+Authorization → "Remote host login/password" (addon settings `remote_login`/`remote_password`, passed to the
+daemon as `-localLogin`/`-localPassword`). Without Kodi, pass those flags yourself. The app stores that
+password in plain text on the TV.
 
 There are two ways to install:
 
@@ -118,5 +126,6 @@ certificate, so the downloaded `.wgt` may install without step 6 (unverified).
 
 - *"Waiting for Elementum at IP:port…" does not go away:* check that Elementum is running, that the address
   is the machine's LAN IP (not `127.0.0.1`), that port 65220 is open in its firewall, and that
-  `http://<IP>:65220/api/v1/system/info` opens in a browser on another device.
+  `http://<IP>:65220/api/v1/system/info` opens in a browser on another device (JSON, or a JSON 401 error when
+  a login is set, both mean it is reachable).
 - *The app asks for a login again:* the user name or password does not match Elementum's settings.
