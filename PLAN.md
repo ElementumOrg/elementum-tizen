@@ -330,6 +330,17 @@ The pre-existing issues logged in §9, in the user's order (release → follow-u
 
 The `urgent` flag for questions during playback is dropped for now: no question reaches the TV during API playback (the session handles file choice itself), so nothing would send it.
 
+## 7f. Final review of Elementum `api`: reuse and Swagger (2026-11-09)
+
+Three read-only reviews (apiv1 duplication, duplication outside apiv1, Swagger route inventory) found about 560 removable lines and an invalid spec (an unquoted comma in `Torrent.episode`'s description; no test validated the spec). User decisions: merge Trakt into `tracker.DeviceFlow` but keep Trakt's own Kodi texts; add `/api/v1` operations for adding torrents, version + Kodi hosts, reload/restart/shutdown and torrent file actions; keep Swagger UI on the CDN.
+
+| ID | Repo | Step | Depends on |
+|---|---|---|---|
+| R1 | elementum (`api`) | tmdb/providers reuse: delete the unused `GetImages` family; one generic list fetcher behind `listMovies`/`listShows` (fix `MostVotedShows` dropping `opts`); one generic search fan-out in `providers`; `DiscoverFilters.Year` so apiv1's by_genre uses `PopularMovies/Shows`; `tmdb.GetShowSeasonEpisode`, `tmdb.FindID`, `providers.EpisodeCacheKey` shared by Kodi, player and apiv1. | — |
+| R2 | elementum (`api`) | tracker/trakt reuse: Trakt becomes a `tracker.DeviceFlow` (hooks keep Trakt's Kodi strings and its config/cache updates); delete `trakt.TokenRefreshHandler`; `readList` shared by `ViewItems`/`FetchList`; one `traktListsView` for the movie/show Trakt list routes using `notifyTrackerError`; config credential and `SetSetting` duplicates. | — |
+| S1 | elementum (`api`) | Swagger: fix and validate the spec in a test; document HEAD on stream links, the long-poll `wait`, tag descriptions; new operations: add torrent (magnet/URL/upload), `user_agent` in system info, Kodi hosts, POST reload/restart/shutdown, torrent recheck/move/download all/none/file selection. | — |
+| R3 | elementum (`api`) | apiv1 and library reuse: `uid.InContainer`, a shared Kodi watched setter (fixes a Kodi nil crash), `mediaItems` via `tmdb.GetMovies/GetShows`, one `langArg`, `PlayerParams.ResumePoint` (API resume also honours `PlayResumeBack`), one stream-search helper, single-loop `GetSeason`, `ui.Plain`, `castDefault` in `fetchConfiguration`, `reqapi` cache write helper, a shared page helper for catalog lists. | R1 |
+
 ## 8. Risks / open questions
 
 1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
