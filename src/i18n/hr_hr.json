@@ -57,7 +57,7 @@
   "tracker.generic": "Praćenje",
   "tracker.movies": "{name} filmovi",
   "tracker.shows": "{name} serije",
-  "tracker.not_linked": "Povežite svoj {name} račun u Elementumu (Kodi) da biste ovo vidjeli.",
+  "tracker.not_linked": "Vaš {name} račun još nije povezan.",
   "tracker.unsupported": "{name} ne podržava ovaj popis.",
   "tracker.watchlist": "Popis za gledanje",
   "tracker.collection": "Zbirka",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Označeno kao odgledano",
   "menu.done.unwatched": "Označeno kao neodgledano",
   "menu.already_in_library": "Već u Kodi videoteci",
-  "tracker.link": "Povežite svoj {name} račun u Elementumu (Kodi)",
+  "tracker.link": "Povežite svoj {name} račun u postavkama",
   "details.options": "Opcije",
   "menu.failed": "Ažuriranje nije uspjelo",
   "settings.key_test": "Test tipki daljinskog",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Zadani odgovor za {s} s",
   "ui.cancel_hint": "Crveno: otkaži",
-  "ui.invalid": "Odgovor nije prihvaćen"
+  "ui.invalid": "Odgovor nije prihvaćen",
+  "tracker.linked": "Povezan",
+  "tracker.unlinked": "Nije povezan",
+  "tracker.none": "U Elementumu nije odabran nijedan",
+  "tracker.link_account": "Poveži račun",
+  "tracker.link_again": "Poveži ponovno",
+  "tracker.link_instructions": "Otvorite {url} na telefonu ili računalu i unesite kod:",
+  "tracker.link_expires": "Istječe za {time}",
+  "tracker.link_expired": "Kod je istekao",
+  "common.try_again": "Pokušaj ponovno"
 }

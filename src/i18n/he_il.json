@@ -57,7 +57,7 @@
   "tracker.generic": "עוקב",
   "tracker.movies": "סרטי {name}",
   "tracker.shows": "סדרות {name}",
-  "tracker.not_linked": "קשר את חשבון {name} שלך ב-Elementum (Kodi) כדי לראות זאת.",
+  "tracker.not_linked": "חשבון {name} שלך עדיין לא מקושר.",
   "tracker.unsupported": "{name} אינו תומך ברשימה זו.",
   "tracker.watchlist": "רשימת צפייה",
   "tracker.collection": "אוסף",
@@ -125,7 +125,7 @@
   "menu.done.watched": "סומן כנצפה",
   "menu.done.unwatched": "סומן כלא נצפה",
   "menu.already_in_library": "כבר בספריית Kodi",
-  "tracker.link": "קשר את חשבון {name} שלך ב-Elementum (Kodi)",
+  "tracker.link": "קשר את חשבון {name} שלך בהגדרות",
   "details.options": "אפשרויות",
   "menu.failed": "העדכון נכשל",
   "settings.key_test": "בדיקת מקשי שלט",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "תשובת ברירת מחדל בעוד {s} שניות",
   "ui.cancel_hint": "אדום: ביטול",
-  "ui.invalid": "התשובה לא התקבלה"
+  "ui.invalid": "התשובה לא התקבלה",
+  "tracker.linked": "מקושר",
+  "tracker.unlinked": "לא מקושר",
+  "tracker.none": "לא נבחר אף אחד ב-Elementum",
+  "tracker.link_account": "קישור חשבון",
+  "tracker.link_again": "קישור מחדש",
+  "tracker.link_instructions": "פתח את {url} בטלפון או במחשב והזן את הקוד:",
+  "tracker.link_expires": "פג תוקף בעוד {time}",
+  "tracker.link_expired": "תוקף הקוד פג",
+  "common.try_again": "נסה שוב"
 }

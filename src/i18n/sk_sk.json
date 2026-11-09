@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "Filmy {name}",
   "tracker.shows": "Seriály {name}",
-  "tracker.not_linked": "Prepojte svoj účet {name} v Elementum (Kodi), aby ste to videli.",
+  "tracker.not_linked": "Váš účet {name} ešte nie je prepojený.",
   "tracker.unsupported": "{name} tento zoznam nepodporuje.",
   "tracker.watchlist": "Zoznam na pozeranie",
   "tracker.collection": "Kolekcia",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Označené ako pozreté",
   "menu.done.unwatched": "Označené ako nepozreté",
   "menu.already_in_library": "Už je v knižnici Kodi",
-  "tracker.link": "Prepojte svoj účet {name} v Elementum (Kodi)",
+  "tracker.link": "Prepojte svoj účet {name} v Nastaveniach",
   "details.options": "Možnosti",
   "menu.failed": "Aktualizácia zlyhala",
   "settings.key_test": "Test tlačidiel ovládača",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Predvolená odpoveď o {s} s",
   "ui.cancel_hint": "Červené: zrušiť",
-  "ui.invalid": "Odpoveď nebola prijatá"
+  "ui.invalid": "Odpoveď nebola prijatá",
+  "tracker.linked": "Prepojený",
+  "tracker.unlinked": "Neprepojený",
+  "tracker.none": "V Elementum nie je nič vybrané",
+  "tracker.link_account": "Prepojiť účet",
+  "tracker.link_again": "Prepojiť znova",
+  "tracker.link_instructions": "Otvorte {url} v telefóne alebo počítači a zadajte kód:",
+  "tracker.link_expires": "Vyprší o {time}",
+  "tracker.link_expired": "Platnosť kódu vypršala",
+  "common.try_again": "Skúsiť znova"
 }

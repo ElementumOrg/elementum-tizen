@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "{name} films",
   "tracker.shows": "{name} series",
-  "tracker.not_linked": "Koppel je {name}-account in Elementum (Kodi) om dit te zien.",
+  "tracker.not_linked": "Je {name}-account is nog niet gekoppeld.",
   "tracker.unsupported": "{name} ondersteunt deze lijst niet.",
   "tracker.watchlist": "Kijklijst",
   "tracker.collection": "Collectie",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Als bekeken gemarkeerd",
   "menu.done.unwatched": "Als onbekeken gemarkeerd",
   "menu.already_in_library": "Al in de Kodi-bibliotheek",
-  "tracker.link": "Koppel je {name}-account in Elementum (Kodi)",
+  "tracker.link": "Koppel je {name}-account in Instellingen",
   "details.options": "Opties",
   "menu.failed": "Bijwerken mislukt",
   "settings.key_test": "Afstandsbedieningstest",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Standaardantwoord over {s} s",
   "ui.cancel_hint": "Rood: annuleren",
-  "ui.invalid": "Het antwoord is niet geaccepteerd"
+  "ui.invalid": "Het antwoord is niet geaccepteerd",
+  "tracker.linked": "Gekoppeld",
+  "tracker.unlinked": "Niet gekoppeld",
+  "tracker.none": "Niets geselecteerd in Elementum",
+  "tracker.link_account": "Account koppelen",
+  "tracker.link_again": "Opnieuw koppelen",
+  "tracker.link_instructions": "Open {url} op je telefoon of computer en voer de code in:",
+  "tracker.link_expires": "Verloopt over {time}",
+  "tracker.link_expired": "De code is verlopen",
+  "common.try_again": "Opnieuw proberen"
 }

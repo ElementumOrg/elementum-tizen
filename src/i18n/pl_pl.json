@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "Filmy {name}",
   "tracker.shows": "Seriale {name}",
-  "tracker.not_linked": "Połącz konto {name} w Elementum (Kodi), aby to zobaczyć.",
+  "tracker.not_linked": "Twoje konto {name} nie jest jeszcze połączone.",
   "tracker.unsupported": "{name} nie obsługuje tej listy.",
   "tracker.watchlist": "Do obejrzenia",
   "tracker.collection": "Kolekcja",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Oznaczono jako obejrzane",
   "menu.done.unwatched": "Oznaczono jako nieobejrzane",
   "menu.already_in_library": "Już w bibliotece Kodi",
-  "tracker.link": "Połącz konto {name} w Elementum (Kodi)",
+  "tracker.link": "Połącz konto {name} w Ustawieniach",
   "details.options": "Opcje",
   "menu.failed": "Nie udało się zaktualizować",
   "settings.key_test": "Test przycisków pilota",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Domyślna odpowiedź za {s} s",
   "ui.cancel_hint": "Czerwony: anuluj",
-  "ui.invalid": "Odpowiedź nie została przyjęta"
+  "ui.invalid": "Odpowiedź nie została przyjęta",
+  "tracker.linked": "Połączono",
+  "tracker.unlinked": "Nie połączono",
+  "tracker.none": "Nie wybrano w Elementum",
+  "tracker.link_account": "Połącz konto",
+  "tracker.link_again": "Połącz ponownie",
+  "tracker.link_instructions": "Otwórz {url} na telefonie lub komputerze i wpisz kod:",
+  "tracker.link_expires": "Wygasa za {time}",
+  "tracker.link_expired": "Kod wygasł",
+  "common.try_again": "Spróbuj ponownie"
 }

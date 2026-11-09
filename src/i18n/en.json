@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "{name} Movies",
   "tracker.shows": "{name} Shows",
-  "tracker.not_linked": "Link your {name} account in Elementum (Kodi) to see this.",
+  "tracker.not_linked": "Your {name} account isn't linked yet.",
   "tracker.unsupported": "{name} doesn't support this list.",
   "tracker.watchlist": "Watchlist",
   "tracker.collection": "Collection",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Marked as watched",
   "menu.done.unwatched": "Marked as unwatched",
   "menu.already_in_library": "Already in the Kodi library",
-  "tracker.link": "Link your {name} account in Elementum (Kodi)",
+  "tracker.link": "Link your {name} account in Settings",
   "details.options": "Options",
   "menu.failed": "Couldn't update",
   "settings.key_test": "Remote key test",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Answers by default in {s} s",
   "ui.cancel_hint": "Red: cancel",
-  "ui.invalid": "The answer was not accepted"
+  "ui.invalid": "The answer was not accepted",
+  "tracker.linked": "Linked",
+  "tracker.unlinked": "Not linked",
+  "tracker.none": "None selected in Elementum",
+  "tracker.link_account": "Link account",
+  "tracker.link_again": "Link again",
+  "tracker.link_instructions": "Open {url} on your phone or computer and enter the code:",
+  "tracker.link_expires": "Expires in {time}",
+  "tracker.link_expired": "The code expired",
+  "common.try_again": "Try again"
 }

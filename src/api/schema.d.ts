@@ -348,6 +348,35 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tracker/authorize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start linking the tracker account selected in settings
+         * @description Starts the tracker's device-code login without Kodi. The client shows `user_code` and `verification_url`
+         *     to the user, who approves it on another device. The server keeps polling the tracker for up to
+         *     `expires_in` seconds and saves the token; the outcome is also sent as a `notify` event.
+         *     The client learns the result by polling `GET /system/info` until `tracker.logins` grows past the value
+         *     returned here (for a first link, `tracker.authorized` turning true says the same).
+         *     Allowed while already linked: a successful login replaces the token. A newer login cancels
+         *     the polling of the previous one; that includes one started from Kodi, such as Elementum's automatic
+         *     Trakt prompt when Kodi browses Trakt menus while unlinked.
+         *     409 `tracker_unsupported` also when Elementum runs with a settings file that is not JSON,
+         *     as the token could not be saved.
+         */
+        post: operations["startTrackerAuth"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tracker/lists": {
         parameters: {
             query?: never;
@@ -713,6 +742,28 @@ export interface components {
             name: string;
             /** @description An account is linked. */
             authorized: boolean;
+            /**
+             * Format: int64
+             * @description Logins finished since Elementum started. A client re-linking an already linked account waits for this to grow.
+             */
+            logins: number;
+        };
+        TrackerAuthCode: {
+            tracker: components["schemas"]["TrackerInfo"];
+            /** @example A1B2C3D4 */
+            user_code: string;
+            /** @example https://trakt.tv/activate */
+            verification_url: string;
+            /**
+             * @description Seconds until the code expires.
+             * @example 600
+             */
+            expires_in: number;
+            /**
+             * @description Seconds between the server's polls of the tracker.
+             * @example 5
+             */
+            interval: number;
         };
         /** @enum {string} */
         MediaKind: "movies" | "shows";
@@ -2012,6 +2063,54 @@ export interface operations {
             };
             401: components["responses"]["Unauthorized"];
             409: components["responses"]["TrackerUnavailable"];
+            default: components["responses"]["Error"];
+        };
+    };
+    startTrackerAuth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackerAuthCode"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            /** @description No tracker is selected, or it has no device-code login (`tracker_unsupported`). */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "tracker_unsupported",
+                     *         "message": "the selected tracker has no device-code login"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The tracker could not issue a code (`internal_error`). */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
             default: components["responses"]["Error"];
         };
     };

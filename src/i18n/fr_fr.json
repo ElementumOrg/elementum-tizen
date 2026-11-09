@@ -57,7 +57,7 @@
   "tracker.generic": "Suivi",
   "tracker.movies": "Films {name}",
   "tracker.shows": "Séries {name}",
-  "tracker.not_linked": "Associez votre compte {name} dans Elementum (Kodi) pour voir ceci.",
+  "tracker.not_linked": "Votre compte {name} n'est pas encore associé.",
   "tracker.unsupported": "{name} ne prend pas en charge cette liste.",
   "tracker.watchlist": "Liste de suivi",
   "tracker.collection": "Collection",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Marqué comme vu",
   "menu.done.unwatched": "Marqué comme non vu",
   "menu.already_in_library": "Déjà dans la médiathèque Kodi",
-  "tracker.link": "Associez votre compte {name} dans Elementum (Kodi)",
+  "tracker.link": "Associez votre compte {name} dans les Paramètres",
   "details.options": "Options",
   "menu.failed": "Échec de la mise à jour",
   "settings.key_test": "Test des touches de la télécommande",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Réponse par défaut dans {s} s",
   "ui.cancel_hint": "Rouge : annuler",
-  "ui.invalid": "La réponse n'a pas été acceptée"
+  "ui.invalid": "La réponse n'a pas été acceptée",
+  "tracker.linked": "Associé",
+  "tracker.unlinked": "Non associé",
+  "tracker.none": "Aucun sélectionné dans Elementum",
+  "tracker.link_account": "Associer le compte",
+  "tracker.link_again": "Associer à nouveau",
+  "tracker.link_instructions": "Ouvrez {url} sur votre téléphone ou ordinateur et saisissez le code :",
+  "tracker.link_expires": "Expire dans {time}",
+  "tracker.link_expired": "Le code a expiré",
+  "common.try_again": "Réessayer"
 }

@@ -57,7 +57,7 @@
   "tracker.generic": "Трекер",
   "tracker.movies": "Фільми {name}",
   "tracker.shows": "Серіали {name}",
-  "tracker.not_linked": "Прив'яжіть обліковий запис {name} в Elementum (Kodi), щоб побачити це.",
+  "tracker.not_linked": "Ваш акаунт {name} ще не прив’язано.",
   "tracker.unsupported": "{name} не підтримує цей список.",
   "tracker.watchlist": "Список бажаного",
   "tracker.collection": "Колекція",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Позначено як переглянуте",
   "menu.done.unwatched": "Позначено як непереглянуте",
   "menu.already_in_library": "Уже в бібліотеці Kodi",
-  "tracker.link": "Прив'яжіть обліковий запис {name} в Elementum (Kodi)",
+  "tracker.link": "Прив’яжіть акаунт {name} у налаштуваннях",
   "details.options": "Параметри",
   "menu.failed": "Не вдалося оновити",
   "settings.key_test": "Перевірка кнопок пульта",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Відповідь за замовчуванням через {s} с",
   "ui.cancel_hint": "Червона: скасувати",
-  "ui.invalid": "Відповідь не прийнято"
+  "ui.invalid": "Відповідь не прийнято",
+  "tracker.linked": "Прив’язано",
+  "tracker.unlinked": "Не прив’язано",
+  "tracker.none": "В Elementum нічого не вибрано",
+  "tracker.link_account": "Прив’язати акаунт",
+  "tracker.link_again": "Прив’язати знову",
+  "tracker.link_instructions": "Відкрийте {url} на телефоні або комп’ютері та введіть код:",
+  "tracker.link_expires": "Спливає через {time}",
+  "tracker.link_expired": "Термін дії коду минув",
+  "common.try_again": "Повторити"
 }

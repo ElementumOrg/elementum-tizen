@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "Filme {name}",
   "tracker.shows": "Seriale {name}",
-  "tracker.not_linked": "Asociază contul tău {name} în Elementum (Kodi) pentru a vedea asta.",
+  "tracker.not_linked": "Contul tău {name} nu este încă conectat.",
   "tracker.unsupported": "{name} nu acceptă această listă.",
   "tracker.watchlist": "Listă de urmărit",
   "tracker.collection": "Colecție",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Marcat ca vizionat",
   "menu.done.unwatched": "Marcat ca nevizionat",
   "menu.already_in_library": "Deja în librăria Kodi",
-  "tracker.link": "Asociază contul tău {name} în Elementum (Kodi)",
+  "tracker.link": "Conectează-ți contul {name} din Setări",
   "details.options": "Opțiuni",
   "menu.failed": "Actualizarea a eșuat",
   "settings.key_test": "Test taste telecomandă",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Răspuns implicit în {s} s",
   "ui.cancel_hint": "Roșu: anulare",
-  "ui.invalid": "Răspunsul nu a fost acceptat"
+  "ui.invalid": "Răspunsul nu a fost acceptat",
+  "tracker.linked": "Conectat",
+  "tracker.unlinked": "Neconectat",
+  "tracker.none": "Niciunul selectat în Elementum",
+  "tracker.link_account": "Conectează contul",
+  "tracker.link_again": "Conectează din nou",
+  "tracker.link_instructions": "Deschide {url} pe telefon sau computer și introdu codul:",
+  "tracker.link_expires": "Expiră în {time}",
+  "tracker.link_expired": "Codul a expirat",
+  "common.try_again": "Încearcă din nou"
 }

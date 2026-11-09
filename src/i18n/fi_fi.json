@@ -57,7 +57,7 @@
   "tracker.generic": "Seuranta",
   "tracker.movies": "{name}: elokuvat",
   "tracker.shows": "{name}: sarjat",
-  "tracker.not_linked": "Yhdistä {name}-tilisi Elementumissa (Kodi), niin näet tämän.",
+  "tracker.not_linked": "{name}-tiliäsi ei ole vielä yhdistetty.",
   "tracker.unsupported": "{name} ei tue tätä listaa.",
   "tracker.watchlist": "Katselulista",
   "tracker.collection": "Kokoelma",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Merkitty katsotuksi",
   "menu.done.unwatched": "Merkitty katsomattomaksi",
   "menu.already_in_library": "On jo Kodin kirjastossa",
-  "tracker.link": "Yhdistä {name}-tilisi Elementumissa (Kodi)",
+  "tracker.link": "Yhdistä {name}-tilisi asetuksissa",
   "details.options": "Valinnat",
   "menu.failed": "Päivitys epäonnistui",
   "settings.key_test": "Kaukosäätimen näppäintesti",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Vastaa oletuksella {s} s kuluttua",
   "ui.cancel_hint": "Punainen: peruuta",
-  "ui.invalid": "Vastausta ei hyväksytty"
+  "ui.invalid": "Vastausta ei hyväksytty",
+  "tracker.linked": "Yhdistetty",
+  "tracker.unlinked": "Ei yhdistetty",
+  "tracker.none": "Elementumissa ei ole valittu mitään",
+  "tracker.link_account": "Yhdistä tili",
+  "tracker.link_again": "Yhdistä uudelleen",
+  "tracker.link_instructions": "Avaa {url} puhelimella tai tietokoneella ja syötä koodi:",
+  "tracker.link_expires": "Vanhenee: {time}",
+  "tracker.link_expired": "Koodi vanheni",
+  "common.try_again": "Yritä uudelleen"
 }

@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "Películas de {name}",
   "tracker.shows": "Series de {name}",
-  "tracker.not_linked": "Vincula tu cuenta de {name} en Elementum (Kodi) para verlo.",
+  "tracker.not_linked": "Tu cuenta de {name} todavía no está vinculada.",
   "tracker.unsupported": "{name} no admite esta lista.",
   "tracker.watchlist": "Lista de seguimiento",
   "tracker.collection": "Colección",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Marcado como visto",
   "menu.done.unwatched": "Marcado como no visto",
   "menu.already_in_library": "Ya está en la biblioteca de Kodi",
-  "tracker.link": "Vincula tu cuenta de {name} en Elementum (Kodi)",
+  "tracker.link": "Vinculá tu cuenta de {name} en Ajustes",
   "details.options": "Opciones",
   "menu.failed": "No se pudo actualizar",
   "settings.key_test": "Prueba de teclas del control remoto",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Responde por defecto en {s} s",
   "ui.cancel_hint": "Rojo: cancelar",
-  "ui.invalid": "La respuesta no fue aceptada"
+  "ui.invalid": "La respuesta no fue aceptada",
+  "tracker.linked": "Vinculado",
+  "tracker.unlinked": "No vinculado",
+  "tracker.none": "Ninguno seleccionado en Elementum",
+  "tracker.link_account": "Vincular cuenta",
+  "tracker.link_again": "Vincular de nuevo",
+  "tracker.link_instructions": "Abrí {url} en tu celular o computadora e ingresá el código:",
+  "tracker.link_expires": "Vence en {time}",
+  "tracker.link_expired": "El código venció",
+  "common.try_again": "Reintentar"
 }

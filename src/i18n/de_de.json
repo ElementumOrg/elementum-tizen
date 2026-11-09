@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "{name}-Filme",
   "tracker.shows": "{name}-Serien",
-  "tracker.not_linked": "Verknüpfe dein {name}-Konto in Elementum (Kodi), um dies zu sehen.",
+  "tracker.not_linked": "Dein {name}-Konto ist noch nicht verknüpft.",
   "tracker.unsupported": "{name} unterstützt diese Liste nicht.",
   "tracker.watchlist": "Merkliste",
   "tracker.collection": "Sammlung",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Als gesehen markiert",
   "menu.done.unwatched": "Als ungesehen markiert",
   "menu.already_in_library": "Bereits in der Kodi-Bibliothek",
-  "tracker.link": "Verknüpfe dein {name}-Konto in Elementum (Kodi)",
+  "tracker.link": "Verknüpfe dein {name}-Konto in den Einstellungen",
   "details.options": "Optionen",
   "menu.failed": "Aktualisierung fehlgeschlagen",
   "settings.key_test": "Fernbedienungstasten-Test",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Antwortet automatisch in {s} s",
   "ui.cancel_hint": "Rot: Abbrechen",
-  "ui.invalid": "Die Antwort wurde nicht akzeptiert"
+  "ui.invalid": "Die Antwort wurde nicht akzeptiert",
+  "tracker.linked": "Verknüpft",
+  "tracker.unlinked": "Nicht verknüpft",
+  "tracker.none": "In Elementum ist keiner ausgewählt",
+  "tracker.link_account": "Konto verknüpfen",
+  "tracker.link_again": "Erneut verknüpfen",
+  "tracker.link_instructions": "Öffne {url} auf deinem Handy oder Computer und gib den Code ein:",
+  "tracker.link_expires": "Läuft ab in {time}",
+  "tracker.link_expired": "Der Code ist abgelaufen",
+  "common.try_again": "Erneut versuchen"
 }

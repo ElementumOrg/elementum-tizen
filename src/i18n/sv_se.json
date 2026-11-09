@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "{name}-filmer",
   "tracker.shows": "{name}-serier",
-  "tracker.not_linked": "Länka ditt {name}-konto i Elementum (Kodi) för att se detta.",
+  "tracker.not_linked": "Ditt {name}-konto är inte länkat än.",
   "tracker.unsupported": "{name} stöder inte den här listan.",
   "tracker.watchlist": "Bevakningslista",
   "tracker.collection": "Samling",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Markerad som sedd",
   "menu.done.unwatched": "Markerad som osedd",
   "menu.already_in_library": "Finns redan i Kodi-biblioteket",
-  "tracker.link": "Länka ditt {name}-konto i Elementum (Kodi)",
+  "tracker.link": "Länka ditt {name}-konto i Inställningar",
   "details.options": "Alternativ",
   "menu.failed": "Det gick inte att uppdatera",
   "settings.key_test": "Test av fjärrkontrollens knappar",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Svarar som standard om {s} s",
   "ui.cancel_hint": "Röd: avbryt",
-  "ui.invalid": "Svaret godkändes inte"
+  "ui.invalid": "Svaret godkändes inte",
+  "tracker.linked": "Länkad",
+  "tracker.unlinked": "Inte länkad",
+  "tracker.none": "Ingen vald i Elementum",
+  "tracker.link_account": "Länka konto",
+  "tracker.link_again": "Länka igen",
+  "tracker.link_instructions": "Öppna {url} på din telefon eller dator och ange koden:",
+  "tracker.link_expires": "Går ut om {time}",
+  "tracker.link_expired": "Koden har gått ut",
+  "common.try_again": "Försök igen"
 }

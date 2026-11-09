@@ -5,9 +5,11 @@ import type { components } from '../api/schema';
 import { t } from '../i18n';
 import { trackerName } from '../tracker';
 import { openDetails } from '../screens/Details';
+import { Button } from './Button';
 import { Dialog } from './Dialog';
 import { ErrorView } from './ErrorView';
 import { Grid } from './Grid';
+import { LinkTracker } from './LinkTracker';
 import { Row } from './Row';
 import { Spinner } from './Spinner';
 import { usePaged, type FetchPage } from './pager';
@@ -26,11 +28,23 @@ export function errorMessage(e: unknown) {
   return t((e as ApiError).code === 'tracker_not_authorized' ? 'tracker.not_linked' : 'tracker.unsupported', { name: trackerName() });
 }
 
+/** ErrorView; for a tracker that isn't linked it adds "Link account", which retries once linked. */
+function PagedError({ error, onRetry }: { error: unknown; onRetry: () => void }) {
+  const [link, setLink] = useState(false);
+  const unlinked = error instanceof ApiError && error.code === 'tracker_not_authorized';
+  return (
+    <ErrorView message={errorMessage(error)} onRetry={onRetry}>
+      {unlinked && <Button label={t('tracker.link_account')} onPress={() => setLink(true)} />}
+      {link && <LinkTracker onClose={() => setLink(false)} onLinked={onRetry} />}
+    </ErrorView>
+  );
+}
+
 /** A grid screen body. Give it a new `key` when its list changes. */
 export function PagedGrid({ fetchPage, empty, onSelect = openDetails }: { fetchPage: FetchPage<MediaItem>; empty?: string; onSelect?: (item: MediaItem) => void }) {
   const p = usePaged(fetchPage);
   if (p.items.length) return <Grid items={p.items} onSelect={onSelect} onEndReached={p.more} />;
-  if (p.error) return <ErrorView message={errorMessage(p.error)} onRetry={p.more} />;
+  if (p.error) return <PagedError error={p.error} onRetry={p.more} />;
   if (p.loading) return <Spinner />;
   return <p class="empty">{empty || t('browse.empty')}</p>;
 }
@@ -43,7 +57,7 @@ export function PagedRow({ title, fetchPage }: { title: string; fetchPage: Fetch
   return (
     <div class="row">
       <h2>{title}</h2>
-      <div class="row-viewport">{p.error ? <ErrorView message={errorMessage(p.error)} onRetry={p.more} /> : <Spinner />}</div>
+      <div class="row-viewport">{p.error ? <PagedError error={p.error} onRetry={p.more} /> : <Spinner />}</div>
     </div>
   );
 }
@@ -66,7 +80,7 @@ export function Picker<O extends { name: string }>({ title, load, onPick, onClos
   }, []);
   if (!options && !error) return null;
   const ok = [{ label: t('common.ok'), onPress: onClose }];
-  if (error) return <Dialog title={errorMessage(error)} onClose={onClose} actions={ok} />;
+  if (error) return <Dialog title={error instanceof ApiError && error.code === 'tracker_not_authorized' ? t('tracker.link', { name: trackerName() }) : errorMessage(error)} onClose={onClose} actions={ok} />;
   if (!options!.length) return <Dialog title={t('browse.empty')} onClose={onClose} actions={ok} />;
   return (
     <Dialog title={title} onClose={onClose}

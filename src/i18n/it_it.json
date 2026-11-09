@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "Film {name}",
   "tracker.shows": "Serie {name}",
-  "tracker.not_linked": "Collega il tuo account {name} in Elementum (Kodi) per vederlo.",
+  "tracker.not_linked": "Il tuo account {name} non è ancora collegato.",
   "tracker.unsupported": "{name} non supporta questa lista.",
   "tracker.watchlist": "Watchlist",
   "tracker.collection": "Collezione",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Segnato come visto",
   "menu.done.unwatched": "Segnato come non visto",
   "menu.already_in_library": "Già nella libreria di Kodi",
-  "tracker.link": "Collega il tuo account {name} in Elementum (Kodi)",
+  "tracker.link": "Collega il tuo account {name} nelle Impostazioni",
   "details.options": "Opzioni",
   "menu.failed": "Aggiornamento non riuscito",
   "settings.key_test": "Test tasti del telecomando",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Risposta predefinita tra {s} s",
   "ui.cancel_hint": "Rosso: annulla",
-  "ui.invalid": "La risposta non è stata accettata"
+  "ui.invalid": "La risposta non è stata accettata",
+  "tracker.linked": "Collegato",
+  "tracker.unlinked": "Non collegato",
+  "tracker.none": "Nessuno selezionato in Elementum",
+  "tracker.link_account": "Collega account",
+  "tracker.link_again": "Collega di nuovo",
+  "tracker.link_instructions": "Apri {url} sul telefono o sul computer e inserisci il codice:",
+  "tracker.link_expires": "Scade tra {time}",
+  "tracker.link_expired": "Il codice è scaduto",
+  "common.try_again": "Riprova"
 }

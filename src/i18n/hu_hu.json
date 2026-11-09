@@ -57,7 +57,7 @@
   "tracker.generic": "Követő",
   "tracker.movies": "{name} filmek",
   "tracker.shows": "{name} sorozatok",
-  "tracker.not_linked": "Ennek megtekintéséhez kapcsolja össze {name} fiókját az Elementumban (Kodi).",
+  "tracker.not_linked": "A(z) {name}-fiókja még nincs összekapcsolva.",
   "tracker.unsupported": "A {name} nem támogatja ezt a listát.",
   "tracker.watchlist": "Figyelőlista",
   "tracker.collection": "Gyűjtemény",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Megjelölve megtekintettként",
   "menu.done.unwatched": "Megjelölve meg nem tekintettként",
   "menu.already_in_library": "Már a Kodi könyvtárban van",
-  "tracker.link": "Kapcsolja össze {name} fiókját az Elementumban (Kodi)",
+  "tracker.link": "Kapcsolja össze a(z) {name}-fiókját a Beállításokban",
   "details.options": "Lehetőségek",
   "menu.failed": "A frissítés nem sikerült",
   "settings.key_test": "Távirányító gombteszt",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Alapértelmezett válasz {s} mp múlva",
   "ui.cancel_hint": "Piros: mégse",
-  "ui.invalid": "A választ nem fogadta el"
+  "ui.invalid": "A választ nem fogadta el",
+  "tracker.linked": "Összekapcsolva",
+  "tracker.unlinked": "Nincs összekapcsolva",
+  "tracker.none": "Az Elementumban nincs kiválasztva",
+  "tracker.link_account": "Fiók összekapcsolása",
+  "tracker.link_again": "Újra összekapcsolás",
+  "tracker.link_instructions": "Nyissa meg a(z) {url} oldalt a telefonján vagy számítógépén, és adja meg a kódot:",
+  "tracker.link_expires": "Lejár: {time}",
+  "tracker.link_expired": "A kód lejárt",
+  "common.try_again": "Újra"
 }

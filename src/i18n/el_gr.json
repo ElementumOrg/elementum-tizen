@@ -57,7 +57,7 @@
   "tracker.generic": "Tracker",
   "tracker.movies": "Ταινίες {name}",
   "tracker.shows": "Σειρές {name}",
-  "tracker.not_linked": "Συνδέστε τον λογαριασμό {name} στο Elementum (Kodi) για να το δείτε.",
+  "tracker.not_linked": "Ο λογαριασμός σας {name} δεν έχει συνδεθεί ακόμα.",
   "tracker.unsupported": "Το {name} δεν υποστηρίζει αυτή τη λίστα.",
   "tracker.watchlist": "Λίστα παρακολούθησης",
   "tracker.collection": "Συλλογή",
@@ -125,7 +125,7 @@
   "menu.done.watched": "Σημάνθηκε ως παρακολουθημένο",
   "menu.done.unwatched": "Σημάνθηκε ως μη παρακολουθημένο",
   "menu.already_in_library": "Ήδη στη συλλογή του Kodi",
-  "tracker.link": "Συνδέστε τον λογαριασμό {name} στο Elementum (Kodi)",
+  "tracker.link": "Συνδέστε τον λογαριασμό σας {name} στις Ρυθμίσεις",
   "details.options": "Επιλογές",
   "menu.failed": "Η ενημέρωση απέτυχε",
   "settings.key_test": "Δοκιμή πλήκτρων τηλεχειριστηρίου",
@@ -174,5 +174,14 @@
   "ui.title": "Elementum",
   "ui.timeout": "Αυτόματη απάντηση σε {s} δ",
   "ui.cancel_hint": "Κόκκινο: ακύρωση",
-  "ui.invalid": "Η απάντηση δεν έγινε δεκτή"
+  "ui.invalid": "Η απάντηση δεν έγινε δεκτή",
+  "tracker.linked": "Συνδεδεμένο",
+  "tracker.unlinked": "Μη συνδεδεμένο",
+  "tracker.none": "Δεν έχει επιλεγεί κανένα στο Elementum",
+  "tracker.link_account": "Σύνδεση λογαριασμού",
+  "tracker.link_again": "Νέα σύνδεση",
+  "tracker.link_instructions": "Ανοίξτε το {url} στο κινητό ή τον υπολογιστή σας και πληκτρολογήστε τον κωδικό:",
+  "tracker.link_expires": "Λήγει σε {time}",
+  "tracker.link_expired": "Ο κωδικός έληξε",
+  "common.try_again": "Δοκιμάστε ξανά"
 }
