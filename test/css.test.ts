@@ -1,31 +1,47 @@
+import postcss from 'postcss';
 import { expect, test } from 'vitest';
 
-/** Returns an error text for the first unbalanced brace, or '' when the CSS is well formed (rules may nest only inside @-rules). */
+/** Returns an error text for the first sign of a dropped brace, or '' when the CSS is well formed. */
 export function braceProblem(css: string): string {
-  const stack: boolean[] = []; // true = @-rule
-  let start = 0;
-  const text = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (c === '{') {
-      if (stack.length && !stack[stack.length - 1]) return 'rule opened inside a rule near: ' + text.slice(start, i).trim().slice(-40);
-      stack.push(text.slice(start, i).trim().charAt(0) === '@');
-      start = i + 1;
-    } else if (c === '}') {
-      if (!stack.length) return 'stray }';
-      stack.pop();
-      start = i + 1;
-    } else if (c === ';') start = i + 1;
+  let root;
+  try {
+    root = postcss.parse(css);
+  } catch (e) {
+    return (e as Error).message; // unclosed block / stray }
   }
-  return stack.length ? 'unclosed {' : '';
+  let problem = '';
+  root.walkRules((rule) => {
+    if (problem) return;
+    const p = rule.parent as postcss.Container | undefined;
+    const inKeyframes = p?.type === 'atrule' && /keyframes$/i.test((p as postcss.AtRule).name);
+    // A missing } swallows the next rule into the open one (or into @keyframes, whose children must be from/to/N%).
+    if (p?.type === 'rule') problem = 'rule nested in rule: ' + rule.selector;
+    else if (inKeyframes && !/^(from|to|[\d.]+%)(\s*,\s*(from|to|[\d.]+%))*$/i.test(rule.selector)) problem = 'bad keyframe selector: ' + rule.selector;
+    else if (/[{;]/.test(rule.selector)) problem = 'declaration in selector: ' + rule.selector;
+  });
+  root.walkDecls((d) => {
+    if (!problem && /[{}]/.test(d.value)) problem = 'brace in value: ' + d.prop;
+  });
+  return problem;
 }
 
 const files = import.meta.glob<string>('../src/**/*.css', { query: '?raw', import: 'default', eager: true });
+const good = '@media (min-width: 1px) {\n  .a {\n    top: 0;\n  }\n  .b {\n    top: 1px;\n  }\n}\n@keyframes k {\n  to {\n    top: 1px;\n  }\n}\n.c {\n  top: 0;\n}\n.d {\n  top: 0;\n}\n';
 
-test('braceProblem catches an unclosed rule', () => {
-  expect(braceProblem('.a { color: red; }\n.b { color: blue;\n\n/* x */\n.c { top: 0; }')).toMatch(/inside a rule/);
-  expect(braceProblem('.a { color: red;')).toBe('unclosed {');
-  expect(braceProblem('@media (x) { .a { top: 0; } }\n@keyframes k { to { top: 1px; } }')).toBe('');
+test('braceProblem accepts well-formed css', () => {
+  expect(braceProblem(good)).toBe('');
+});
+
+test('braceProblem catches a } dropped inside an @media block', () => {
+  expect(braceProblem(good.replace('top: 0;\n  }\n  .b', 'top: 0;\n  .b'))).not.toBe('');
+});
+
+test('braceProblem catches a } dropped inside @keyframes', () => {
+  expect(braceProblem(good.replace('top: 1px;\n  }\n}\n.c', 'top: 1px;\n}\n.c'))).not.toBe('');
+});
+
+test('braceProblem catches a } dropped from a top-level rule', () => {
+  expect(braceProblem(good.replace('top: 0;\n}\n.d', 'top: 0;\n.d'))).not.toBe('');
 });
 
 test('every src css file is balanced', () => {
