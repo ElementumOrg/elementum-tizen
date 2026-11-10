@@ -1194,7 +1194,7 @@ export interface components {
             /**
              * Format: uri
              * @description Absolute signed link to `getStream`; set in `ready`.
-             * @example http://192.168.1.10:65220/api/v1/stream/3f2a9c/0?exp=1793750400&sig=...
+             * @example http://192.168.1.10:65220/api/stream/3f2a9c/0?exp=1793750400&sig=...
              */
             stream_url?: string;
             /** @description Set in `error`. */
@@ -1263,7 +1263,7 @@ export interface components {
             media_type?: "movie" | "episode";
             /** @description Episodes only; 0 is specials. */
             season?: number;
-            /** @description Episodes only */
+            /** @description Episodes only, when known. */
             episode?: number;
             /** @description A Kodi or API player is attached. */
             has_player: boolean;

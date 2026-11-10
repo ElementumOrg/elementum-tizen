@@ -1,5 +1,9 @@
 # A8a: Elementum settings from a JSON file (research and design)
 
+> Historical design. The 2026-11-09 branch review supersedes the versioned API paths below:
+> the JSON API uses `/api`, with source spec `api/json/openapi.yaml` in Go package `jsonapi`.
+> Earlier proposals are retained as recorded; see the current decisions in [PLAN.md](../PLAN.md).
+
 Read-only research. Nothing was built or changed in the three repos. Elementum = `/home/elgato/Develop/elementum` (branch `api`), addon = `/home/elgato/Develop/plugin.video.elementum` (`master`), lt2http = `/home/elgato/Develop/lt2http` plus `/home/elgato/Develop/service.lt2http`.
 
 ## 1. How lt2http does it

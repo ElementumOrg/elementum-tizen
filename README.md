@@ -15,10 +15,11 @@ Elementum still uses Kodi for provider (Burst) search.
 ## Requirements
 
 - **Elementum built from the `api` branch** (planned for the plugin.video.elementum 0.1.120 release), i.e.
-  Elementum with the `/api/v1` JSON API. A stock release has no such API and the app cannot connect. It must
+  Elementum with the unversioned `/api` JSON API. A stock release has no such API and the app cannot connect. It must
   run on a machine reachable from the TV on the LAN (default port 65220).
-- **Kodi with the Burst add-on** (or another provider add-on) for stream search and for tracker
-  authorization (Trakt, Simkl, MDBList, ...).
+  Update the daemon and TV app together; this app requires the matching `/api` daemon.
+- **Kodi with the Burst add-on** (or another provider add-on) for stream search.
+  Tracker authorization (Trakt, Simkl, MDBList, ...) uses JSON device login and works without Kodi.
 - A Samsung TV with **Tizen 4.0 or newer** (2018+ models), in **Developer Mode** for sideloading
   (see INSTALL.md).
 
@@ -72,11 +73,19 @@ npm run dev         # dev server; open the printed URL in Chrome (layout is fixe
 npm run build       # production build into dist/ (index.html, config.xml, icon.png, assets/)
 npm run typecheck   # tsc --noEmit
 npm test            # vitest (builds dist/ first; includes the i18n completeness and build tests)
-npm run api:sync    # copy apiv1/openapi.yaml from Elementum and regenerate src/api/schema.d.ts
+npm run api:sync    # copy api/json/openapi.yaml from Elementum and regenerate src/api/schema.d.ts
 ```
 
-`api:sync` reads the spec with `git show $ELEMENTUM_REF:apiv1/openapi.yaml` from the repo at
-`$ELEMENTUM_REPO` (defaults: `../elementum`, ref `api`).
+`api:sync` resolves `$ELEMENTUM_REF` to a commit and reads `api/json/openapi.yaml` with `git show` from
+`$ELEMENTUM_REPO` (defaults: `../elementum`, ref `api`). Commit the daemon's spec move first, then sync
+from that commit, for example:
+
+```sh
+ELEMENTUM_REPO=/path/to/elementum ELEMENTUM_REF='<committed-spec-ref>' npm run api:sync
+```
+
+Commit `api/openapi.yaml`, `src/api/schema.d.ts` and `api/SPEC_REF` together after syncing; do not edit them by hand.
+The unversioned API migration is pinned to daemon commit `f667ef3`.
 
 **Against a dev daemon:** build and run Elementum from the `api` branch, open the dev server URL in Chrome and
 enter the daemon's IP and port (for example `127.0.0.1` and `65220`) on the setup screen. The API's CORS

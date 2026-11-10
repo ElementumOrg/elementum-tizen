@@ -13,7 +13,7 @@ if (!/^[\w./-]+$/.test(ref) || ref.startsWith('-')) throw new Error(`invalid ELE
 
 const git = (...args) => execFileSync('git', ['-C', repo, ...args], { maxBuffer: 64 << 20 });
 const sha = git('rev-parse', '--verify', `${ref}^{commit}`).toString().trim();
-const spec = git('show', `${sha}:apiv1/openapi.yaml`);
+const spec = git('show', `${sha}:api/json/openapi.yaml`);
 
 // Generate from a temp copy first, so a failed generation leaves the committed spec and types in sync.
 const tmp = mkdtempSync(join(tmpdir(), 'elementum-api-'));

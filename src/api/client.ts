@@ -1,4 +1,4 @@
-// Thin typed client for Elementum's /api/v1. XHR, not fetch: Chrome 56 has no AbortController.
+// Thin typed client for Elementum's /api. XHR, not fetch: Chrome 56 has no AbortController.
 import type { paths } from './schema';
 import { loadServer, type Server } from '../settings';
 import { t } from '../i18n';
@@ -65,7 +65,7 @@ export const del = <P extends PathsWith<'delete'>>(path: P, opts: Options<Op<P, 
   request<Ok<Op<P, 'delete'>>>('DELETE', path, opts);
 
 export function baseUrl(s: Server) {
-  return `http://${s.ip}:${s.port}/api/v1`;
+  return `http://${s.ip}:${s.port}/api`;
 }
 
 function buildUrl(s: Server, path: string, params: unknown, query: unknown) {

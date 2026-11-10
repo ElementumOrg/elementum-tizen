@@ -1,5 +1,9 @@
 # Elementum internals — Step 0 notes
 
+> Historical research. The 2026-11-09 branch review supersedes the versioned API proposals below:
+> the JSON API uses `/api`, with source spec `api/json/openapi.yaml` in Go package `jsonapi`.
+> Earlier paths and observations are retained as recorded; see the current decisions in [PLAN.md](../PLAN.md).
+
 Source: `/home/elgato/Develop/elementum` @ `master` (628b5b6), addon `/home/elgato/Develop/plugin.video.elementum` @ `master`.
 All paths below are relative to the Elementum repo unless prefixed with `addon:`. Read-only research; nothing was built or changed.
 

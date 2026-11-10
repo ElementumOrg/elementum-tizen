@@ -1,6 +1,13 @@
 # Elementum TV (Tizen) — Implementation Plan
 
-Status: draft v1 · 2026-11-06
+Status: active plan · updated 2026-11-09
+
+> Current migration decision (2026-11-09): one JSON API at `/api`, daemon source spec
+> `api/json/openapi.yaml`, Go package `jsonapi`. Deploy the daemon and TV app together.
+> The migration and schema sync are complete against daemon commit `f667ef3`.
+> Typecheck, production build and all 149 tests pass. Live TV/Kodi verification remains before release.
+> Sections 7e–7f and the decisions log retain earlier history. The branch review supersedes old
+> versioned paths and the broad S1 feature scope; new endpoints are outside this migration.
 
 ## 1. Goal
 
@@ -16,7 +23,7 @@ Two repos are touched:
 
 | Repo | Work |
 |---|---|
-| `elementum` (Go), branch **`api`** | New JSON API under `/api/v1` with an OpenAPI 3 spec and Swagger UI. Existing Kodi routes stay unchanged. All Elementum work goes to `api` (step branches merge into `api`, not `master`). `api` is merged upstream once it is ready and tested. |
+| `elementum` (Go), branch **`api`** | New JSON API under `/api` with an OpenAPI 3 spec and Swagger UI. Existing Kodi routes stay unchanged. All Elementum work goes to `api` (step branches merge into `api`, not `master`). `api` is merged upstream once it is ready and tested. |
 | `elementum-tizen` (this repo) | TV app, CI packaging, install docs. |
 
 **Runtime assumption:** Elementum is already running somewhere on the LAN. How it runs is out of scope. If it isn't reachable yet, the app shows a "Waiting for Elementum at IP:port…" dialog and continues on its own once Elementum responds.
@@ -26,8 +33,8 @@ Two repos are touched:
 ```
  Samsung TV                                 LAN machine
 ┌──────────────────────────┐   HTTP JSON   ┌─────────────────────────────────────────┐
-│ Elementum TV (.wgt)      │  /api/v1/*    │ Elementum (Go, gin)                     │
-│  Preact UI + spatial nav │──────────────▶│  /api/v1  ── TMDB / Trakt / library     │
+│ Elementum TV (.wgt)      │  /api/*       │ Elementum (Go, gin)                     │
+│  Preact UI + spatial nav │──────────────▶│  /api     ── TMDB / Trakt / library     │
 │  API client (Basic auth) │               │           ── providers via Kodi (Burst) │
 │  AVPlay player           │◀──────────────│           ── libtorrent session         │
 └──────────────────────────┘  stream_url   │  existing Kodi routes (unchanged)       │
@@ -39,13 +46,13 @@ Two repos are touched:
 | Topic | Decision | Why |
 |---|---|---|
 | **Reuse first** | API handlers are thin: parse input → call the **existing** Elementum functions (TMDB/Trakt/library fetch + cache, provider search, torrent/player, file serving) → map to the spec DTOs. No second fetch or cache layer. Where existing logic is fused with Kodi list-item building, split out the data part so both the Kodi routes and `/api` call it, and keep Kodi output identical. | One code path to maintain; the Kodi addon and the TV app stay consistent. |
-| API prefix | `/api/v1` | `/api` as asked, plus a version so it can change later without breaking clients. |
-| Spec | **Spec-first** `apiv1/openapi.yaml` (OpenAPI 3.0) in a new Go package `apiv1/` (the existing `api/` package holds the Kodi handlers). The Go server interface and models are generated with `oapi-codegen` (gin, strict server), installed as a `go.mod` `tool` like msgp, with generated code committed. No request-validator middleware: the strict server's typed params are enough. | One contract drives both sides; the TV app can start as soon as the spec exists; input/output are typed and validated. |
-| Docs | Swagger UI at `/api/docs` (tiny HTML page that loads swagger-ui from a CDN), raw spec at `/api/v1/openapi.yaml` | No bundled assets in the Go binary. |
+| API prefix | `/api` | One unversioned contract; deploy the daemon and TV app together. |
+| Spec | **Spec-first** `api/json/openapi.yaml` (OpenAPI 3.0), Go package `jsonapi`; the existing `api/` package holds the Kodi handlers. The Go server interface and models are generated with `oapi-codegen` (gin, strict server), installed as a `go.mod` `tool` like msgp, with generated code committed. The strict server parses typed parameters; explicit handler validation enforces bounds and enums. | One contract drives both sides; the TV app can start as soon as the spec exists; input/output are typed and validated. |
+| Docs | Swagger UI at `/api/docs` (tiny HTML page that loads swagger-ui from a CDN), raw spec at `/api/openapi.yaml` | No bundled assets in the Go binary. |
 | Errors | `{"error": {"code": "trakt_not_authorized", "message": "..."}}` + proper HTTP status | Clients can branch on `code`. |
-| Auth | HTTP Basic with the existing `config.Args.LocalLogin/LocalPassword`; none when both are empty. The global `Auth()` in `api/routes.go` skips `/api/`, and `/api/v1` runs its own check with the same credentials. It returns the JSON 401 with **no** `WWW-Authenticate` header, so browsers show no popup. `/api/v1/stream` skips Basic (HMAC only). | Matches the existing setup; JSON errors everywhere. |
+| Auth | HTTP Basic with the existing `config.Args.LocalLogin/LocalPassword`; none when both are empty. The global `Auth()` in `api/routes.go` skips `/api/`, and `/api` runs its own check with the same credentials. It returns the JSON 401 with **no** `WWW-Authenticate` header, so browsers show no popup. `/api/stream` skips Basic (HMAC only). | Matches the existing setup; JSON errors everywhere. |
 | CORS | Reuse the existing global `CORS()` and add `DELETE` | Already there. |
-| Stream auth | **HMAC-signed links.** `stream_url` = `/api/v1/stream/{session_id}/{file_index}?exp=<unix>&sig=<hex>`, where `sig = HMAC-SHA256(key, session_id + "/" + file_index + "/" + exp)`. The key is 32 random bytes generated when Elementum starts. The server checks with `hmac.Equal`, rejects expired links, and requires the session to still be active. The stream path skips Basic auth. | AVPlay can't send auth headers. A signed link can't be forged or reused after the session stops. A per-process key means a restart invalidates all links, which is fine because sessions die with the process too. |
+| Stream auth | **HMAC-signed links.** `stream_url` = `/api/stream/{session_id}/{file_index}?exp=<unix>&sig=<hex>`, where `sig = HMAC-SHA256(key, session_id + "/" + file_index + "/" + exp)`. The key is 32 random bytes generated when Elementum starts. The server checks with `hmac.Equal`, rejects expired links, and requires the session to still be active. The stream path skips Basic auth. | AVPlay can't send auth headers. A signed link can't be forged or reused after the session stops. A per-process key means a restart invalidates all links, which is fine because sessions die with the process too. |
 | Unreachable server | The client separates a network error (Elementum not up) from 401 (wrong credentials). A network error opens the waiting dialog, which retries `/system/info` every 3 s. A 401 opens Setup. | Matches the "wait until Elementum is up" behaviour. |
 | Metadata language | `lang` query param on catalog endpoints, defaulting to Elementum's setting. It accepts `de` or `de-DE`, normalized once in the API layer. The existing TMDB fetchers already take `lang` per call and key the cache on it. The DTO mapping reads TMDB's localized fields directly, not the `GetTitle()`-style helpers that read the global config. | The UI language and TMDB language can follow the app's switcher. |
 | Trackers | User lists go through Elementum's generic **tracker** layer (Trakt/Simkl/MDBList/…): `/tracker/...`, and 409 `tracker_not_authorized` when no account is linked. Public charts (trending/popular/…) stay `/trakt/...` and need no auth. Never call `trakt.Authorized()`, which starts the Kodi device-login flow; check the token or the tracker's state instead. | Reuses the existing abstraction; works for non-Trakt users. |
@@ -59,7 +66,7 @@ Two repos are touched:
 | Settings storage | `localStorage` (server, credentials, language) | Single-user TV. Credentials are stored in plain text; documented. |
 | Distribution | **Apps2Samsung** (desktop sideloading tool for Windows/macOS/Linux): the user puts the TV in Developer Mode, opens Apps2Samsung, and installs our `.wgt` from GitHub Releases. Apps2Samsung handles Samsung signing for the TV. Fallback: the manual Tizen CLI (`sdb connect` + re-sign + `tizen install`). No TizenBrew, no npm, no Samsung store (see §8). | One `.wgt` for everyone, with full Tizen APIs (AVPlay, key registration, our `config.xml` privileges). |
 
-## 4. API v1 contract (draft — finalized in step A1)
+## 4. JSON API contract (draft — finalized in step A1)
 
 Common: `page` (1-based), `limit` (page size 1–100; defaults to Elementum's `results_per_page`), `lang` (BCP-47, e.g. `de-DE`). Paged responses look like `{ "items": [...], "page": 1, "limit": 20, "total_pages": 10, "total_results": 200 }`. Every list endpoint takes `limit`; only unpaged arrays (genres, tracker lists) don't.
 `MediaItem` (list entry) = `{ type: movie|show, tmdb_id, title, year, overview, poster, backdrop, rating, genres[] }`. Image fields are absolute URLs.
@@ -121,8 +128,8 @@ For UI steps, implementers must check their screenshots visually (Read the image
 5. **Merge**: squash-merge into `api` (Elementum) or `main` (this repo), tick the step here, and write any deviations in §9 Decisions log.
 6. 👤 marks a **human checkpoint**: work stops until the user confirms.
 
-**Rules for every `apiv1` handler (A2–A5); the implementer prompt must include them:**
-- The strict server only parses types. Every handler validates its input with the shared apiv1 helper (`page` ≥ 1, `.Valid()` on enums) and returns 400 `bad_request` otherwise. Add one 400 test per enum endpoint.
+**Rules for every `jsonapi` handler (A2–A5); the implementer prompt must include them:**
+- The strict server only parses types. Every handler validates its input with the shared jsonapi helper (`page` ≥ 1, `.Valid()` on enums) and returns 400 `bad_request` otherwise. Add one 400 test per enum endpoint.
 - Use `ctx.(*gin.Context).Request.Context()` for anything long-running (search, metadata fetches), so a client cancel stops the work. Never enable gin `ContextWithFallback` globally, because it changes Kodi handlers.
 - **Page size:** honour `limit` by passing it into the existing fetchers. Where a fetcher reads `config.Get().ResultsPerPage` itself (`tmdb/movie.go:236`, `tmdb/show.go:208`, `trakt/movies.go`, `trakt/shows.go`), add a `perPage` argument, with the Kodi callers passing `config.Get().ResultsPerPage`, so Kodi output stays identical. Don't write a second pagination layer. The TMDB cache holds TMDB's fixed 20-item pages, so any `limit` reuses it. Check that cache keys for Trakt requests include the limit.
 - Never put `err.Error()` from upstream calls into responses; it can contain URLs with `api_key`. Log it and return a generic message.
@@ -165,18 +172,18 @@ Read the Elementum repo and write `docs/elementum-notes.md` in this repo, with `
 
 ### A1 — API foundation + full spec
 - Create branch `api` from `master` in `/home/elgato/Develop/elementum`.
-- `api/openapi.yaml` with **all** v1 endpoints and schemas from §4, the error schema, and the Basic security scheme. Use `operationId` everywhere and add examples.
-- `oapi-codegen` as a `go.mod` tool + `go:generate` in the new package `apiv1/`; mount the `/api/v1` group on the existing engine in `api.Routes`.
-- Auth as in §3: the global `Auth()` skips `/api/`; the `apiv1` Basic check returns the JSON 401. Add `DELETE` to the existing `CORS()`. Errors are JSON; the existing recovery is reused.
-- `/api/docs` Swagger UI page; `/api/v1/openapi.yaml`.
+- `api/json/openapi.yaml` with **all** JSON API endpoints and schemas from §4, the error schema, and the Basic security scheme. Use `operationId` everywhere and add examples.
+- `oapi-codegen` as a `go.mod` tool + `go:generate` in the `api/json/` package (`jsonapi`); mount the `/api` group on the existing engine in `api.Routes`.
+- Auth as in §3: the global `Auth()` skips `/api/`; the `jsonapi` Basic check returns the JSON 401. Add `DELETE` to the existing `CORS()`. Errors are JSON; the existing recovery is reused.
+- `/api/docs` Swagger UI page; `/api/openapi.yaml`.
 - Implement `GET /system/info`. Every other operation returns 501 `not_implemented`.
 - CI: in the existing lint job (no cgo needed), regenerate the code and fail on `git diff --exit-code`.
 
 **Done when:** unit tests pass for 401 without creds / 200 with creds / 200 with auth disabled, the CORS preflight, and the 501 error shape. Swagger UI renders. Existing Kodi routes are untouched (their tests still pass). 👤 The user reviews the spec, since it is the contract for everything else.
 
 ### A2 — Catalog & search
-Implement the movies/shows lists, genres, details, seasons, and search through the existing TMDB layer and cache. Map to the spec DTOs in one place (`apiv1/mapping.go`). Image paths become absolute URLs (posters at w342, backdrops at w1280, original-size logos). TMDB has no existing wrappers for trending, upcoming, or multi search, so add one-line ones next to the existing fetchers. `now_playing` maps to `RecentMovies`; year/genre filters go through `DiscoverMovies`.
-**Done when:** mapping unit tests pass against fixture TMDB JSON in `apiv1/testdata/`; `lang=de-DE` returns German titles; every endpoint responds through Swagger UI "Try it out".
+Implement the movies/shows lists, genres, details, seasons, and search through the existing TMDB layer and cache. Map to the spec DTOs in one place (`api/json/mapping.go`). Image paths become absolute URLs (posters at w342, backdrops at w1280, original-size logos). TMDB has no existing wrappers for trending, upcoming, or multi search, so add one-line ones next to the existing fetchers. `now_playing` maps to `RecentMovies`; year/genre filters go through `DiscoverMovies`.
+**Done when:** mapping unit tests pass against fixture TMDB JSON in `api/json/testdata/`; `lang=de-DE` returns German titles; every endpoint responds through Swagger UI "Try it out".
 
 ### A3 — Library, tracker & Trakt charts
 Library lists. Tracker watchlist/collection/progress/custom lists through the existing generic tracker layer, plus the Trakt public charts, all resolved to `MediaItem` with TMDB ids. Without a linked account, return 409 `tracker_not_authorized`; never trigger the Kodi login flow.
@@ -193,7 +200,7 @@ Movie and episode stream endpoints reuse the existing provider search, sorting, 
 - `http(s)` only when it exactly matches a cached result.
 Reject `file:`, `plugin:`, relative paths, and `..`. Return a generic 400 that never echoes paths or `err.Error()`. Without these checks, `Download()` reads any absolute path, and http URIs allow server-side requests to internal URLs and header injection via `|k=v`. Tests cover every rejected form.
 **Biggest change in the Elementum part.** The existing `bittorrent.Player` assumes a Kodi host: `updateWatchTimes` dereferences `xbmcHost` without checking it, and multi-file movies open a Kodi picker. Add a small **external mode** to `bittorrent/player.go`: no Kodi dialogs, overlay, or watch-time loop, and lifecycle driven by API calls. `ChooseFile` returns a sentinel error for an ambiguous choice, which drives `choosing_file`. `GetActivePlayer` skips API players so Kodi player events never reach them. Never call `NewPlayer(..., nil)` with today's loop.
-Session store (one active session). `POST` adds the torrent and selects the file (auto for movies and episodes, `choosing_file` when ambiguous). `GET` reports state/progress. `progress` keeps the session alive, stores the resume point, and scrobbles to Trakt. `DELETE` and the idle reaper clean up. `stream_url` is an absolute LAN URL to `GET /api/v1/stream/{id}/{file_index}`, which wraps the existing Range-capable `bittorrent.NewTorrentFS` file serving (as used by `/files/`) and is authorized only by the HMAC link from §3 (expiry 12 h; session must be active). This path must not depend on Kodi player callbacks. Mount `HEAD` on the same stream handler outside the spec (ServeContent and `NewTorrentFS(method)` handle it). Fill `resume_s` from the stored resume point or tracker progress.
+Session store (one active session). `POST` adds the torrent and selects the file (auto for movies and episodes, `choosing_file` when ambiguous). `GET` reports state/progress. `progress` keeps the session alive, stores the resume point, and scrobbles to Trakt. `DELETE` and the idle reaper clean up. `stream_url` is an absolute LAN URL to `GET /api/stream/{id}/{file_index}`, which wraps the existing Range-capable `bittorrent.NewTorrentFS` file serving (as used by `/files/`) and is authorized only by the HMAC link from §3 (expiry 12 h; session must be active). This path must not depend on Kodi player callbacks. Mount `HEAD` on the same stream handler outside the spec (ServeContent and `NewTorrentFS(method)` handle it). Fill `resume_s` from the stored resume point or tracker progress.
 **Done when:** tests cover the state machine and HMAC (valid, tampered sig/path/exp, expired, stopped session → 403, all compared with `hmac.Equal`). An integration check with a legal public-domain torrent (e.g. Big Buck Bunny/Sintel) reaches `ready` and returns `206` on a ranged GET. The reaper stops the session after 60 s without calls. Kodi playback still works. 👤 The user runs the integration check on their setup.
 
 ### B1 — Scaffold (this repo)
@@ -332,6 +339,8 @@ The `urgent` flag for questions during playback is dropped for now: no question 
 
 ## 7f. Final review of Elementum `api`: reuse and Swagger (2026-11-09)
 
+> Historical review scope, superseded by the current migration decision above. Retained as recorded.
+
 Three read-only reviews (apiv1 duplication, duplication outside apiv1, Swagger route inventory) found about 560 removable lines and an invalid spec (an unquoted comma in `Torrent.episode`'s description; no test validated the spec). User decisions: merge Trakt into `tracker.DeviceFlow` but keep Trakt's own Kodi texts; add `/api/v1` operations for adding torrents, version + Kodi hosts, reload/restart/shutdown and torrent file actions; keep Swagger UI on the CDN.
 
 | ID | Repo | Step | Depends on |
@@ -344,7 +353,7 @@ Three read-only reviews (apiv1 duplication, duplication outside apiv1, Swagger r
 ## 8. Risks / open questions
 
 1. **Samsung store: not pursued.** Seller Office requires a seller account (a business registration and partner level for launches outside the US / for some APIs), pre-certification testing, and compliance with Samsung's content policy. A torrent front-end is very likely to be rejected, so effort goes to the `.wgt` via Apps2Samsung instead.
-2. **`/files/` is open today.** It is mounted outside gin (`main.go:281`) with no auth, so anyone on the LAN can read torrent files there. This predates the plan and is left unchanged because Kodi playback depends on it. The new `/api/v1/stream` is HMAC-protected.
+2. **`/files/` is open today.** It is mounted outside gin (`main.go:281`) with no auth, so anyone on the LAN can read torrent files there. This predates the plan and is left unchanged because Kodi playback depends on it. The new `/api/stream` is HMAC-protected.
 3. **Developer Mode:** the TV stays in Developer Mode for sideloaded apps (Apps2Samsung or CLI).
 4. **Codec support** depends on the TV model (e.g. DTS was dropped on 2018+ models). No transcoding is planned; the UI shows codec badges so users can pick wisely.
 5. **Apps2Samsung:** a community tool; Developer Mode must stay enabled on the TV, and sideloaded apps may need reinstalling when the signing certificate expires. B2 documents the details; the manual Tizen CLI path stays as the fallback.

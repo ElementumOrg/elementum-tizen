@@ -53,7 +53,7 @@ test('builds the URL from settings, path params and query; parses JSON', async (
   const req = get('/movies/lists/{list}', { path: { list: 'top_rated' }, query: { page: 2, lang: 'de-DE', genre: undefined } });
   const x = last();
   expect(x.method).toBe('GET');
-  expect(x.url).toBe('http://192.168.1.2:65220/api/v1/movies/lists/top_rated?page=2&lang=de-DE');
+  expect(x.url).toBe('http://192.168.1.2:65220/api/movies/lists/top_rated?page=2&lang=de-DE');
   expect(x.timeout).toBe(75000);
   expect(x.headers.Authorization).toBeUndefined();
   x.respond(200, '{"items":[{"title":"Ä"}],"page":2}');
@@ -84,7 +84,7 @@ test('Basic auth header (UTF-8), JSON body, timeout override, empty 204', async 
   expect(await req).toEqual({ id: 's1' });
 
   const d = del('/playback/{id}', { server, path: { id: 'a/b' } });
-  expect(last().url).toBe('http://10.0.0.5:65220/api/v1/playback/a%2Fb');
+  expect(last().url).toBe('http://10.0.0.5:65220/api/playback/a%2Fb');
   last().respond(204, '');
   expect(await d).toBeUndefined();
 });

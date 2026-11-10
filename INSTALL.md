@@ -6,10 +6,11 @@
 Requirements:
 
 - A Samsung TV with Tizen 4.0 or newer (2018+ models), in Developer Mode (below).
-- Elementum built from the `api` branch (planned for the plugin.video.elementum 0.1.120 release), running on a
-  machine in the same network (default port 65220).
-- Kodi with Burst (or another provider add-on) for stream search and for tracker authorization (Trakt,
-  Simkl, MDBList, ...).
+- Elementum built from the `api` branch (planned for the plugin.video.elementum 0.1.120 release), serving
+  the unversioned `/api` JSON API on a machine in the same network (default port 65220). Update the
+  daemon and TV app together.
+- Kodi with Burst (or another provider add-on) for stream search.
+  Tracker authorization (Trakt, Simkl, MDBList, ...) uses JSON device login and works without Kodi.
 
 If Elementum has a login, the app asks for it. Set it in Kodi under Elementum settings → Addon Startup →
 Authorization → "Remote host login/password" (addon settings `remote_login`/`remote_password`, passed to the
@@ -126,6 +127,6 @@ certificate, so the downloaded `.wgt` may install without step 6 (unverified).
 
 - *"Waiting for Elementum at IP:port…" does not go away:* check that Elementum is running, that the address
   is the machine's LAN IP (not `127.0.0.1`), that port 65220 is open in its firewall, and that
-  `http://<IP>:65220/api/v1/system/info` opens in a browser on another device (JSON, or a JSON 401 error when
+  `http://<IP>:65220/api/system/info` opens in a browser on another device (JSON, or a JSON 401 error when
   a login is set, both mean it is reachable).
 - *The app asks for a login again:* the user name or password does not match Elementum's settings.

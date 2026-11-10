@@ -1,5 +1,9 @@
 # A9: UI host interface (design, read-only research)
 
+> Historical design. The 2026-11-09 branch review supersedes the versioned API paths below:
+> the JSON API uses `/api`, with source spec `api/json/openapi.yaml` in Go package `jsonapi`.
+> Earlier proposals are retained as recorded; see the current decisions in [PLAN.md](../PLAN.md).
+
 Nothing was changed in the Go repo (`/home/elgato/Develop/elementum`, branch `api`). Counts are call sites outside `xbmc/` and `vendor/`, from `grep` on 2026-11-08. Paths are relative to the Go repo.
 
 ## 1. Inventory of Kodi UI use
