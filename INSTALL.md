@@ -6,10 +6,10 @@
 Requirements:
 
 - A Samsung TV with Tizen 4.0 or newer (2018+ models), in Developer Mode (below).
-- Elementum built from the `api` branch (planned for the plugin.video.elementum 0.1.120 release), serving
-  the unversioned `/api` JSON API on a machine in the same network (default port 65220). Update the
-  daemon and TV app together.
-- Kodi with Burst (or another provider add-on) for stream search.
+- Elementum 0.1.120 or newer (until it is released: built from Elementum's `master` branch), serving the
+  `/api` JSON API on a machine in the same network (default port 65220). Update the daemon and TV app together.
+- Kodi is optional: without it Elementum uses its built-in search, which you set up from the TV in
+  Settings → Built-in search settings.
   Tracker authorization (Trakt, Simkl, MDBList, ...) uses JSON device login and works without Kodi.
 
 If Elementum has a login, the app asks for it. Set it in Kodi under Elementum settings → Addon Startup →

@@ -1,8 +1,8 @@
 # elementum-tizen
 
 A Samsung Tizen TV app: a remote-controlled front-end for [Elementum](https://github.com/elgatito/elementum)
-on your LAN. Browse movies and shows, search, pick a torrent stream and play it on the TV. The TV app talks to Elementum directly;
-Elementum still uses Kodi for provider (Burst) search.
+on your LAN. Browse movies and shows, search, pick a torrent stream and play it on the TV. The TV app talks to Elementum directly,
+and Elementum searches the torrent sites itself (its built-in search), so Kodi is optional.
 
 | | |
 |---|---|
@@ -14,11 +14,13 @@ Elementum still uses Kodi for provider (Burst) search.
 
 ## Requirements
 
-- **Elementum built from the `api` branch** (planned for the plugin.video.elementum 0.1.120 release), i.e.
-  Elementum with the unversioned `/api` JSON API. A stock release has no such API and the app cannot connect. It must
-  run on a machine reachable from the TV on the LAN (default port 65220).
-  Update the daemon and TV app together; this app requires the matching `/api` daemon.
-- **Kodi with the Burst add-on** (or another provider add-on) for stream search.
+- **Elementum 0.1.120 or newer** (until it is released: built from Elementum's `master` branch), which has the
+  `/api` JSON API. Older releases have no such API and the app cannot connect. It must run on a machine reachable
+  from the TV on the LAN (default port 65220), as the Kodi add-on, on a server or in
+  [Docker](https://github.com/ElementumOrg/elementum-docker). Update the daemon and TV app together.
+- **Kodi is optional.** Without it Elementum searches with its built-in search, set up from the TV
+  (Settings → Built-in search settings). With Kodi, Elementum's "Search torrents with" setting decides between
+  the built-in search and Kodi provider add-ons such as Burst.
   Tracker authorization (Trakt, Simkl, MDBList, ...) uses JSON device login and works without Kodi.
 - A Samsung TV with **Tizen 4.0 or newer** (2018+ models), in **Developer Mode** for sideloading
   (see INSTALL.md).
@@ -45,19 +47,23 @@ See [INSTALL.md](INSTALL.md). The recommended way is **Apps2Samsung**, which sig
   (Green cycles audio, Yellow cycles subtitles).
 - Elementum's own notifications, progress, questions and input prompts appear on the TV.
 - Settings for the server (address, port, login) and the language.
+- Built-in search settings: public and private providers (with the logins of private trackers), filters and other
+  search options, and the cookie sync with GitHub sign-in by code and the choice of its Gist.
 - 22 languages, following the TV or chosen in Settings. All but English are machine-drafted
   (see [docs/translations.md](docs/translations.md)).
 
 ## Security notes
 
-- Elementum's API allows requests from **any origin** (CORS `*`) on all its routes, and its login is **off by
-  default**, so any device or web page on your LAN can use it. Set a login: in Kodi, Elementum settings →
+- Elementum's API (`/api`) allows requests from **any origin** (CORS `*`), and its login is **off by
+  default**, so any device on your LAN, and any web page you open, can use it. Set a login: in Kodi, Elementum settings →
   Addon Startup → Authorization → "Remote host login/password" (the addon settings `remote_login` /
   `remote_password`, which the addon passes to the daemon as `-localLogin` / `-localPassword`). Then enter
   them in the TV app. Without Kodi (settings-file mode) pass those flags yourself; `settings.json` does not
   carry the login.
 - The login does not cover `/files/`, Elementum's file server used by Kodi.
 - The app stores the Elementum **password in plain text** on the TV.
+- Logins of private trackers entered in Built-in search settings are sent to Elementum and stored there
+  (`providers/settings.json` in its profile), not on the TV. Elementum never sends passwords or passkeys back.
 - Stream links are HMAC-signed and expire, so the player needs no credentials, but do not share them.
 - Notifications forwarded to the TV can contain **file paths and error text** from the Elementum host, and
   stream entries can contain host paths or provider URLs with passkeys.

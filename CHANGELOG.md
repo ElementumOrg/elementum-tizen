@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Settings → Built-in search settings: Elementum's own torrent search, set up from the TV. Switch public and
+  private providers on and off, enter the logins of private trackers, change filters, sizes and the other search
+  options, and connect the cookie sync to GitHub with a code, then choose its Gist.
+- Without Kodi, stream search now works through Elementum's built-in search; the message shown when no search is
+  available says what to change.
+- Needs Elementum 0.1.120 or newer (until then, built from its `master` branch).
+
 ## 0.2.2 - 2026-11-09
 
 First public release candidate.
