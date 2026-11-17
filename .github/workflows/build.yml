@@ -26,14 +26,9 @@ jobs:
       - run: npm run typecheck
       - run: npm test # pretest builds dist/
 
-      - name: Cache Tizen Studio CLI
-        id: tizen-cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/tizen-studio
-          key: tizen-studio-${{ env.TIZEN_CLI_SHA256 }}
+      # Not cached: the installer also writes ~/tizen-studio-data (profiles.xml), and caching that
+      # would put the signing key into the Actions cache.
       - name: Install Tizen Studio CLI
-        if: steps.tizen-cache.outputs.cache-hit != 'true'
         run: |
           curl -fsSL -o "$RUNNER_TEMP/web-cli.bin" "$TIZEN_CLI_URL"
           echo "$TIZEN_CLI_SHA256  $RUNNER_TEMP/web-cli.bin" | sha256sum -c -
