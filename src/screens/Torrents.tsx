@@ -1,8 +1,8 @@
-import { useContext, useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { FocusContext, doesFocusableExist, getCurrentFocusKey, setFocus, useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 import { ApiError, del, errorText, get, post } from '../api/client';
 import { t } from '../i18n';
-import { LayerContext, stack } from '../nav/stack';
+import { useOnTop } from '../nav/focus';
 import { Dialog } from '../ui/Dialog';
 import { ErrorView } from '../ui/ErrorView';
 import { showToast } from '../ui/ItemMenu';
@@ -10,18 +10,6 @@ import { ListItem } from '../ui/ListItem';
 import { Spinner } from '../ui/Spinner';
 import { openDetails } from './Details';
 import { applyOverlay, createPoller, neighbour, pruneOverlay, removeActions, stateLabel, statsLine, type Overlay, type Torrent } from './torrents-util';
-
-/** True while this screen's layer is the top one (a pushed screen hides it but keeps it mounted). */
-function useOnTop() {
-  const layer = useContext(LayerContext);
-  const [top, setTop] = useState(stack.isTop(layer));
-  useEffect(() => {
-    const update = () => setTop(stack.isTop(layer));
-    update();
-    return stack.subscribe(update);
-  }, []);
-  return top;
-}
 
 const rowKey = (hash: string) => 'torrent-' + hash;
 

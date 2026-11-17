@@ -8,6 +8,7 @@ import { Button } from '../ui/Button';
 import { Dialog } from '../ui/Dialog';
 import { LinkTracker } from '../ui/LinkTracker';
 import { openKeyTest } from './KeyTest';
+import { openSearchSettings } from './SearchSettings';
 
 export function Settings() {
   // The error itself, not its text, so a language switch re-translates it.
@@ -50,6 +51,11 @@ export function Settings() {
           {version.tracker && <Button label={t(version.tracker.authorized ? 'tracker.link_again' : 'tracker.link_account')} onPress={() => setLinkOpen(true)} />}
         </div>
       )}
+      <div class="settings-row">
+        <span>{t('providers.builtin')}</span>
+        <b />
+        <Button label={t('providers.settings')} onPress={openSearchSettings} />
+      </div>
       <div class="settings-row">
         <span>{t('settings.key_test')}</span>
         <Button label={t('settings.key_test')} onPress={openKeyTest} />

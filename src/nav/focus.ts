@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'preact/hooks';
+import { useContext, useEffect, useState } from 'preact/hooks';
 import { SpatialNavigation, getCurrentFocusKey } from '@noriginmedia/norigin-spatial-navigation';
 import { LayerContext, stack } from './stack';
 
@@ -12,4 +12,16 @@ export function useClaimFocus(focusKey: string, focusSelf: () => void) {
   useEffect(() => {
     if (stack.isTop(layer) && SpatialNavigation.isDescendantOf(focusKey, getCurrentFocusKey())) focusSelf();
   }, []);
+}
+
+/** True while this screen's layer is the top one (a pushed screen hides it but keeps it mounted). */
+export function useOnTop() {
+  const layer = useContext(LayerContext);
+  const [top, setTop] = useState(stack.isTop(layer));
+  useEffect(() => {
+    const update = () => setTop(stack.isTop(layer));
+    update();
+    return stack.subscribe(update);
+  }, []);
+  return top;
 }
