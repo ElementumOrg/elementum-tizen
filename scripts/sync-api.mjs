@@ -1,5 +1,5 @@
 // Copies the API spec from the Elementum repo, regenerates the TS types and records the commit in api/SPEC_REF.
-// Env: ELEMENTUM_REPO (default ../elementum), ELEMENTUM_REF (default api).
+// Env: ELEMENTUM_REPO (default ../elementum), ELEMENTUM_REF (default master).
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repo = resolve(root, process.env.ELEMENTUM_REPO || '../elementum');
-const ref = process.env.ELEMENTUM_REF || 'api';
+const ref = process.env.ELEMENTUM_REF || 'master';
 if (!/^[\w./-]+$/.test(ref) || ref.startsWith('-')) throw new Error(`invalid ELEMENTUM_REF: ${ref}`);
 
 const git = (...args) => execFileSync('git', ['-C', repo, ...args], { maxBuffer: 64 << 20 });

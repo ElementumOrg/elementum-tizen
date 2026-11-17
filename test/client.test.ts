@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
-import { ApiError, del, errorText, get, hooks, post } from '../src/api/client';
+import { ApiError, del, errorText, get, hooks, post, put } from '../src/api/client';
 
 class FakeXHR {
   static all: FakeXHR[] = [];
@@ -184,10 +184,11 @@ test('if the server was up after all (e.g. a slow call timed out), the original 
   expect(FakeXHR.all.length).toBe(1);
 });
 
-test('POST, DELETE, custom-timeout and quiet calls never wait or resend', async () => {
+test('POST, PUT, DELETE, custom-timeout and quiet calls never wait or resend', async () => {
   const calls = stubWait();
   const cases = [
     post('/playback', { server, body: { uri: 'magnet:?x', type: 'movie', tmdb_id: 1 } }),
+    put('/providers/{id}', { server, path: { id: 'yts' }, body: { enabled: false } }),
     del('/playback/{id}', { server, path: { id: 'x' }, quiet: true }),
     get('/movies/{tmdb_id}/streams', { server, path: { tmdb_id: 1 }, timeout: 60000 }),
     get('/system/info', { server, quiet: true }),
@@ -195,7 +196,18 @@ test('POST, DELETE, custom-timeout and quiet calls never wait or resend', async 
   FakeXHR.all.forEach((x) => x.ontimeout!());
   for (const c of cases) expect(await fail(c)).toMatchObject({ kind: 'network', code: 'timeout' });
   expect(calls.length).toBe(0);
-  expect(FakeXHR.all.length).toBe(4);
+  expect(FakeXHR.all.length).toBe(5);
+});
+
+test('PUT sends its JSON body to the path', async () => {
+  const req = put('/providers/options/{id}', { server, path: { id: 'max_results' }, body: { value: 20 } });
+  const x = last();
+  expect(x.method).toBe('PUT');
+  expect(x.url).toBe('http://10.0.0.5:65220/api/providers/options/max_results');
+  expect(x.headers['Content-Type']).toBe('application/json');
+  expect(x.sent).toBe('{"value":20}');
+  x.respond(200, '{"id":"max_results","group":"General","label":"Maximum results per provider","value":20,"default":10}');
+  expect(await req).toMatchObject({ id: 'max_results', value: 20 });
 });
 
 test('abort while waiting leaves the wait and rejects with aborted', async () => {

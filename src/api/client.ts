@@ -29,7 +29,7 @@ export const DEFAULT_TIMEOUT = 15000;
 export const LIST_TIMEOUT = 75000;
 const isList = (path: string) => /^\/(library|search|tracker|trakt)\b|\/(lists|genres)\b/.test(path);
 
-type Method = 'get' | 'post' | 'delete';
+type Method = 'get' | 'post' | 'put' | 'delete';
 type PathsWith<M extends Method> = { [P in keyof paths]: [NonNullable<paths[P][M]>] extends [never] ? never : P }[keyof paths];
 type Op<P extends keyof paths, M extends Method> = NonNullable<paths[P][M]>;
 type Json<R> = R extends { content: { 'application/json': infer T } } ? T : void;
@@ -61,6 +61,8 @@ export const get = <P extends PathsWith<'get'>>(path: P, opts: Options<Op<P, 'ge
   request<Ok<Op<P, 'get'>>>('GET', path, opts);
 export const post = <P extends PathsWith<'post'>>(path: P, opts: Options<Op<P, 'post'>> = {}) =>
   request<Ok<Op<P, 'post'>>>('POST', path, opts);
+export const put = <P extends PathsWith<'put'>>(path: P, opts: Options<Op<P, 'put'>> = {}) =>
+  request<Ok<Op<P, 'put'>>>('PUT', path, opts);
 export const del = <P extends PathsWith<'delete'>>(path: P, opts: Options<Op<P, 'delete'>> = {}) =>
   request<Ok<Op<P, 'delete'>>>('DELETE', path, opts);
 
@@ -96,7 +98,7 @@ function request<T>(method: string, path: string, opts: Options<unknown>): Reque
       }
       if (aborted || opts.quiet) throw err;
       if (err.kind === 'unauthorized') hooks.unauthorized();
-      // Only plain GETs are resent: POST/DELETE aren't idempotent, and a custom timeout means a slow call.
+      // Only plain GETs are resent: a change may have reached the server already, and a custom timeout means a slow call.
       if (err.kind !== 'network' || method !== 'GET' || opts.timeout || !hooks.waitForServer) throw err;
       const w = hooks.waitForServer();
       waiting = w;

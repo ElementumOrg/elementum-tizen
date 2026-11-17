@@ -28,6 +28,7 @@ tags:
   - name: playback
   - name: torrents
   - name: people
+  - name: providers
   - name: ui
 
 paths:
@@ -630,6 +631,147 @@ paths:
           schema: { type: boolean, default: false }
       responses:
         "204": { description: Removed }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        default: { $ref: "#/components/responses/Error" }
+
+  /providers:
+    get:
+      tags: [providers]
+      operationId: listProviders
+      summary: Trackers of the built-in torrent search, with the user's settings
+      description: |
+        Elementum searches these itself, without Kodi (the `providers_source` setting decides whether this
+        search, Kodi provider add-ons, or both are used). Passwords and passkeys are never returned.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Provider" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+
+  /providers/options:
+    get:
+      tags: [providers]
+      operationId: listProviderOptions
+      summary: General settings of the built-in search (filters, sizes, result limits)
+      parameters:
+        - $ref: "#/components/parameters/LangParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProviderOption" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+
+  /providers/options/{id}:
+    put:
+      tags: [providers]
+      operationId: updateProviderOption
+      summary: Change one general setting
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [value]
+              properties:
+                value: { description: "A boolean, number or text: the type of the option's default." }
+      responses:
+        "200":
+          description: The option after the change
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProviderOption" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+
+  /providers/cookie-sync/gists:
+    get:
+      tags: [providers]
+      operationId: listCookieSyncGists
+      summary: The gists of the connected GitHub account that hold the cookies file
+      description: |
+        Most recently updated first. Choose one with `PUT /providers/options/cookie_sync_gist_id`;
+        without a choice the most recently updated one is used.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/CookieSyncGist" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "409":
+          description: GitHub is not connected (`tracker_not_authorized`)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        default: { $ref: "#/components/responses/Error" }
+
+  /providers/cookie-sync/login:
+    post:
+      tags: [providers]
+      operationId: startCookieSyncLogin
+      summary: Sign in to GitHub for the cookie sync, with a device code
+      description: |
+        Show `verification_url` and `user_code` to the user. Elementum waits for GitHub in the background;
+        when the user has entered the code, the token is stored and the cookie sync is switched on
+        (`cookie_sync_user` in `/providers/options` then names the account). Nothing is stored when the
+        code expires.
+      responses:
+        "200":
+          description: The code to enter
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DeviceLoginCode" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "502":
+          description: GitHub could not be reached, or refused
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        default: { $ref: "#/components/responses/Error" }
+
+  /providers/{id}:
+    put:
+      tags: [providers]
+      operationId: updateProvider
+      summary: Change a provider's settings
+      description: Fields left out keep their value. An empty text clears it.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProviderSettings" }
+      responses:
+        "200":
+          description: The provider after the change
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Provider" }
         "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "404": { $ref: "#/components/responses/NotFound" }
@@ -1394,6 +1536,77 @@ components:
         duration_s: { type: number, format: double, minimum: 0, example: 8160 }
         paused: { type: boolean, example: false }
 
+    Provider:
+      type: object
+      required: [id, name, private, languages, enabled, searched, has_secret]
+      properties:
+        id: { type: string, example: rutor }
+        name: { type: string, example: RuTor }
+        private: { type: boolean, description: Needs an account on the tracker. }
+        languages: { type: array, items: { type: string }, example: [ru] }
+        enabled: { type: boolean, description: "The user's choice, or the default." }
+        searched: { type: boolean, description: "Whether searches use it now: enabled, usable, and with credentials when private." }
+        reason:
+          type: string
+          description: Why an enabled provider is not searched.
+          example: no username and password, or passkey
+        username: { type: string }
+        has_secret: { type: boolean, description: A password or passkey is stored. }
+        has_cookies: { type: boolean, description: Browser cookies are stored. }
+        user_agent: { type: string, description: The browser the cookies belong to. }
+        contains: { $ref: "#/components/schemas/ProviderContains" }
+        alias: { type: string, description: "Mirror in use: another domain or URL of the site.", example: "http://rutor.is" }
+    ProviderOption:
+      type: object
+      required: [id, group, label, value, default]
+      properties:
+        id: { type: string, example: filter_cam }
+        group: { type: string, description: In the requested language., example: Release type }
+        label: { type: string, description: In the requested language., example: CAM }
+        choices:
+          type: array
+          items: { type: string }
+          description: "For a number option with named values: the names of 0, 1, 2 ... in the requested language."
+        value: { description: "The current value: a boolean, number or text. A token or password is only shown as set (`********`) or empty." }
+        default: { description: The value when the user has not set one. }
+    CookieSyncGist:
+      type: object
+      required: [id, description, updated_at, cookies, sites, selected]
+      properties:
+        id: { type: string }
+        description: { type: string }
+        updated_at: { type: string, description: As GitHub gives it., example: "2026-11-15T17:20:00Z" }
+        cookies: { type: integer, description: "0 when the file could not be read, as with a wrong password." }
+        sites: { type: integer }
+        selected: { type: boolean, description: The gist the cookie sync uses. }
+    DeviceLoginCode:
+      type: object
+      required: [user_code, verification_url, expires_in, interval]
+      properties:
+        user_code: { type: string, example: "AB12-CD34" }
+        verification_url: { type: string, example: "https://github.com/login/device" }
+        expires_in: { type: integer, description: Seconds the code is valid for. }
+        interval: { type: integer, description: Seconds between Elementum's checks with GitHub. }
+    ProviderSettings:
+      type: object
+      properties:
+        enabled: { type: boolean }
+        username: { type: string }
+        password: { type: string, format: password }
+        passkey: { type: string, format: password }
+        alias: { type: string }
+        contains: { $ref: "#/components/schemas/ProviderContains" }
+        cookies:
+          type: string
+          format: password
+          description: |
+            Cookies of a browser signed in to the site, or past its bot check, as `name=value; other=value`.
+            With the site's login cookie among them Elementum does not sign in itself.
+        user_agent: { type: string, description: "The User-Agent of that browser; bot checks tie their cookie to it." }
+    ProviderContains:
+      type: string
+      enum: [all, movies, shows]
+      description: The searches the provider is used for.
     Torrent:
       type: object
       required: [info_hash, name, size_bytes, progress, download_rate, upload_rate, seeds, peers, state, paused, added_at, has_player]

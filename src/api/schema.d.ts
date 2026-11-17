@@ -542,6 +542,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Trackers of the built-in torrent search, with the user's settings
+         * @description Elementum searches these itself, without Kodi (the `providers_source` setting decides whether this
+         *     search, Kodi provider add-ons, or both are used). Passwords and passkeys are never returned.
+         */
+        get: operations["listProviders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/providers/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** General settings of the built-in search (filters, sizes, result limits) */
+        get: operations["listProviderOptions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/providers/options/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Change one general setting */
+        put: operations["updateProviderOption"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/providers/cookie-sync/gists": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The gists of the connected GitHub account that hold the cookies file
+         * @description Most recently updated first. Choose one with `PUT /providers/options/cookie_sync_gist_id`;
+         *     without a choice the most recently updated one is used.
+         */
+        get: operations["listCookieSyncGists"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/providers/cookie-sync/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign in to GitHub for the cookie sync, with a device code
+         * @description Show `verification_url` and `user_code` to the user. Elementum waits for GitHub in the background;
+         *     when the user has entered the code, the token is stored and the cookie sync is switched on
+         *     (`cookie_sync_user` in `/providers/options` then names the account). Nothing is stored when the
+         *     code expires.
+         */
+        post: operations["startCookieSyncLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/providers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a provider's settings
+         * @description Fields left out keep their value. An empty text clears it.
+         */
+        put: operations["updateProvider"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/people/{tmdb_id}": {
         parameters: {
             query?: never;
@@ -1225,6 +1344,109 @@ export interface components {
             /** @example false */
             paused: boolean;
         };
+        Provider: {
+            /** @example rutor */
+            id: string;
+            /** @example RuTor */
+            name: string;
+            /** @description Needs an account on the tracker. */
+            private: boolean;
+            /**
+             * @example [
+             *       "ru"
+             *     ]
+             */
+            languages: string[];
+            /** @description The user's choice, or the default. */
+            enabled: boolean;
+            /** @description Whether searches use it now: enabled, usable, and with credentials when private. */
+            searched: boolean;
+            /**
+             * @description Why an enabled provider is not searched.
+             * @example no username and password, or passkey
+             */
+            reason?: string;
+            username?: string;
+            /** @description A password or passkey is stored. */
+            has_secret: boolean;
+            /** @description Browser cookies are stored. */
+            has_cookies?: boolean;
+            /** @description The browser the cookies belong to. */
+            user_agent?: string;
+            contains?: components["schemas"]["ProviderContains"];
+            /**
+             * @description Mirror in use: another domain or URL of the site.
+             * @example http://rutor.is
+             */
+            alias?: string;
+        };
+        ProviderOption: {
+            /** @example filter_cam */
+            id: string;
+            /**
+             * @description In the requested language.
+             * @example Release type
+             */
+            group: string;
+            /**
+             * @description In the requested language.
+             * @example CAM
+             */
+            label: string;
+            /** @description For a number option with named values: the names of 0, 1, 2 ... in the requested language. */
+            choices?: string[];
+            /** @description The current value: a boolean, number or text. A token or password is only shown as set (`********`) or empty. */
+            value: unknown;
+            /** @description The value when the user has not set one. */
+            default: unknown;
+        };
+        CookieSyncGist: {
+            id: string;
+            description: string;
+            /**
+             * @description As GitHub gives it.
+             * @example 2026-11-15T17:20:00Z
+             */
+            updated_at: string;
+            /** @description 0 when the file could not be read, as with a wrong password. */
+            cookies: number;
+            sites: number;
+            /** @description The gist the cookie sync uses. */
+            selected: boolean;
+        };
+        DeviceLoginCode: {
+            /** @example AB12-CD34 */
+            user_code: string;
+            /** @example https://github.com/login/device */
+            verification_url: string;
+            /** @description Seconds the code is valid for. */
+            expires_in: number;
+            /** @description Seconds between Elementum's checks with GitHub. */
+            interval: number;
+        };
+        ProviderSettings: {
+            enabled?: boolean;
+            username?: string;
+            /** Format: password */
+            password?: string;
+            /** Format: password */
+            passkey?: string;
+            alias?: string;
+            contains?: components["schemas"]["ProviderContains"];
+            /**
+             * Format: password
+             * @description Cookies of a browser signed in to the site, or past its bot check, as `name=value; other=value`.
+             *     With the site's login cookie among them Elementum does not sign in itself.
+             */
+            cookies?: string;
+            /** @description The User-Agent of that browser; bot checks tie their cookie to it. */
+            user_agent?: string;
+        };
+        /**
+         * @description The searches the provider is used for.
+         * @enum {string}
+         */
+        ProviderContains: "all" | "movies" | "shows";
         Torrent: {
             /**
              * @description Lower-case.
@@ -2363,6 +2585,181 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["Error"];
+        };
+    };
+    listProviders: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Provider"][];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            default: components["responses"]["Error"];
+        };
+    };
+    listProviderOptions: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Metadata language, `ll` or `ll-CC`. Defaults to Elementum's language.
+                 *     Images, logos and videos are also requested in this language first, then Elementum's second
+                 *     language, English, and no language.
+                 */
+                lang?: components["parameters"]["LangParam"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProviderOption"][];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            default: components["responses"]["Error"];
+        };
+    };
+    updateProviderOption: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description A boolean, number or text: the type of the option's default. */
+                    value: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description The option after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProviderOption"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            default: components["responses"]["Error"];
+        };
+    };
+    listCookieSyncGists: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CookieSyncGist"][];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            /** @description GitHub is not connected (`tracker_not_authorized`) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    startCookieSyncLogin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The code to enter */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeviceLoginCode"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            /** @description GitHub could not be reached, or refused */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    updateProvider: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProviderSettings"];
+            };
+        };
+        responses: {
+            /** @description The provider after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Provider"];
+                };
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
