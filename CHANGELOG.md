@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 - 2026-11-18
 
 - LG webOS support (experimental, untested on hardware; the maintainers have no LG TV, so reports are welcome):
   - `Elementum-<version>.ipk` is attached to GitHub Releases next to the `.wgt`; install notes in INSTALL.md.

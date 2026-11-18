@@ -1,6 +1,6 @@
 {
   "id": "io.github.elementumorg.elementum",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "vendor": "ElementumOrg",
   "type": "web",
   "main": "index.html",
