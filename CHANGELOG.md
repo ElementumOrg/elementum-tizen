@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- LG webOS support (experimental, untested on hardware; the maintainers have no LG TV, so reports are welcome):
+  - `Elementum-<version>.ipk` is attached to GitHub Releases next to the `.wgt`; install notes in INSTALL.md.
+  - The player uses the TV's HTML5 player; audio and subtitle switching depends on the TV and is unverified.
+  - Magic Remote pointer: click presses, hover focuses buttons, the sidebar and fields.
+  - The app is built for Chromium 53 (webOS 4.x); the same build is used for the Samsung `.wgt`.
 - Settings → Built-in search settings: Elementum's own torrent search, set up from the TV. Switch public and
   private providers on and off, enter the logins of private trackers, change filters, sizes and the other search
   options, and connect the cookie sync to GitHub with a code, then choose its Gist.

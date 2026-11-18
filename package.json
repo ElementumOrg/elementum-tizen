@@ -2,7 +2,7 @@
   "name": "elementum-tizen",
   "version": "0.2.2",
   "private": true,
-  "description": "Samsung Tizen TV front-end for Elementum",
+  "description": "Samsung Tizen and LG webOS TV front-end for Elementum",
   "license": "MIT",
   "repository": {
     "type": "git",

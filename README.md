@@ -1,7 +1,8 @@
 # elementum-tizen
 
-A Samsung Tizen TV app: a remote-controlled front-end for [Elementum](https://github.com/elgatito/elementum)
-on your LAN. Browse movies and shows, search, pick a torrent stream and play it on the TV. The TV app talks to Elementum directly,
+A Samsung (Tizen) and LG (webOS) TV app: a remote-controlled front-end for
+[Elementum](https://github.com/elgatito/elementum) on your LAN. Browse movies and shows, search, pick a torrent
+stream and play it on the TV. The TV app talks to Elementum directly,
 and Elementum searches the torrent sites itself (its built-in search), so Kodi is optional.
 
 | | |
@@ -24,12 +25,15 @@ and Elementum searches the torrent sites itself (its built-in search), so Kodi i
   Tracker authorization (Trakt, Simkl, MDBList, ...) uses JSON device login and works without Kodi.
 - A Samsung TV with **Tizen 4.0 or newer** (2018+ models), in **Developer Mode** for sideloading
   (see INSTALL.md).
+- Or an LG TV with **webOS 4.0 or newer** (2018+ models), in Developer Mode or rooted with Homebrew Channel
+  (see INSTALL.md). **Experimental: not yet tested on a real TV.**
 
 ## Install
 
 See [INSTALL.md](INSTALL.md). The recommended way is **Apps2Samsung**, which signs and installs the `.wgt` from
 [GitHub Releases](https://github.com/ElementumOrg/elementum-tizen/releases/latest) for you
 (notes in [docs/apps2samsung.md](docs/apps2samsung.md)). The Tizen CLI works too.
+On LG, install `Elementum-<version>.ipk` from the same release (see [INSTALL.md](INSTALL.md#lg-webos)).
 
 ## Features
 
@@ -43,14 +47,26 @@ See [INSTALL.md](INSTALL.md). The recommended way is **Apps2Samsung**, which sig
 - Torrents screen: active torrents with progress, speed and peers, and pause, resume and remove.
 - Actor pages with their movies and shows.
 - Stream list with quality, codec, audio, size, seeds and provider badges.
-- Player built on Samsung's AVPlay: seek (±10 s, FF/RW ±60 s), resume, and audio and subtitle switching without pausing
-  (Green cycles audio, Yellow cycles subtitles).
+- Player built on Samsung's AVPlay: seek (±10 s, FF/RW ±60 s), resume, and audio and subtitle switching without
+  pausing (Green cycles audio, Yellow cycles subtitles). On LG it uses the TV's own HTML5 player; seek and resume
+  are the same, track switching is unverified (see below).
+- LG Magic Remote pointer: click presses, hover focuses buttons, the sidebar and fields; the player controls are
+  clickable.
 - Elementum's own notifications, progress, questions and input prompts appear on the TV.
 - Settings for the server (address, port, login) and the language.
 - Built-in search settings: public and private providers (with the logins of private trackers), filters and other
   search options, and the cookie sync with GitHub sign-in by code and the choice of its Gist.
 - 22 languages, following the TV or chosen in Settings. All but English are machine-drafted
   (see [docs/translations.md](docs/translations.md)).
+
+## LG webOS: known limitations and untested areas
+
+LG support is **experimental**. The maintainers have no LG TV, so nothing has been tested on real hardware.
+
+- Embedded subtitle and audio track switching depends on what the TV exposes and is unverified; it may be missing.
+- DTS audio is unsupported on many 2020-2022 LG models.
+- In Developer Mode the session expires and the TV then removes sideloaded apps unless you renew it.
+- Please report what works and what doesn't: open a GitHub issue with the "LG webOS" template.
 
 ## Security notes
 
