@@ -2,7 +2,7 @@ import { defineConfig, type Plugin } from 'vite';
 import preact from '@preact/preset-vite';
 import pkg from './package.json' with { type: 'json' };
 
-// Tizen 4.0 (Chrome 56) has no ES module scripts and loads the app from file://,
+// Tizen 4.0 (Chrome 56) and webOS 4.x (Chromium 53) have no ES module scripts and load the app from file://,
 // so ship a classic deferred script instead of type="module" + crossorigin.
 const classicScript: Plugin = {
   name: 'classic-script',
@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [preact(), classicScript],
   define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   build: {
-    target: 'chrome56',
+    target: 'chrome53',
     modulePreload: false,
     rolldownOptions: { output: { format: 'iife' } },
   },

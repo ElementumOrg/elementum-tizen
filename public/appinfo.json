@@ -1,0 +1,12 @@
+{
+  "id": "io.github.elementumorg.elementum",
+  "version": "0.2.2",
+  "vendor": "ElementumOrg",
+  "type": "web",
+  "main": "index.html",
+  "title": "Elementum",
+  "icon": "icon-80.png",
+  "largeIcon": "icon-130.png",
+  "resolution": "1920x1080",
+  "disableBackHistoryAPI": true
+}

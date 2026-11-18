@@ -1,3 +1,4 @@
+import './polyfills';
 import { render, type ComponentChild } from 'preact';
 import { memo } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
