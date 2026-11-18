@@ -19,16 +19,22 @@ export function createHtml5(host: HTMLElement): Player {
   host.appendChild(v);
   let closed = false;
   let want = true; // the user's intent; a track switch must not leave the video paused
+  const once = (ev: string, fn: () => void) => {
+    // Chromium 53 (webOS 4) has no `{ once: true }`: it would read it as useCapture and never remove the listener
+    const h = () => (v.removeEventListener(ev, h), fn());
+    v.addEventListener(ev, h);
+  };
+  const hide = () => document.hidden && p.pause(); // like AVPlay's suspend on Tizen; no auto-resume
   const p: Player = {
     open(url, startS) {
       v.src = url;
-      if (startS > 0) v.addEventListener('loadedmetadata', () => (v.currentTime = startS), { once: true });
+      if (startS > 0) once('loadedmetadata', () => (v.currentTime = startS));
       if (want) void v.play();
     },
     play: () => ((want = true), void v.play()),
     pause: () => ((want = false), v.pause()),
     seek(s, done) {
-      if (done) v.addEventListener('seeked', done, { once: true });
+      if (done) once('seeked', done);
       v.currentTime = Math.max(0, Math.min(s, v.duration || s));
     },
     position: () => v.currentTime || 0,
@@ -61,6 +67,7 @@ export function createHtml5(host: HTMLElement): Player {
     },
     close() {
       closed = true;
+      document.removeEventListener('visibilitychange', hide);
       p.onState = p.onBuffering = p.onError = p.onEnded = noop;
       v.pause();
       v.removeAttribute('src');
@@ -72,6 +79,7 @@ export function createHtml5(host: HTMLElement): Player {
     onError: noop,
     onEnded: noop,
   };
+  document.addEventListener('visibilitychange', hide);
   v.addEventListener('playing', () => (p.onState(true), p.onBuffering(100)));
   v.addEventListener('pause', () => p.onState(false));
   v.addEventListener('waiting', () => p.onBuffering(0));

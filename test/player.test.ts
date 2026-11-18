@@ -219,3 +219,64 @@ test('avplay: a pause before prepare finishes is kept; a long rebuffer after a s
   r.listener().onbufferingcomplete();
   expect(r.av.play).toHaveBeenCalledTimes(1);
 });
+
+import { createHtml5 } from '../src/player/html5';
+
+const mkHtml5 = () => {
+  const on: Record<string, Array<() => void>> = {};
+  const reg = (m: Record<string, Array<() => void>>) => ({
+    add: (e: string, f: () => void) => (m[e] = (m[e] || []).concat(f)),
+    remove: (e: string, f: () => void) => (m[e] = (m[e] || []).filter((x) => x !== f)),
+  });
+  const ve = reg(on);
+  const v: any = {
+    paused: true, ended: false, duration: 100, currentTime: 0, set src(_: string) {}, removeAttribute() {}, load() {}, remove() {},
+    addEventListener: ve.add, removeEventListener: ve.remove,
+    play: vi.fn(() => (v.paused = false)), pause: vi.fn(() => (v.paused = true)),
+  };
+  const don: Record<string, Array<() => void>> = {};
+  const de = reg(don);
+  const doc: any = { hidden: false, createElement: () => v, addEventListener: de.add, removeEventListener: de.remove };
+  vi.stubGlobal('document', doc);
+  const p = createHtml5({ appendChild() {} } as unknown as HTMLElement);
+  const fire = (e: string) => (on[e] || []).slice().forEach((f) => f());
+  return { p, v, doc, don, fire };
+};
+
+test('html5: each seek done runs once, never again on a later seeked', () => {
+  const { p, fire } = mkHtml5();
+  const a = vi.fn();
+  const b = vi.fn();
+  p.seek(10, a);
+  fire('seeked');
+  expect(a).toHaveBeenCalledTimes(1);
+  p.seek(20, b);
+  p.seek(30, a);
+  fire('seeked');
+  fire('seeked');
+  expect([a.mock.calls.length, b.mock.calls.length]).toEqual([2, 1]);
+});
+
+test('html5: open(url, 30) seeks once on the first loadedmetadata', () => {
+  const { p, v, fire } = mkHtml5();
+  p.open('u', 30);
+  fire('loadedmetadata');
+  expect(v.currentTime).toBe(30);
+  v.currentTime = 5;
+  fire('loadedmetadata');
+  expect(v.currentTime).toBe(5);
+});
+
+test('html5: hidden pauses and a later track switch does not resume; close drops the listener', () => {
+  const { p, v, doc, don } = mkHtml5();
+  p.open('u', 0);
+  v.play.mockClear();
+  doc.hidden = true;
+  don.visibilitychange.forEach((f) => f());
+  expect(v.pause).toHaveBeenCalledTimes(1);
+  p.setTrack('audio', 1);
+  vi.advanceTimersByTime(2000);
+  expect(v.play).not.toHaveBeenCalled();
+  p.close();
+  expect(don.visibilitychange).toEqual([]);
+});
