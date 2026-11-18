@@ -85,7 +85,7 @@ export const stack = createStack({
 });
 
 export function exitApp() {
-  if (typeof tizen === 'undefined') return;
+  if (typeof tizen === 'undefined') return window.close(); // webOS exits on close; a no-op in a desktop tab
   try {
     tizen.application.getCurrentApplication().exit();
   } catch (_) {

@@ -1,5 +1,5 @@
-import { expect, test } from 'vitest';
-import { createStack, MAX_DEPTH } from '../src/nav/stack';
+import { expect, test, vi } from 'vitest';
+import { createStack, exitApp, MAX_DEPTH } from '../src/nav/stack';
 import { dispatch, keyAction, onKey } from '../src/nav/keys';
 
 function setup() {
@@ -46,6 +46,7 @@ test('keyAction maps TV and browser keys, Backspace in inputs is left alone', ()
   const div = { tagName: 'DIV' } as unknown as EventTarget;
   const input = { tagName: 'INPUT' } as unknown as EventTarget;
   expect(keyAction({ keyCode: 10009, target: div })).toBe('back');
+  expect(keyAction({ keyCode: 461, target: div })).toBe('back');
   expect(keyAction({ keyCode: 8, target: div })).toBe('back');
   expect(keyAction({ keyCode: 27, target: div })).toBe('back');
   expect(keyAction({ keyCode: 8, target: input })).toBeUndefined();
@@ -81,4 +82,12 @@ test('layer key handlers run only while their layer is on top; global ones alway
   expect(calls).toEqual(['global']);
   expect(s.isTop(0)).toBe(true);
   offs.forEach((off) => off());
+});
+
+test('exitApp closes the window when there is no tizen', () => {
+  const close = vi.fn();
+  vi.stubGlobal('window', { close });
+  exitApp();
+  vi.unstubAllGlobals();
+  expect(close).toHaveBeenCalled();
 });

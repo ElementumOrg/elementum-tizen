@@ -1,8 +1,8 @@
 import { useRef } from 'preact/hooks';
 import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 
-// Enter (13) and the Tizen IME's Done (65376) / Cancel (65385), Back (10009) and Escape leave the input.
-const LEAVE_KEYS = [13, 65376, 65385, 10009, 27];
+// Enter (13) and the Tizen IME's Done (65376) / Cancel (65385), Back (Tizen 10009, webOS 461) and Escape leave the input.
+const LEAVE_KEYS = [13, 65376, 65385, 10009, 461, 27];
 
 interface TextFieldProps {
   label: string;

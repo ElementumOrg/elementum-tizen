@@ -15,6 +15,7 @@ const TIZEN_KEYS = [
 const ACTIONS: { [keyCode: number]: Action } = {
   37: 'left', 38: 'up', 39: 'right', 40: 'down', 13: 'enter',
   10009: 'back', 8: 'back', 27: 'back', // TV Back; Backspace/Escape in a browser
+  461: 'back', // webOS Back (with disableBackHistoryAPI)
   10252: 'playpause', 415: 'play', 19: 'pause', 413: 'stop', 417: 'ff', 412: 'rw',
   403: 'red', 404: 'green', 405: 'yellow', 406: 'blue',
 };
