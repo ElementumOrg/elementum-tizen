@@ -1,4 +1,4 @@
-# elementum-tizen
+# elementum-tv
 
 A Samsung (Tizen) and LG (webOS) TV app: a remote-controlled front-end for
 [Elementum](https://github.com/elgatito/elementum) on your LAN. Browse movies and shows, search, pick a torrent
@@ -31,7 +31,7 @@ and Elementum searches the torrent sites itself (its built-in search), so Kodi i
 ## Install
 
 See [INSTALL.md](INSTALL.md). The recommended way is **Apps2Samsung**, which signs and installs the `.wgt` from
-[GitHub Releases](https://github.com/ElementumOrg/elementum-tizen/releases/latest) for you
+[GitHub Releases](https://github.com/ElementumOrg/elementum-tv/releases/latest) for you
 (notes in [docs/apps2samsung.md](docs/apps2samsung.md)). The Tizen CLI works too.
 On LG, install `Elementum-<version>.ipk` from the same release (see [INSTALL.md](INSTALL.md#lg-webos)).
 

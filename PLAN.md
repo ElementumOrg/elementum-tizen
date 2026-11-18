@@ -24,7 +24,7 @@ Two repos are touched:
 | Repo | Work |
 |---|---|
 | `elementum` (Go), branch **`api`** | New JSON API under `/api` with an OpenAPI 3 spec and Swagger UI. Existing Kodi routes stay unchanged. All Elementum work goes to `api` (step branches merge into `api`, not `master`). `api` is merged upstream once it is ready and tested. |
-| `elementum-tizen` (this repo) | TV app, CI packaging, install docs. |
+| `elementum-tv` (this repo, formerly `elementum-tizen`) | TV app, CI packaging, install docs. |
 
 **Runtime assumption:** Elementum is already running somewhere on the LAN. How it runs is out of scope. If it isn't reachable yet, the app shows a "Waiting for Elementum at IP:port…" dialog and continues on its own once Elementum responds.
 

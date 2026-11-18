@@ -52,7 +52,7 @@ Nothing here has been tried on a TV yet. "Verified" means read in the source or 
 
 Possible, by a pull request to
 [tizen-community-packages](https://github.com/Apps2Samsung/tizen-community-packages): add one file
-`packages/ElementumOrg__elementum-tizen.json`, validated by a bot against `packages.schema.json`
+`packages/ElementumOrg__elementum-tv.json`, validated by a bot against `packages.schema.json`
 ([packages/README.md](https://github.com/Apps2Samsung/tizen-community-packages/blob/ad5d6309dad34c8402bb8e46b244f6a6ce0c38cf/packages/README.md)).
 For prebuilt `.wgt` files the type is `source: "release"`, with an asset `match` (exact name or regex) against the
 GitHub release assets:
@@ -62,7 +62,7 @@ GitHub release assets:
   "name": "Elementum",
   "description": "Remote-controlled front-end for an Elementum server on your network.",
   "category": "streaming",
-  "repo": "ElementumOrg/elementum-tizen",
+  "repo": "ElementumOrg/elementum-tv",
   "source": "release",
   "branch": "main",
   "assets": [{ "match": "Elementum-.*[.]wgt$", "output_name": "Elementum.wgt" }]
@@ -76,7 +76,7 @@ now produced by CI), an open-source license (MIT), and testing on at least one T
 Risk: the rules never accept "apps that ship with unlicensed content sources by default: ... torrent indexers";
 "a player that only plays sources *the user adds* is fine". The TV app ships no sources (it talks to the user's own
 Elementum, and similar torrent front-ends such as TorrStream and SeanimeTV are listed), but acceptance is the
-maintainers' call. Until then, users can add `ElementumOrg/elementum-tizen` as their own source (item 7), which
+maintainers' call. Until then, users can add `ElementumOrg/elementum-tv` as their own source (item 7), which
 needs nothing from the catalog.
 
 ## Assumptions (to be checked on a TV)

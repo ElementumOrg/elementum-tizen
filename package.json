@@ -1,12 +1,12 @@
 {
-  "name": "elementum-tizen",
+  "name": "elementum-tv",
   "version": "0.3.0",
   "private": true,
   "description": "Samsung Tizen and LG webOS TV front-end for Elementum",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ElementumOrg/elementum-tizen.git"
+    "url": "git+https://github.com/ElementumOrg/elementum-tv.git"
   },
   "type": "module",
   "scripts": {

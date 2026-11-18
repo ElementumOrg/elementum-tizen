@@ -27,7 +27,7 @@ There are two ways to install:
 - **Option B, Tizen CLI:** Samsung's own command-line tools; more steps, nothing third-party.
 
 Both install the same `Elementum-<version>.wgt` from
-[GitHub Releases](https://github.com/ElementumOrg/elementum-tizen/releases/latest). The TV only accepts it
+[GitHub Releases](https://github.com/ElementumOrg/elementum-tv/releases/latest). The TV only accepts it
 after it is signed with a certificate made for that TV, which both options do. An app installed one way must
 be deleted on the TV before installing it the other way (the certificates differ).
 
@@ -42,8 +42,8 @@ be deleted on the TV before installing it the other way (the certificates differ
    `winget install Apps2Samsung.Apps2Samsung`).
 3. **Get Elementum**, either way:
    - download `Elementum-<version>.wgt` from our
-     [latest release](https://github.com/ElementumOrg/elementum-tizen/releases/latest), or
-   - in Apps2Samsung, add `ElementumOrg/elementum-tizen` as **your own source** (the catalog's **⋯** →
+     [latest release](https://github.com/ElementumOrg/elementum-tv/releases/latest), or
+   - in Apps2Samsung, add `ElementumOrg/elementum-tv` as **your own source** (the catalog's **⋯** →
      **Add a source**, or Settings → Installing → Your sources). Elementum then shows up in the catalog and
      Apps2Samsung offers updates when we publish a release.
 4. **Install:** open Apps2Samsung, pick the TV, then pick Elementum from the catalog (or your downloaded
@@ -81,7 +81,7 @@ the TV: Apps → Elementum → hold Enter → Delete.
    is connected) → finish.
    [Samsung guide](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/creating-certificates.html)
 5. **Download** `Elementum-<version>.wgt` from the
-   [latest release](https://github.com/ElementumOrg/elementum-tizen/releases/latest) into the current folder.
+   [latest release](https://github.com/ElementumOrg/elementum-tv/releases/latest) into the current folder.
 6. **Re-sign it** with your profile. Use absolute paths: the `tizen` launcher changes directory.
    ```sh
    tizen package -t wgt -s MyTV -o "$PWD/resigned" -- "$PWD/Elementum-<version>.wgt"
@@ -148,7 +148,7 @@ Requirements:
   unsupported on many 2020-2022 LG models.
 
 Both options below install the same `Elementum-<version>.ipk` from
-[GitHub Releases](https://github.com/ElementumOrg/elementum-tizen/releases/latest).
+[GitHub Releases](https://github.com/ElementumOrg/elementum-tv/releases/latest).
 
 ### Option A: webOS Dev Manager
 
