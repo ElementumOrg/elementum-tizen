@@ -1,4 +1,6 @@
 import { useRef } from 'preact/hooks';
+import { onClickNotEnter } from '../nav/keys';
+import { hover } from '../nav/focus';
 import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 
 // Enter (13) and the Tizen IME's Done (65376) / Cancel (65385), Back (Tizen 10009, webOS 461) and Escape leave the input.
@@ -20,7 +22,7 @@ interface TextFieldProps {
  */
 export function TextField({ label, value, onInput, type = 'text', focusKey, onSubmit }: TextFieldProps) {
   const input = useRef<HTMLInputElement>(null);
-  const { ref, focused } = useFocusable({ focusKey, onEnterPress: () => input.current!.focus() });
+  const { ref, focused, focusSelf } = useFocusable({ focusKey, onEnterPress: () => input.current!.focus() });
   const onKeyDown = (e: KeyboardEvent) => {
     e.stopPropagation();
     if (LEAVE_KEYS.indexOf(e.keyCode) >= 0) {
@@ -30,7 +32,7 @@ export function TextField({ label, value, onInput, type = 'text', focusKey, onSu
     }
   };
   return (
-    <div ref={ref} class={focused ? 'field focused' : 'field'}>
+    <div ref={ref} class={focused ? 'field focused' : 'field'} onClick={onClickNotEnter(() => input.current!.focus())} onMouseMove={hover(focused, focusSelf)}>
       <span>{label}</span>
       <input ref={input} type={type} value={value} onKeyDown={onKeyDown}
         onInput={(e) => onInput((e.currentTarget as HTMLInputElement).value)} />

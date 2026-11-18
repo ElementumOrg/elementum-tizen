@@ -73,6 +73,11 @@ export const onFreshEnter = (fn: () => void) => () => {
   if (enter.fresh) fn();
 };
 
+/** Wraps a click so one from an OK press is ignored: webOS may send both keydown 13 and a click on the hovered element. */
+export const onClickNotEnter = (fn: () => void) => () => {
+  if (!enter.held && Date.now() - enter.last > FRESH_GAP_MS) fn();
+};
+
 export function initKeys() {
   if (typeof tizen !== 'undefined') {
     for (const k of TIZEN_KEYS) {

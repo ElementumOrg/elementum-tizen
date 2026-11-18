@@ -112,6 +112,12 @@
   z-index: 1;
 }
 
+/* Pointer cue: nothing moves, so a Row or list that scrolls under a still pointer can't cascade. */
+.poster:hover:not(.focused),
+.list-item:hover:not(.focused) {
+  box-shadow: 0 0 0 5px #8a8a94;
+}
+
 .poster-title {
   display: block;
   padding: 20px;

@@ -1,6 +1,7 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
+import { onClickNotEnter } from '../nav/keys';
 import { createLongPress } from '../nav/longpress';
 import { scrollToAnimated } from './tween';
 
@@ -25,7 +26,7 @@ export function ListItem({ children, onPress, onFocus, onMenu, cls, focusKey }: 
     },
   });
   return (
-    <div ref={ref} class={'list-item ' + (cls || '') + (focused ? ' focused' : '')} onClick={onPress}>
+    <div ref={ref} class={'list-item ' + (cls || '') + (focused ? ' focused' : '')} onClick={onClickNotEnter(() => onPress && onPress())}>
       {children}
     </div>
   );

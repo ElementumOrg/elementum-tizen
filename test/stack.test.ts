@@ -1,6 +1,6 @@
 import { expect, test, vi } from 'vitest';
 import { createStack, exitApp, MAX_DEPTH } from '../src/nav/stack';
-import { dispatch, keyAction, onKey } from '../src/nav/keys';
+import { dispatch, enter, keyAction, onClickNotEnter, onKey } from '../src/nav/keys';
 
 function setup() {
   let current = 'a';
@@ -90,4 +90,16 @@ test('exitApp closes the window when there is no tizen', () => {
   exitApp();
   vi.unstubAllGlobals();
   expect(close).toHaveBeenCalled();
+});
+
+test('onClickNotEnter ignores a click right after an OK press, not a pointer click', () => {
+  let n = 0;
+  const click = onClickNotEnter(() => n++);
+  Object.assign(enter, { held: true, last: Date.now() });
+  click();
+  Object.assign(enter, { held: false, last: Date.now() });
+  click();
+  Object.assign(enter, { held: false, last: Date.now() - 1000 });
+  click();
+  expect(n).toBe(1);
 });

@@ -14,6 +14,11 @@ export function useClaimFocus(focusKey: string, focusSelf: () => void) {
   }, []);
 }
 
+/** Pointer: moving over a focusable focuses it. Only for focusables whose focus moves no content (Button, TextField, sidebar items); items in Rows, Grids and lists scroll on focus, so a hover would cascade: they get click only plus a CSS :hover cue. */
+export const hover = (focused: boolean, focusSelf: () => void) => () => {
+  if (!focused) focusSelf();
+};
+
 /** True while this screen's layer is the top one (a pushed screen hides it but keeps it mounted). */
 export function useOnTop() {
   const layer = useContext(LayerContext);

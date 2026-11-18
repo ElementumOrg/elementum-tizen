@@ -1,4 +1,6 @@
 import { FocusContext, useFocusable } from '@noriginmedia/norigin-spatial-navigation';
+import { onClickNotEnter } from '../nav/keys';
+import { hover } from '../nav/focus';
 import { useEffect, useRef } from 'preact/hooks';
 import { t } from '../i18n';
 import { debounce } from './debounce';
@@ -68,14 +70,14 @@ interface ItemProps {
 }
 
 function SidebarItem({ tab, active, onSelect, onSettle, onLeave }: ItemProps) {
-  const { ref, focused } = useFocusable({
+  const { ref, focused, focusSelf } = useFocusable({
     focusKey: `sidebar-${tab}`,
     onEnterPress: () => onSelect(tab),
     onFocus: () => onSettle(tab),
     onBlur: onLeave,
   });
   return (
-    <div ref={ref} class={'sidebar-item' + (focused ? ' focused' : '') + (active ? ' active' : '')} onClick={() => onSelect(tab)}>
+    <div ref={ref} class={'sidebar-item' + (focused ? ' focused' : '') + (active ? ' active' : '')} onClick={onClickNotEnter(() => onSelect(tab))} onMouseMove={hover(focused, focusSelf)}>
       <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d={ICONS[tab]} />
       </svg>

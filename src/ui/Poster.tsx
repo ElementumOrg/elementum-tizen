@@ -1,6 +1,7 @@
 import { memo } from 'preact/compat';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
+import { onClickNotEnter } from '../nav/keys';
 import { createLongPress } from '../nav/longpress';
 import { Badges } from './Badges';
 import { openItemMenu } from './ItemMenu';
@@ -65,7 +66,7 @@ export const Poster = memo(function Poster({ item, focusKey, index, left, top, o
       ref={ref}
       class={'poster' + (focused ? ' focused' : '') + (state.watched === true ? ' watched' : '') + (item.caption ? ' captioned' : '')}
       style={`left:${left}px;top:${top}px`}
-      onClick={() => onSelect(index)}
+      onClick={onClickNotEnter(() => onSelect(index))}
     >
       {/* The title stays underneath; it shows until the image loads, and if it never does. */}
       <span class="poster-title">{item.title}{item.caption && <small>{item.caption}</small>}</span>

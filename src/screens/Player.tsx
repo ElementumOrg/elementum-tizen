@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'preact/hooks';
 import { SpatialNavigation } from '@noriginmedia/norigin-spatial-navigation';
 import { LayerContext, stack } from '../nav/stack';
-import { onKey } from '../nav/keys';
+import { onClickNotEnter, onKey } from '../nav/keys';
 import { t } from '../i18n';
 import { del, post } from '../api/client';
 import { dispatcher } from '../uiClient';
@@ -61,7 +61,7 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
   const [tracks, setTracks] = useState<{ audio: Track[]; text: Track[] }>({ audio: [], text: [] });
   const [warn, setWarn] = useState(false);
   const [toast, setToast] = useState('');
-  const api = useRef<{ exit(): void; setTrack(kind: 'audio' | 'text', i: number): void; cycle(kind: 'audio' | 'text'): void; show(): void; menu: Menu; osd: boolean; focus: number }>({ exit() {}, setTrack() {}, cycle() {}, show() {}, menu: null, osd: true, focus: PLAY });
+  const api = useRef<{ exit(): void; setTrack(kind: 'audio' | 'text', i: number): void; cycle(kind: 'audio' | 'text'): void; show(): void; press(i: number): void; menu: Menu; osd: boolean; focus: number }>({ exit() {}, setTrack() {}, cycle() {}, show() {}, press() {}, menu: null, osd: true, focus: PLAY });
   api.current.menu = menu;
   api.current.osd = osd;
   api.current.focus = focus;
@@ -149,15 +149,24 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
     const onHidden = () => document.hidden && reporter.now();
     document.addEventListener('visibilitychange', onHidden);
 
+    const openPanel = (col: 0 | 1) => {
+      setTracks({ audio: player.tracks('audio'), text: player.tracks('text') });
+      setPanelCol(col);
+      setMenu('tracks');
+      hider.cancel();
+    };
+    // OK on button i (keys and clicks).
+    const press = (i: number) => {
+      const b = BTNS[i];
+      if (b === 'back10') seeker.by(-10);
+      else if (b === 'fwd10') seeker.by(10);
+      else if (b === 'play') wasPlaying ? player.pause() : player.play();
+      else openPanel(b === 'audio' ? 0 : 1);
+    };
+    api.current.press = press;
     const off = onKey((a) => {
       if (gone) return true;
       if (api.current.menu === 'error') return false; // the dialog handles its own keys (Back closes it)
-      const openPanel = (col: 0 | 1) => {
-        setTracks({ audio: player.tracks('audio'), text: player.tracks('text') });
-        setPanelCol(col);
-        setMenu('tracks');
-        hider.cancel();
-      };
       const f = api.current.focus;
       const arrow = a === 'left' || a === 'right' || a === 'up' || a === 'down' || a === 'enter';
       if (arrow && !api.current.menu) {
@@ -174,13 +183,7 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
         } else if (a === 'left' || a === 'right') setFocus(Math.max(0, Math.min(BTNS.length - 1, f + (a === 'left' ? -1 : 1))));
         else if (a === 'up') setFocus(-1);
         else if (a === 'down') (setOsd(false), hider.cancel());
-        else {
-          const b = BTNS[f];
-          if (b === 'back10') seeker.by(-10);
-          else if (b === 'fwd10') seeker.by(10);
-          else if (b === 'play') wasPlaying ? player.pause() : player.play();
-          else openPanel(b === 'audio' ? 0 : 1);
-        }
+        else press(f);
         return true;
       }
       const transport = a === 'playpause' || a === 'play' || a === 'pause' || a === 'ff' || a === 'rw' || a === 'back' || a === 'stop';
@@ -240,7 +243,7 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
   const shown = seekTo !== null ? seekTo : pos.p;
   const pct = pos.d ? Math.min(100, (shown / pos.d) * 100) : 0;
   return (
-    <div class="player" ref={host}>
+    <div class="player" ref={host} onClick={onClickNotEnter(() => { if (!api.current.osd && !api.current.menu) (setFocus(PLAY), api.current.show()); })}>
       {osd && (
         <div class="player-osd">
           <div class="player-top" />
@@ -269,7 +272,7 @@ function PlayerScreen({ session }: { session: PlayerSession }) {
               {BTNS.map((b, i) => {
                 const label = b === 'play' ? t(playing ? 'player.pause' : 'player.play') : b === 'audio' ? t('player.audio') : b === 'subs' ? t('player.subtitles') : t('player.' + b);
                 return (
-                  <div key={b} class={'player-btn' + (b === 'play' ? ' player-btn-main' : '') + (focus === i ? ' player-btn-on' : '')}>
+                  <div key={b} class={'player-btn' + (b === 'play' ? ' player-btn-main' : '') + (focus === i ? ' player-btn-on' : '')} onClick={onClickNotEnter(() => { if (!api.current.menu) (setFocus(i), api.current.show(), api.current.press(i)); })}>
                     <div class="player-btn-ico"><Icon k={b === 'play' && playing ? 'pause' : b} /></div>
                     <div class="player-btn-label">{label}</div>
                   </div>
